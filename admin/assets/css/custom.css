@@ -1,0 +1,38 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.user-signup {
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+/* .modal .modal-header {
+  padding: 9px 9px !important;
+} */
+
+/* :root {
+    --bs-sidebar-item-hover: transparent; 
+    --bs-sidebar-item-active: transparent;
+} */
+
+table.dataTable.table-bordered {
+  border-collapse: collapse !important;
+}
+
+table.dataTable.table-bordered th,
+table.dataTable.table-bordered td {
+  border: 1px solid #dee2e6 !important;
+}
+
+table.dataTable.table-bordered {
+  border-bottom: 1px solid #dee2e6 !important; /* restore missing bottom border */
+}
+
+.dataTables_length {
+  margin-bottom: 1rem;  /* 16px, good for Bootstrap */
+}
+
+
