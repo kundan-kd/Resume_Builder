@@ -3,10 +3,10 @@ include '../../includes/header.php';
 include '../../includes/connection.php';
 ?>
 <body data-menu-color="light" data-sidebar="default">
+  <?php include  '../alert/toast.php';?>
   <div id="app-layout">
     <?php include '../../includes/topbar.php'; ?>
     <?php include '../../includes/left_sidebar.php'; ?>
-
     <div class="content-page">
       <div class="content">
         <!-- Start Content -->
@@ -31,7 +31,7 @@ include '../../includes/connection.php';
                 <div class="card-body">
                   <div class="row">
                     <div class="col-12">
-                      <table id="datatable11" class="table table-bordered">
+                      <table id="category_table" class="table table-bordered">
                         <thead>
                           <tr>
                             <th scope="col">#</th>
@@ -40,20 +40,20 @@ include '../../includes/connection.php';
                           </tr>
                         </thead>
                         <tbody>
-                         
+                         <!-- data appended here using category.js -->
                         </tbody>
                       </table>
                     </div>
                   </div>
-                </div> <!-- end card-body -->
-              </div> <!-- end card -->
-            </div> <!-- end col -->
-          </div> <!-- end row -->
+                </div>
+              </div> 
+            </div> 
+          </div> 
 
-        </div> <!-- container-fluid -->
-      </div> <!-- content -->
-    </div> <!-- content-page -->
-  </div> <!-- app-layout -->
+        </div> 
+      </div> 
+    </div> 
+  </div> 
 
   <!-- Add Modal -->
   <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">

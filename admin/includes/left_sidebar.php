@@ -33,28 +33,28 @@
                     <div class="collapse" id="categories">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="user_categories.php" class="tp-link">Categories</a>
+                                <a href="../master/user_categories.php" class="tp-link">Categories</a>
                             </li>
                             <li>
-                                <a href="user_designations.php" class="tp-link">Designation Types</a>
+                                <a href="../master/user_designations.php" class="tp-link">Designation Types</a>
                             </li>
                             <li>
-                                <a href="user_plans.php" class="tp-link">Plan Types</a>
+                                <a href="../master/user_plans.php" class="tp-link">Plan Types</a>
                             </li>
                             <li>
-                                <a href="user_programming_skills.php" class="tp-link">Programming Skill Types</a>
+                                <a href="../master/user_programming_skills.php" class="tp-link">Programing Skill Types</a>
                             </li>
                             <li>
-                                <a href="user_langs.php" class="tp-link">Language Types</a>
+                                <a href="../master/user_langs.php" class="tp-link">Language Types</a>
                             </li>
                             <li>
-                                <a href="user_extra_skills.php" class="tp-link">Extra Skill Types</a>
+                                <a href="../master/user_extra_skills.php" class="tp-link">Extra Skill Types</a>
                             </li>
                             <li>
-                                <a href="user_qualifications.php" class="tp-link">Qualification Types</a>
+                                <a href="../master/user_qualifications.php" class="tp-link">Qualification Types</a>
                             </li>
                             <li>
-                                <a href="user_skill_lists.php" class="tp-link">Skill List Types</a>
+                                <a href="../master/user_skill_lists.php" class="tp-link">Skill List Types</a>
                             </li>
                         </ul>
                     </div>

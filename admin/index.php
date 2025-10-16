@@ -73,6 +73,7 @@
                                                              <div class="invalid-feedback">
                                                                 Enter valid Password                
                                                             </div>
+                                                            <div class="credentialError mt-1 d-none"></div>
                                                     </div>
 
                                                     <div class="form-group d-flex mb-3">
@@ -93,8 +94,12 @@
                                                     <div class="form-group mb-0 row">
                                                         <div class="col-12">
                                                             <div class="d-grid">
-                                                                <button class="btn btn-primary fw-semibold"
-                                                                    type="submit"> Log In </button>
+                                                                <button class="btn btn-primary fw-semibold loginSubmit"
+                                                                    type="submit"> Log In 
+                                                                </button>
+                                                                <button class="btn btn-primary loginSpinn d-none" type="button" disabled>
+                                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Please Wait...
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -225,27 +230,32 @@ $('#user_login').on('submit',function(e){
     e.preventDefault();
     let email = $('#user-email').val();
     let password = $('#user-password').val();
-    console.log(email);
-    console.log(password);
     if(email == '' || password == ''){
         $('.needs-validation').addClass('was-validated');
     }else{
+        $('.loginSubmit').addClass('d-none');
+        $('.loginSpinn').removeClass('d-none');
         $.ajax({
             url: "includes/authentication.php",
             type:"POST",
             data:{login_email:email,login_password:password},
             dataType: 'json',
            success: function(response) {
-             console.log("Response received:", response);
-    alert(response.message); // Show message in alert
-
-            // if (typeof response == 'string') {
-            //     try {
-            //         response = JSON.parse(response);
-            //     } catch (e) {
-            //         console.error("Invalid JSON:", response);
-            //     }
-            // }
+           if(response.success){
+                window.location.href = 'modules/home/dashboard.php';
+           }else if(response.error_password){
+                $('.credentialError').html(response.error_password).css("color","#dc3545").removeClass('d-none');
+                $('.loginSpinn').addClass('d-none');
+                $('.loginSubmit').removeClass('d-none');
+           }else if(response.error_email){
+                $('.credentialError').html(response.error_email).css("color","#dc3545").removeClass('d-none');
+                $('.loginSpinn').addClass('d-none');
+                $('.loginSubmit').removeClass('d-none');
+           }else{
+                $('.credentialError').html('something went wrong!').css("color","#dc3545").removeClass('d-none');
+                $('.loginSpinn').addClass('d-none');
+                $('.loginSubmit').removeClass('d-none');
+           }
         }
 
         });

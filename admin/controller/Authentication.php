@@ -1,16 +1,10 @@
-
-
-
-
-
-
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-require_once('../includes/dbconfig.php'); // Adjust path as needed
+// require_once('../includes/dbconfig.php'); // Adjust path as needed
 
 header('Content-Type: application/json');
 if (isset($_POST['login_data']) && $_POST['login_data'] == 'login_data') {
@@ -34,15 +28,15 @@ if (isset($_POST['login_data']) && $_POST['login_data'] == 'login_data') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['user_name']; // Adjust if needed
 
-            echo json_encode(['status' => 'success', 'message' => 'Login successful']);
+            echo json_encode(['success' => 'Login successful']);
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Invalid password']);
+            echo json_encode(['error_password' => 'Invalid password']);
         }
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'User not found']);
+        echo json_encode(['error_email' => 'User not found']);
     }
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
+    echo json_encode(['error' => 'Invalid request']);
 }
 
 

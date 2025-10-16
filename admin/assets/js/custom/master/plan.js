@@ -1,40 +1,40 @@
  function loadCategories() {
         $.ajax({
-            url: "../../controller/master/Category.php",
+            url: "../../controller/master/Plan.php",
             type: "POST",
             data:{ action: 'loadData'},
             success: function (response) {
-                $("#category_table tbody").html(response);
+                $("#plan_table tbody").html(response);
             }
         });
     }
     loadCategories();
 
-    $('.categoryAdd').on('click',function(e){
-        $('#categoryID').val('');
-        $('.categoryTitle').html('Add Category');
-        $('.categoryUpdate').addClass('d-none');
-        $('.categorySubmit').removeClass('d-none');
+    $('.planAdd').on('click',function(e){
+        $('#planID').val('');
+        $('.planTitle').html('Add Plan');
+        $('.planUpdate').addClass('d-none');
+        $('.planSubmit').removeClass('d-none');
     });
     //  add data
-    $('#categoryForm').on('submit', function (e) {
+    $('#planForm').on('submit', function (e) {
         e.preventDefault();
-        let name = $('#categoryName').val().trim();
+        let name = $('#planName').val().trim();
         if (name === '') {
             $('.needs-validation').addClass('was-validated');
             return;
         }
         $.ajax({
-            url: "../../controller/master/Category.php",
+            url: "../../controller/master/Plan.php",
             type: "POST",
-            data: { action:'add',category_name: name },
+            data: { action:'add',plan_name: name },
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
                     // Hide modal & reset form
                     $('.needs-validation').removeClass('was-validated');
-                    $('#categoryModal').modal('hide');
-                    $('#categoryForm')[0].reset();
+                    $('#planModal').modal('hide');
+                    $('#planForm')[0].reset();
                     loadCategories();
                     toastSuccessAlert(response.success);
                 } else if(response.error_success) {
@@ -48,23 +48,23 @@
             }
         });
     });
-    $(document).on('click','.edit-category-btn',function(e){
+    $(document).on('click','.edit-plan-btn',function(e){
         let id = $(this).data('id');
          $.ajax({
-            url: "../../controller/master/Category.php",
+            url: "../../controller/master/Plan.php",
             type: "POST",
             data: { action:'getData', id:id},
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
-                    $('#categoryID').val(id);
-                    $('#categoryName').val(response.data.name);
-                    $('.categoryTitle').html('Update Category');
-                    $('.categorySubmit').addClass('d-none');
-                    $('.categoryUpdate').removeClass('d-none');
-                    $('#categoryModal').modal('show');
+                    $('#planID').val(id);
+                    $('#planName').val(response.data.name);
+                    $('.planTitle').html('Update Plan');
+                    $('.planSubmit').addClass('d-none');
+                    $('.planUpdate').removeClass('d-none');
+                    $('#planModal').modal('show');
                 } else {
-                    alert('Error fetching category.');
+                    alert('Error fetching plan.');
                 }
             },
             error: function () {
@@ -74,23 +74,23 @@
         
     });
 
-   function categoryUpdate(id){
-     let name = $('#categoryName').val().trim();
+   function planUpdate(id){
+     let name = $('#planName').val().trim();
         if (name === '') {
             $('.needs-validation').addClass('was-validated');
             return;
         }
         $.ajax({
-            url: "../../controller/master/Category.php",
+            url: "../../controller/master/Plan.php",
             type: "POST",
-            data: { action:'update', category_name: name, id:id},
+            data: { action:'update', plan_name: name, id:id},
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
                     // Hide modal & reset form
                     $('.needs-validation').removeClass('was-validated');
-                    $('#categoryModal').modal('hide');
-                    $('#categoryForm')[0].reset();
+                    $('#planModal').modal('hide');
+                    $('#planForm')[0].reset();
                     loadCategories();
                     toastSuccessAlert(response.success);
                 } else if(response.error_success){
@@ -105,7 +105,7 @@
         });
     }
 
-    $(document).on('click','.delete-category-btn',function(e){
+    $(document).on('click','.delete-plan-btn',function(e){
         let id = $(this).data('id');
         $.confirm({
             title: 'Are you sure?',
@@ -118,7 +118,7 @@
                     action: function () {
                         
                         $.ajax({
-                            url: "../../controller/master/Category.php",
+                            url: "../../controller/master/Plan.php",
                             type: "POST",
                             data: { action:'delete',id: id },
                             dataType: 'json',
@@ -126,11 +126,11 @@
                                 if (response.success) {
                                     $.alert({title: 'Deleted!', content: response.success,type: 'green'});
                                     $('.needs-validation').removeClass('was-validated');
-                                    $('#categoryModal').modal('hide');
-                                    $('#categoryForm')[0].reset();
+                                    $('#planModal').modal('hide');
+                                    $('#planForm')[0].reset();
                                     loadCategories();
                                 } else {
-                                    $.alert({title: 'Error!', content: 'Category not deleted.', type: 'red'});
+                                    $.alert({title: 'Error!', content: 'plan not deleted.', type: 'red'});
                                 }
                             },
                             error: function(xhr, status, error) {

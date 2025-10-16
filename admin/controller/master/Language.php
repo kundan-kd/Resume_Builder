@@ -2,7 +2,7 @@
 include '../../includes/connection.php';
 $action = $_POST['action'];
     if($action == 'loadData'){
-        $query = "SELECT * FROM category_types WHERE status = 1 AND deleted_at IS NULL";
+        $query = "SELECT * FROM language_types WHERE status = 1 AND deleted_at IS NULL";
         $result = mysqli_query($conn, $query);
         if ($result && mysqli_num_rows($result) > 0) {
             $count = 1;
@@ -11,11 +11,11 @@ $action = $_POST['action'];
                         <th scope='row'>{$count}</th>
                         <td>" . $row['name'] . "</td>
                         <td>
-                        <button class='btn btn-outline-primary btn-sm me-2 edit-category-btn'
+                        <button class='btn btn-outline-primary btn-sm me-2 edit-language-btn'
                                 data-id='{$row['id']}' '>
                             <i class='ri-pencil-line'></i>
                         </button>
-                        <button class='btn btn-outline-danger btn-sm delete-category-btn' 
+                        <button class='btn btn-outline-danger btn-sm delete-language-btn' 
                                 data-id='{$row['id']}'>
                             <i class='ri-delete-bin-6-line'></i>
                         </button>
@@ -27,33 +27,33 @@ $action = $_POST['action'];
     }
 
     if($action == 'add'){
-        $category = trim(mysqli_real_escape_string($conn,$_POST["category_name"]));
-        $insert = "INSERT INTO category_types (`name`,`status`,`created_at`,`updated_at`) values('$category',1,NOW(),NOW())";
+        $language = trim(mysqli_real_escape_string($conn,$_POST["language_name"]));
+        $insert = "INSERT INTO language_types (`name`,`status`,`created_at`,`updated_at`) values('$language',1,NOW(),NOW())";
         if(mysqli_query($conn, $insert)){
             $last_id = mysqli_insert_id($conn);
             echo json_encode([
-                'success' => 'Category added successfully',
+                'success' => 'Language added successfully',
                 'id' => $last_id,
-                'name' => $category
+                'name' => $language
             ]);
         } else {
-            echo json_encode(['success' => 'Category not added']);
+            echo json_encode(['success' => 'Language not added']);
         }
     }
 
     if($action == 'delete'){
         $id = trim(mysqli_real_escape_string($conn,$_POST["id"]));
-        $query = "UPDATE category_types SET deleted_at = NOW() WHERE id = $id";
+        $query = "UPDATE language_types SET deleted_at = NOW() WHERE id = $id";
         if(mysqli_query($conn,$query)){
-            echo json_encode(['success' => 'Category deleted successfully']);
+            echo json_encode(['success' => 'Language deleted successfully']);
         }else{
-            echo json_encode(['error_success' => 'Category not deleted']);
+            echo json_encode(['error_success' => 'Language not deleted']);
         }
     }
 
     if($action == 'getData'){
         $id = trim(mysqli_real_escape_string($conn,$_POST["id"]));
-        $query = "SELECT `name` FROM category_types WHERE id = '$id'";
+        $query = "SELECT `name` FROM language_types WHERE id = '$id'";
         $result = mysqli_query($conn,$query);
         if($result && mysqli_num_rows($result)){
             while($row = mysqli_fetch_assoc($result)){
@@ -67,12 +67,12 @@ $action = $_POST['action'];
 
     if($action == 'update'){
         $id = trim(mysqli_real_escape_string($conn,$_POST["id"]));
-        $name = trim(mysqli_real_escape_string($conn,$_POST["category_name"]));
-        $query = "UPDATE category_types SET name = '$name' WHERE id = $id";
+        $name = trim(mysqli_real_escape_string($conn,$_POST["language_name"]));
+        $query = "UPDATE language_types SET name = '$name' WHERE id = $id";
         if(mysqli_query($conn,$query)){
-            echo json_encode(['success' => 'Category updated successfully']);
+            echo json_encode(['success' => 'Language updated successfully']);
         }else{
-            echo json_encode(['error_success' => 'Category not updated']);
+            echo json_encode(['error_success' => 'Language not updated']);
         }
     }
 ?>

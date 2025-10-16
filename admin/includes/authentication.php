@@ -27,12 +27,12 @@ if(isset($_POST['login_email'])){
             $_SESSION['user_name'] = $user['user_name']; // Adjust if needed
             $_SESSION['user_email'] = $user['email']; // Adjust if needed
 
-            echo json_encode(['status' => 'success', 'message' => 'Login successful']);
+            echo json_encode(['success' => 'Login successful']);
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Invalid password']);
+            echo json_encode(['error_password' => 'Invalid password']);
         }
     } else { 
-        echo json_encode(['status' => 'error', 'message' => 'User not found']);
+        echo json_encode(['error_email' => 'User not found']);
     }
 }
 

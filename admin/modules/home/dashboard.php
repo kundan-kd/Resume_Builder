@@ -1,28 +1,11 @@
-<?php include '../includes/header.php'; 
-    
-    //   $select = "SELECT * FROM `user_registrations` WHERE `id` ='{$_SESSION['user_id']}'";
-    // //   $result = mysqli_query($conn,$select);
-      
-    // //   if ($result && mysqli_num_rows($result) > 0) {
-    // //        $row = mysqli_fetch_assoc($result);
-    // //         $_SESSION['user_name'] = $row['first_name'];
-    // //   }
-
+<?php
+include '../../includes/header.php';
+include '../../includes/connection.php';
 ?>
-    <!-- body start -->
-    <body data-menu-color="light" data-sidebar="default">
-        <!-- Begin page -->
-        <div id="app-layout">
-
-            <!-- Topbar Start -->
-            <?php include '../includes/topbar.php'; ?>
-            <!-- end Topbar -->
-            <!-- Left Sidebar Start -->
-            <?php include '../includes/left_sidebar.php'; ?>
-            <!-- Left Sidebar End -->
-            <!-- ============================================================== -->
-            <!-- Start Page Content here -->
-            <!-- ============================================================== -->
+<body data-menu-color="light" data-sidebar="default">
+  <div id="app-layout">
+    <?php include '../../includes/topbar.php'; ?>
+    <?php include '../../includes/left_sidebar.php'; ?>
 
             <div class="content-page">
                 <div class="content">
@@ -545,7 +528,7 @@
         <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
         <script src="assets/js/pages/crm-dashboard.init.js"></script>
         <script src="assets/js/app.js"></script> -->
-        <?php include '../includes/footer.php'; ?>
+        <?php include '../../includes/footer.php'; ?>
     
     </body>
 </html>

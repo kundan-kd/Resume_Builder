@@ -1,3 +1,15 @@
+        <footer class="footer">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col fs-13 text-muted text-center">
+                                    &copy;
+                                    <script>document.write(new Date().getFullYear())</script> - Made with <span
+                                        class="mdi mdi-heart text-danger"></span> by <a target="_blank" href="https://techiesquad.com/"
+                                        class="text-reset fw-semibold">Techie Squad</a>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
         <script src="../../assets/libs/jquery/jquery.min.js"></script>
         <script src="../../assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="../../assets/libs/simplebar/simplebar.min.js"></script>
@@ -30,9 +42,13 @@
         <!-- dataTables.select -->
         <script src="../../assets/libs/datatables.net-select/js/dataTables.select.min.js"></script>
         <script src="../../assets/libs/datatables.net-select-bs5/js/select.bootstrap5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+            <!-- Bootstrap JS Bundle (includes Popper) -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script> -->
          <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> -->
         <!-- <script src="../../assets/js/custom.js"></script> -->
         <script src="../../assets/js/app.js"></script>
+        <script src="../../assets/js/custom/common.js"></script>
 
         <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields

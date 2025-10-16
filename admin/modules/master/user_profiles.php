@@ -1331,20 +1331,10 @@ $id = 1;
                         </div>
                     </div> -->
 
-                    <footer class="footer">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col fs-13 text-muted text-center">
-                                    &copy;
-                                    <script>document.write(new Date().getFullYear())</script> - Made with <span
-                                        class="mdi mdi-heart text-danger"></span> by <a href="#!"
-                                        class="text-reset fw-semibold">Hando</a>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
+                    
                 </div>
             </div>
+            
              <?php
     require_once '../../includes/footer.php';
     ?>

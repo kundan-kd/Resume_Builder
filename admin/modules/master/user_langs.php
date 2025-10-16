@@ -1,38 +1,37 @@
 <?php
-require_once '../../includes/header.php';
-require_once '../../includes/connection.php';
-$id = 1;
+include '../../includes/header.php';
+include '../../includes/connection.php';
 ?>
-
 <body data-menu-color="light" data-sidebar="default">
+  <?php include  '../alert/toast.php';?>
   <div id="app-layout">
     <?php include '../../includes/topbar.php'; ?>
     <?php include '../../includes/left_sidebar.php'; ?>
-
     <div class="content-page">
       <div class="content">
-        <!-- Start Content-->
+        <!-- Start Content -->
         <div class="container-fluid">
+
+          <!-- Page Title -->
           <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
             <div class="flex-grow-1">
-              <h4 class="fs-18 fw-semibold m-0">Language Types</h4>
+              <h4 class="fs-18 fw-semibold m-0">Languages</h4>
             </div>
             <div class="text-end">
-              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#languageModal">
+              <button class="btn btn-primary languageAdd" data-bs-toggle="modal" data-bs-target="#languageModal">
                 <i class="ri-add-line"></i> Add
               </button>
             </div>
           </div>
 
+          <!-- language Table -->
           <div class="row">
             <div class="col-xl-12">
               <div class="card">
-
                 <div class="card-body">
                   <div class="row">
-
                     <div class="col-12">
-                      <table id="datatable" class="table table-bordered">
+                      <table id="language_table" class="table table-bordered">
                         <thead>
                           <tr>
                             <th scope="col">#</th>
@@ -41,147 +40,49 @@ $id = 1;
                           </tr>
                         </thead>
                         <tbody>
-                          <!-- <tr>
-                            <th scope="row">1</th>
-                            <td>English</td>
-                            <td>
-                              <button class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal"
-                                data-bs-target="#editButton"><i class="ri-pencil-line"></i></button>
-                              <button class="btn  btn-outline-danger btn-sm" onclick="deleteButton()"><i
-                                  class="ri-delete-bin-6-line"></i></button>
-                            </td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>French</td>
-                            <td>
-                              <button class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal"
-                                data-bs-target="#editButton"><i class="ri-pencil-line"></i></button>
-                              <button class="btn  btn-outline-danger btn-sm" onclick="deleteButton()"><i
-                                  class="ri-delete-bin-6-line"></i></button>
-                            </td>
-
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>Spanish</td>
-                            <td>
-                              <button class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal"
-                                data-bs-target="#editButton"><i class="ri-pencil-line"></i></button>
-                              <button class="btn  btn-outline-danger btn-sm" onclick="deleteButton()"><i
-                                  class="ri-delete-bin-6-line"></i></button>
-                            </td>
-                          </tr> -->
-                          <?php
-                            $select = "SELECT * FROM `language_types`";
-                            $result = mysqli_query($conn, $select);
-                            if ($result && $result->num_rows > 0) {
-                              while ($row = $result->fetch_assoc()) {
-                              ?>
-                              <tr>
-                                <th scope="row"><?php echo $id; ?></th>
-                                <td><?php echo $row['name']; ?></td>
-                                <td>
-                                  <button class="edit-lang-btn btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal"
-                                    data-bs-target="#editLangModal" data-lang-id="<?php echo $row['id']; ?>"><i
-                                      class="ri-pencil-line"></i></button>
-                                  <button class="btn btn-outline-danger btn-sm" onclick="deleteButton(<?= $row['id'] ?>, 'language_types', '<?= $row['name'] ?>')"><i
-                                      class="ri-delete-bin-6-line"></i></button>
-                                </td>
-                              </tr>
-                              <?php
-                              $id++;
-                            }
-                          }
-                          ?>
-
+                         <!-- data appended here using language.js -->
                         </tbody>
                       </table>
                     </div>
                   </div>
-                </div> <!-- end card-body -->
-              </div> <!-- end card-->
-            </div> <!-- end col -->
-          </div> <!-- end row -->
+                </div>
+              </div> 
+            </div> 
+          </div> 
+
+        </div> 
+      </div> 
+    </div> 
+  </div> 
+
+  <!-- Add Modal -->
+  <div class="modal fade" id="languageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header" style="padding:9px 9px;">
+          <h5 class="modal-title languageTitle">Add Language</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-      </div>
-    </div>
-
-
-    <!-- Add Category  -->
-    <div class="modal fade" id="languageModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header" style="padding:9px 9px;">
-            <h5 class="modal-title">Add</h5>
-            <button class="btn-close" data-bs-dismiss="modal"></button>
-
+        <form id="languageForm" class="needs-validation" novalidate>
+          <div class="modal-body">
+            <label for="languageName" class="mb-2">Language</label>
+            <input type="hidden" id="languageID">
+            <input class="form-control" type="text" placeholder="Enter language" id="languageName" name="languageName" style="background-image: none;" required>
+            <div class="invalid-feedback">Enter Language Name</div>
           </div>
-          <form id="languageForm">
-            <div class="modal-body">
-              <label for="languageName" class="mb-2">Language</label>
-              <input class="form-control mb-3" type="text" placeholder="Language" id="languageName" name="languageName"
-                required>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-              <button class="btn btn-primary" type="submit" value="submit" name="submit">Submit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit Modal -->
-    <div class="modal fade" id="editLangModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header" style="padding:9px 9px;">
-            <h5 class="modal-title">Edit</h5>
-            <button class="btn-close" data-bs-dismiss="modal"></button>
-
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-primary languageSubmit" type="submit" name="submit">Submit</button>
+            <button class="btn btn-primary languageUpdate d-none" type="button" onclick="languageUpdate(document.getElementById('languageID').value)">Update</button>
           </div>
-          <form method="post" id="editLangForm">
-            <div class="modal-body">
-              <label for="editLangName" class="mb-2">Language</label>
-              <input class="form-control mb-3" type="text" placeholder="Language" id="editLangName"
-                name="editLanguageName" required>
-              <input type="hidden" id="editLangId">
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-              <button class="btn btn-primary" type="submit" value="submit" name="submit">Submit</button>
-            </div>
-          </form>
-        </div>
+        </form>
+
       </div>
     </div>
-
-    <!-- Delete Modal -->
-    <div class="modal fade" id="deleteButton" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Delete</h5>
-          </div>
-          <form method="post">
-            <div class="modal-body">
-              <label for="deleteLanguageName" class="mb-2">Language</label>
-              <input class="form-control mb-3" type="text" placeholder="language " id="deleteLanguageName"
-                name="deleteLanguageName" required>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-              <button class="btn btn-primary" type="button" value="submit" name="submit">Submit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <?php
-    require_once '../../includes/footer.php';
-    ?>
+  </div>
+  <?php include '../../includes/footer.php'; ?>
+  <!-- JavaScript -->
+<script src="../../assets/js/custom/master/language.js"></script>
 </body>
-
 </html>
