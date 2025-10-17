@@ -46,18 +46,19 @@
                                                                 height="24">
                                                         </span>
                                                     </a>
-                                                    <a href="index.html" class="logo logo-dark">
-                                                        <span class="logo-lg">
-                                                            <img src="assets/images/logo-dark-3.png" alt="" height="24">
-                                                        </span>
-                                                    </a>
+                                                    <!--<a href="index.html" class="logo logo-dark">-->
+                                                    <!--    <span class="logo-lg">-->
+                                                    <!--        <img src="assets/images/logo-dark-3.png" alt="" height="24">-->
+                                                    <!--    </span>-->
+                                                    <!--</a>-->
+                                                    <h3 style="color:#838383;">Resume Builder</h3>
                                                 </div>
                                             </div>
                                             <div class="pt-0">
                                                 <form id="user_login" class=" needs-validation my-4" method="POST" novalidate>
                                                     <div class="form-group mb-3">
                                                         <label for="user-email" class="form-label">Email</label>
-                                                        <input class="form-control" type="text" id="user-email"
+                                                        <input class="form-control" type="email" id="user-email"
                                                             name="user-email" style="background-image: none;" required
                                                             placeholder="Enter your username">
                                                             <div class="invalid-feedback">
@@ -87,7 +88,7 @@
                                                         </div>
                                                         <div class="col-sm-6 text-end">
                                                             <a class='text-muted fs-14'
-                                                                href='auth-recoverpw.html'>Forgot password?</a>
+                                                                href='#'>Forgot password?</a>
                                                         </div>
                                                     </div>
 

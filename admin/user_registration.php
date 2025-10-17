@@ -38,11 +38,12 @@
                                                                 height="24">
                                                         </span>
                                                     </a>
-                                                    <a href="index.php" class="logo logo-dark">
-                                                        <span class="logo-lg">
-                                                            <img src="assets/images/logo-dark-3.png" alt="" height="24">
-                                                        </span>
-                                                    </a>
+                                                  <!--<a href="index.html" class="logo logo-dark">-->
+                                                    <!--    <span class="logo-lg">-->
+                                                    <!--        <img src="assets/images/logo-dark-3.png" alt="" height="24">-->
+                                                    <!--    </span>-->
+                                                    <!--</a>-->
+                                                    <h3 style="color:#838383;">Resume Builder</h3>
                                                 </div>
                                             </div>
                                             <div class="pt-0">
@@ -217,10 +218,6 @@ $('#user_registration').on('submit',function(e){
     let email = $('#reg-email').val();
     let password = $('#reg-password').val();
     let cpassword = $('#reg-confirm-password').val();
-    console.log(firstname);
-    console.log(lastname);
-    console.log(email);
-    console.log(password);
     if(firstname == '' || lastname == '' || email == '' || password == '' || cpassword == ''){
         $('.needs-validation').addClass('was-validated');
     }else{
@@ -231,6 +228,16 @@ $('#user_registration').on('submit',function(e){
             dataType: 'json',
             success:function(response){
                 console.log(response);
+                if (response.success) {
+                    alert('User created successfully');
+                    window.location.href = 'index.php';
+                }else if(response.error_success){
+                    alert(response.error_success);
+                }else if(response.already_found){
+                    alert(response.already_found);
+                }else{
+                    alert('something went wrong');
+                }
             }
         });
     }

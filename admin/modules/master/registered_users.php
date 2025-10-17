@@ -18,9 +18,9 @@ $id = 1;
               <h4 class="fs-18 fw-semibold m-0">Users</h4>
             </div>
             <div class="text-end">
-              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userForm">
+              <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userForm">
                 <i class="ri-add-line"></i> Add
-              </button>
+              </button> -->
             </div>
           </div>
 
@@ -39,13 +39,13 @@ $id = 1;
                             <th scope="col">First Name</th>
                             <th scope="col">Last Name</th>
                             <th scope="col">Full Name</th>
-                            <th scope="col">Username</th>
+                            <!-- <th scope="col">Username</th> -->
                             <th scope="col">Email</th>
-                            <th scope="col">Contact No.</th>
+                            <!-- <th scope="col">Contact No.</th>
                             <th scope="col">Street</th>
                             <th scope="col">Pincode</th>
                             <th scope="col">Country</th>
-                            <th scope="col">Actions</th>
+                            <th scope="col">Actions</th> -->
                           </tr>
                         </thead>
                         <tbody>
@@ -114,9 +114,9 @@ $id = 1;
                                 <td><?= $row['first_name'] ?></td>
                                 <td><?= $row['last_name'] ?></td>
                                 <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
-                                <td></td>
+                                <!-- <td></td> -->
                                 <td><?= $row['email'] ?></td>
-                                <td></td>
+                                <!-- <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -133,7 +133,7 @@ $id = 1;
                                       <i class="ri-delete-bin-6-line"></i>
                                     </button>
                                   </div>
-                                </td>
+                                </td> -->
                               </tr>
                               <?php
                               $id++;

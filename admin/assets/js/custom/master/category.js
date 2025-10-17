@@ -1,10 +1,23 @@
- function loadCategories() {
+//  function loadCategories() {
+//         $.ajax({
+//             url: "../../controller/master/Category.php",
+//             type: "POST",
+//             data:{ action: 'loadData'},
+//             success: function (response) {
+//                 $("#category_table tbody").html(response);
+//             }
+//         });
+//     }
+    function loadCategories() {
         $.ajax({
             url: "../../controller/master/Category.php",
             type: "POST",
-            data:{ action: 'loadData'},
+            data: { action: 'loadData' },
             success: function (response) {
-                $("#category_table tbody").html(response);
+                let table = $('#category_table').DataTable();
+                table.destroy(); // destroy old instance
+                $("#category_table tbody").html(response); // inject new rows
+                $('#category_table').DataTable(); // reinitialize
             }
         });
     }
@@ -150,3 +163,5 @@
             }
         });
     });
+
+   

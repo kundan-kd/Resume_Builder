@@ -1,8 +1,8 @@
 <?php
 
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 
 // echo "helloooo";
@@ -87,8 +87,7 @@ if (isset($_POST['reg_firstname'])) {
     $select = "SELECT * FROM `user_registrations` WHERE `email` = '{$email}'";
     $check = mysqli_query($conn,$select);
     if($check && mysqli_num_rows($check) > 0){  
-        $error = "The user already exists";
-        echo json_encode(["status" => "error", "error1" => $error]);
+        echo json_encode(["already_found" => "The user already exists"]);
         exit;
     }
     else{
@@ -97,10 +96,10 @@ if (isset($_POST['reg_firstname'])) {
         $result = mysqli_query($conn, $insert);
         if (!$result) {
             $error = mysqli_error($conn);
-            echo json_encode(["status" => "error", "error2" => $error]);
+            echo json_encode(["error_success" => "User not created"]);
             exit;
         } else {
-            echo json_encode(["status" => "success"]);
+            echo json_encode(["success" => "New User created successfully"]);
         }
     }
 }

@@ -1,10 +1,23 @@
- function loadCategories() {
+//  function loadCategories() {
+//         $.ajax({
+//             url: "../../controller/master/Plan.php",
+//             type: "POST",
+//             data:{ action: 'loadData'},
+//             success: function (response) {
+//                 $("#plan_table tbody").html(response);
+//             }
+//         });
+//     }
+    function loadCategories() {
         $.ajax({
             url: "../../controller/master/Plan.php",
             type: "POST",
-            data:{ action: 'loadData'},
+            data: { action: 'loadData' },
             success: function (response) {
-                $("#plan_table tbody").html(response);
+                let table = $('#plan_table').DataTable();
+                table.destroy(); // destroy old instance
+                $("#plan_table tbody").html(response); // inject new rows
+                $('#plan_table').DataTable(); // reinitialize
             }
         });
     }

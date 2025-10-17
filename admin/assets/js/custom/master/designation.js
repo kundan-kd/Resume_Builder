@@ -1,10 +1,23 @@
- function loadDesignations() {
+    // function loadDesignations() {
+    //     $.ajax({
+    //         url: "../../controller/master/Designation.php",
+    //         type: "POST",
+    //         data:{ action: 'loadData'},
+    //         success: function (response) {
+    //             $("#designation_table tbody").html(response);
+    //         }
+    //     });
+    // }
+    function loadDesignations() {
         $.ajax({
             url: "../../controller/master/Designation.php",
             type: "POST",
-            data:{ action: 'loadData'},
+            data: { action: 'loadData' },
             success: function (response) {
-                $("#designation_table tbody").html(response);
+                let table = $('#designation_table').DataTable();
+                table.destroy(); // destroy old instance
+                $("#designation_table tbody").html(response); // inject new rows
+                $('#designation_table').DataTable(); // reinitialize
             }
         });
     }

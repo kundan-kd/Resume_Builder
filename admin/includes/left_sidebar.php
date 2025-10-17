@@ -4,26 +4,27 @@
         <div id="sidebar-menu">
 
             <div class="logo-box">
-                <a href="index.php" class="logo logo-light">
+                <!-- <a href="index.php" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="assets/images/logo-sm.png" alt="" height="22">
+                        <img src="../assets/images/logo-sm.png" alt="logo" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/logo-light.png" alt="" height="24">
+                        <img src="../assets/images/logo-light.png" alt="logo" height="24">
                     </span>
-                </a>
-                <a href="index.php" class="logo logo-dark">
+                </a> -->
+                <!-- <a href="index.php" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="assets/images/logo-sm.png" alt="" height="22">
+                        <img src="../assets/images/logo-sm.png" alt="logo" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/logo-dark.png" alt="" height="24">
+                        <img src="../assets/images/logo-dark.png" alt="logo" height="24">
                     </span>
-                </a>
+                </a> -->
+                <h3 class="mt-2" style="color: #6589a1;">Resume Builder</h3>
             </div>
             <ul id="side-menu" style="--bs-sidebar-item-hover: var(--bs-sidebar-item); 
     --bs-sidebar-item-active: var(--bs-sidebar-item);">
-                <li class="menu-title">Menu</li>
+                <!-- <li class="menu-title">Menu</li> -->
                 <li>
                     <a href="#categories" data-bs-toggle="collapse">
                         <i data-feather="home"></i>
@@ -47,7 +48,7 @@
                             <li>
                                 <a href="../master/user_langs.php" class="tp-link">Language Types</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="../master/user_extra_skills.php" class="tp-link">Extra Skill Types</a>
                             </li>
                             <li>
@@ -55,7 +56,7 @@
                             </li>
                             <li>
                                 <a href="../master/user_skill_lists.php" class="tp-link">Skill List Types</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
 
@@ -80,15 +81,17 @@
                     <div class="collapse" id="profiles">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="user_profiles.php" class="tp-link">Profile</a>
+                                <a href="#" class="tp-link">Profile</a>
+                                <!-- <a href="user_profiles.php" class="tp-link">Profile</a> -->
                             </li>
                             <li>
-                                <a href="user_contacts.php" class="tp-link">Contacts</a>
+                                <a href="#" class="tp-link">Contacts</a>
+                                <!-- <a href="user_contacts.php" class="tp-link">Contacts</a> -->
                             </li>
                         </ul>
                     </div>
 
-                    <a  onclick="myLogout()">
+                    <a  onclick="logout()">
                         <i data-feather="home"></i>
                         <span>Logout</span>
                         <!-- <span class="menu-arrow"></span> -->

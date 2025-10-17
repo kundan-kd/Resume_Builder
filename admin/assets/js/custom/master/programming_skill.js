@@ -1,10 +1,23 @@
- function loadCategories() {
+//  function loadCategories() {
+//         $.ajax({
+//             url: "../../controller/master/ProgrammingSkill.php",
+//             type: "POST",
+//             data:{ action: 'loadData'},
+//             success: function (response) {
+//                 $("#programmingSkill_table tbody").html(response);
+//             }
+//         });
+//     }
+    function loadCategories() {
         $.ajax({
             url: "../../controller/master/ProgrammingSkill.php",
             type: "POST",
-            data:{ action: 'loadData'},
+            data: { action: 'loadData' },
             success: function (response) {
-                $("#programmingSkill_table tbody").html(response);
+                let table = $('#programmingSkill_table').DataTable();
+                table.destroy(); // destroy old instance
+                $("#programmingSkill_table tbody").html(response); // inject new rows
+                $('#programmingSkill_table').DataTable(); // reinitialize
             }
         });
     }

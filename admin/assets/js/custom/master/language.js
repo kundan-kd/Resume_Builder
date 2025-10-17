@@ -1,10 +1,23 @@
- function loadCategories() {
+    // function loadCategories() {
+    //         $.ajax({
+    //             url: "../../controller/master/Language.php",
+    //             type: "POST",
+    //             data:{ action: 'loadData'},
+    //             success: function (response) {
+    //                 $("#language_table tbody").html(response);
+    //             }
+    //         });
+    //     }
+    function loadCategories() {
         $.ajax({
             url: "../../controller/master/Language.php",
             type: "POST",
-            data:{ action: 'loadData'},
+            data: { action: 'loadData' },
             success: function (response) {
-                $("#language_table tbody").html(response);
+                let table = $('#language_table').DataTable();
+                table.destroy(); // destroy old instance
+                $("#language_table tbody").html(response); // inject new rows
+                $('#language_table').DataTable(); // reinitialize
             }
         });
     }
