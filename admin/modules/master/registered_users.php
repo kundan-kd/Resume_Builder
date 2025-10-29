@@ -32,7 +32,7 @@ $id = 1;
                   <div class="row g-3">
                     <div class="col-12">
                       <!-- removed .table-responsive -->
-                      <table id="datatable" class="table table-bordered">
+                      <table id="users-table" class="table table-bordered">
                         <thead>
                           <tr>
                             <th scope="col">#</th>
@@ -234,9 +234,10 @@ $id = 1;
 
 
   </div>
-  <?php
-  require_once '../../includes/footer.php';
-  ?>
+  <?php require_once '../../includes/footer.php'; ?>
+  <script>
+    $('#users-table').DataTable();
+  </script>
 </body>
 
 </html>

@@ -48,7 +48,7 @@
                             <li>
                                 <a href="../master/user_langs.php" class="tp-link">Language Types</a>
                             </li>
-                            <!-- <li>
+                             <li>
                                 <a href="../master/user_extra_skills.php" class="tp-link">Extra Skill Types</a>
                             </li>
                             <li>
@@ -56,7 +56,7 @@
                             </li>
                             <li>
                                 <a href="../master/user_skill_lists.php" class="tp-link">Skill List Types</a>
-                            </li> -->
+                            </li>
                         </ul>
                     </div>
 
@@ -81,11 +81,11 @@
                     <div class="collapse" id="profiles">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="#" class="tp-link">Profile</a>
-                                <!-- <a href="user_profiles.php" class="tp-link">Profile</a> -->
+                                <!-- <a href="#" class="tp-link">Profile</a> -->
+                                <a href="user_profiles.php" class="tp-link">Profile</a>
                             </li>
                             <li>
-                                <a href="#" class="tp-link">Contacts</a>
+                                <!-- <a href="#" class="tp-link">Contacts</a> -->
                                 <!-- <a href="user_contacts.php" class="tp-link">Contacts</a> -->
                             </li>
                         </ul>

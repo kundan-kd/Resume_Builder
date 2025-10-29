@@ -5,7 +5,7 @@
        header("Location: /resume_builder/admin/");
         exit();
     }
-    // $select = "SELECT * FROM `user_registrations` WHERE `email` = '{$_SESSION['user_email']}' ";
+    $select = "SELECT * FROM `user_registrations` WHERE `email` = '{$_SESSION['user_email']}' ";
     // $result = mysqli_query($conn,$select);
     // if($result && mysqli_num_rows($result) > 0){
     //     $row = mysqli_fetch_assoc($result); 

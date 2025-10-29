@@ -2,6 +2,20 @@
 require_once '../../includes/header.php';
 require_once '../../includes/connection.php';
 $id = 1;
+if (isset($_SESSION['user_email'])) {
+    $email = mysqli_real_escape_string($conn, $_SESSION['user_email']);
+    $select = "SELECT * FROM `user_registrations` WHERE `email` = '$email'";
+    $result = mysqli_query($conn, $select);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+    } else {
+        echo "No user found.";
+    }
+} else {
+    echo "User email not set in session.";
+}
+
 ?>
 
 <body data-menu-color="light" data-sidebar="default">
@@ -25,24 +39,24 @@ $id = 1;
                             <form id="profile-reg" method="POST" enctype="multipart/form-data">
                                 <div class="row g-3">
 
-                                    <div class="col-4">
+                                   <div class="col-4">
                                         <label for="first_name" class="form-label">First Name</label>
                                         <input type="text" class="form-control" id="first_name" name="first_name"
-                                            value="<?php echo $_SESSION['first_name'] ?>">
+                                            value="<?php echo $row['first_name']?>">
                                     </div>
 
                                     <div class="col-4">
                                         <label for="last_name" class="form-label">Last Name</label>
                                         <input type="text" class="form-control" id="last_name" name="last_name"
-                                            value="<?php echo $_SESSION['last_name'] ?>">
+                                            value="<?php echo $row['last_name'] ?>">
                                     </div>
-
-                                    <!-- <div class="col-4">
-                                        <label for="full-name" class="form-label">Full Name</label>
-                                        <input type="text" class="form-control" id="full-name" name="full-name"
-                                            placeholder="Enter your full name" required>
-                                    </div> -->
-
+                                    
+                                    <div class="col-4">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                            value="<?php echo $row['email'] ?>">
+                                    </div>
+                                    
                                     <div class="col-4">
                                         <label for="user-name" class="form-label">Username</label>
                                         <div class="input-group">
@@ -65,78 +79,74 @@ $id = 1;
                                             placeholder="">
                                     </div>
 
-                                    <div class="col-4">
-                                        <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email"
-                                            value="<?= $_SESSION['email'] ?>">
-                                    </div>
+                                    
 
                                     <div class="col-4">
                                         <label for="personal_no" class="form-label">Personal No</label>
                                         <input type="number" class="form-control" id="personal_no" name="personal_no"
-                                            value="<?= $_SESSION['personal_no'] ?>">
+                                            value="">
                                     </div>
 
                                     <div class="col-4">
                                         <label for="support_no" class="form-label">Support No</label>
                                         <input type="number" class="form-control" id="support_no" name="support_no"
-                                            value="<?= $_SESSION['support_no'] ?>" r>
+                                            value="" >
                                     </div>
 
                                     <div class="col-4">
                                         <label for="office_no" class="form-label">Office No</label>
                                         <input type="number" class="form-control" id="office_no" name="office_no"
-                                            value="<?= $_SESSION['office_no'] ?>">
+                                            value="">
                                     </div>
 
                                     <div class="col-4">
                                         <label for="residence" class="form-label">Residence</label>
                                         <input type="text" class="form-control" id="residence" name="residence"
-                                            placeholder="" value="<?php echo $user_profile['residence'];  ?>">
+                                            placeholder="" value="">
                                     </div>
 
                                     <div class="col-4">
                                         <label for="street" class="form-label">Street</label>
                                         <input type="text" class="form-control" id="street" name="street"
-                                            value="<?= $_SESSION['street'] ?>">
+                                            value="">
                                     </div>
 
                                     <div class="col-4">
                                         <label for="city" class="form-label">City</label>
-                                        <input type="text" class="form-control" id="city" name="city" value="<?= $user_profile['city']; ?>">
+                                        <input type="text" class="form-control" id="city" name="city" value="">
                                     </div>
 
                                     <div class="col-4">
                                         <label for="state" class="form-label">State</label>
-                                        <input type="text" class="form-control" id="state" name="state" placeholder="" value="<?= $user_profile['state'] ?>">
+                                        <input type="text" class="form-control" id="state" name="state" placeholder="" value="">
                                     </div>
 
                                     <div class="col-4">
                                         <label for="pincode" class="form-label">Pincode</label>
                                         <input type="number" class="form-control" id="pincode" name="pincode"
-                                            value="<?= $_SESSION['pincode'] ?>">
+                                            value="">
                                     </div>
 
                                     <div class="col-4">
                                         <label for="country" class="form-label">Country</label>
                                         <select class="form-select" id="country" name="country">
                                             <option value="">-- Select Country --</option>
-                                            <option value="India" <?= (isset($_SESSION['country']) && $_SESSION['country'] == 'India') ? 'selected' : '' ?>>India</option>
-                                            <option value="USA" <?= (isset($_SESSION['country']) && $_SESSION['country'] == 'USA') ? 'selected' : '' ?>>USA</option>
-                                            <option value="China" <?= (isset($_SESSION['country']) && $_SESSION['country'] == 'China') ? 'selected' : '' ?>>China</option>
+                                            <option value="India">India</option>
+                                            <option value="USA">USA</option>
+                                            <option value="China">China</option>
                                         </select>
                                     </div>
 
                                     <div class="col-4">
                                         <label for="telegram_id" class="form-label">Telegram</label>
                                         <input type="text" class="form-control" id="telegram_id" name="telegram_id"
-                                            value="<?= $_SESSION['telegram'] ?>">
+                                            value="">
                                     </div>
 
                                     <div class="col-4">
                                         <label for="skype_id" class="form-label">Skype </label>
                                         <input type="text" class="form-control" id="skype_id" name="skype_id"
-                                            value="<?= $_SESSION['skype'] ?>">
+                                            value="">
                                     </div>
 
                                     <div class="col-4">
@@ -151,21 +161,21 @@ $id = 1;
                                     <div class="col-4">
                                         <label for="experience" class="form-label">Experience</label>
                                         <input type="text" class="form-control" id="experience" name="experience"
-                                            placeholder="Enter Experience" value="<?= $user_profile['experience'];?>">
+                                            placeholder="Enter Experience" value="">
                                     </div>
                                     <div class="col-4">
                                         <label for="projects_completed" class="form-label">Projects Completed</label>
                                         <input type="number" class="form-control" id="projects_completed"
-                                            name="projects_completed" placeholder="Enter Projects Completed" value="<?=  $user_profile['experience']; ?>">
+                                            name="projects_completed" placeholder="Enter Projects Completed" value="">
                                     </div>
                                     <div class="col-4">
                                         <label for="customer_count" class="form-label">Customer Count</label>
                                         <input type="number" class="form-control" id="customer_count"
-                                            name="customer_count" placeholder="Enter Customer Count" value="<?= $user_profile['customer_count']; ?>">
+                                            name="customer_count" placeholder="Enter Customer Count" value="">
                                     </div>
                                     <div class="col-4">
                                         <label for="award_count" class="form-label">Award Count</label>
-                                        <input type="number" class="form-control" id="award_count" name="award_count" value="<?= $user_profile['award_count']; ?>"
+                                        <input type="number" class="form-control" id="award_count" name="award_count" value=""
                                             placeholder="Enter Award Count">
                                     </div>
 
