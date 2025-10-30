@@ -36,100 +36,60 @@ if (isset($_SESSION['user_email'])) {
                             <h5 class="mb-0">Update Profile</h5>
                         </div>
                         <div class="card-body">
-                            <form id="profile-reg" method="POST" enctype="multipart/form-data">
+                            <form method="POST" id="profile_details" class="needs-validation" novalidate>
                                 <div class="row g-3">
 
                                    <div class="col-4">
                                         <label for="first_name" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="first_name" name="first_name"
-                                            value="<?php echo $row['first_name']?>">
+                                        <input type="text" class="form-control" id="first_name" name="first_name" style="background-image: none;"
+                                            value="<?php echo $row['first_name']?>" required>
                                     </div>
 
                                     <div class="col-4">
                                         <label for="last_name" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="last_name" name="last_name"
-                                            value="<?php echo $row['last_name'] ?>">
+                                        <input type="text" class="form-control" id="last_name" name="last_name" style="background-image: none;"
+                                            value="<?php echo $row['last_name'] ?>" required>
                                     </div>
                                     
                                     <div class="col-4">
                                         <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email"
-                                            value="<?php echo $row['email'] ?>">
+                                        <input type="email" class="form-control" id="email" name="email" style="background-image: none;"
+                                            value="<?php echo $row['email'] ?>" required>
                                     </div>
-                                    
                                     <div class="col-4">
-                                        <label for="user-name" class="form-label">Username</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">@</span>
-                                            <input type="text" class="form-control" id="user-name" name="user-name"
-                                                placeholder="">
-                                        </div>
+                                        <label for="mobile" class="form-label">Mobile No</label>
+                                        <input type="number" class="form-control" id="mobile" name="mobile" style="background-image: none;"
+                                            value="<?= $row['mobile']?>" required>
                                     </div>
-
-
                                     <div class="col-4">
-                                        <label for="password" class="form-label">Password</label>
-                                        <input type="password" class="form-control" id="password1" name="password1"
-                                            placeholder="">
+                                        <label for="dob" class="form-label">DOB</label>
+                                        <input type="date" class="form-control" id="dob" name="dob" value="<?= $row['dob']?>" placeholder="" style="background-image: none;" required>
                                     </div>
 
                                     <div class="col-4">
-                                        <label for="designation" class="form-label">Designation</label>
-                                        <input type="text" class="form-control" id="designation" name="designation"
-                                            placeholder="">
+                                        <label for="address" class="form-label">Address</label>
+                                        <input type="text" class="form-control" id="address" name="address" style="background-image: none;"
+                                            placeholder="" value="<?= $row['address']?>" required>
                                     </div>
-
-                                    
-
-                                    <div class="col-4">
-                                        <label for="personal_no" class="form-label">Personal No</label>
-                                        <input type="number" class="form-control" id="personal_no" name="personal_no"
-                                            value="">
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="support_no" class="form-label">Support No</label>
-                                        <input type="number" class="form-control" id="support_no" name="support_no"
-                                            value="" >
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="office_no" class="form-label">Office No</label>
-                                        <input type="number" class="form-control" id="office_no" name="office_no"
-                                            value="">
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="residence" class="form-label">Residence</label>
-                                        <input type="text" class="form-control" id="residence" name="residence"
-                                            placeholder="" value="">
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="street" class="form-label">Street</label>
-                                        <input type="text" class="form-control" id="street" name="street"
-                                            value="">
-                                    </div>
-
                                     <div class="col-4">
                                         <label for="city" class="form-label">City</label>
-                                        <input type="text" class="form-control" id="city" name="city" value="">
+                                        <input type="text" class="form-control" id="city" name="city" value="<?= $row['city']?>" style="background-image: none;" required>
                                     </div>
 
                                     <div class="col-4">
                                         <label for="state" class="form-label">State</label>
-                                        <input type="text" class="form-control" id="state" name="state" placeholder="" value="">
+                                        <input type="text" class="form-control" id="state" name="state" placeholder="" value="<?= $row['state']?>" style="background-image: none;" required>
                                     </div>
 
                                     <div class="col-4">
                                         <label for="pincode" class="form-label">Pincode</label>
-                                        <input type="number" class="form-control" id="pincode" name="pincode"
-                                            value="">
+                                        <input type="number" class="form-control" id="pincode" name="pincode" style="background-image: none;"
+                                            value="<?= $row['pincode']?>" required>
                                     </div>
 
                                     <div class="col-4">
                                         <label for="country" class="form-label">Country</label>
-                                        <select class="form-select" id="country" name="country">
+                                        <select class="form-select" id="country" name="country" style="background-image: none;" value="<?= $row['country']?>" required>
                                             <option value="">-- Select Country --</option>
                                             <option value="India">India</option>
                                             <option value="USA">USA</option>
@@ -138,56 +98,23 @@ if (isset($_SESSION['user_email'])) {
                                     </div>
 
                                     <div class="col-4">
-                                        <label for="telegram_id" class="form-label">Telegram</label>
-                                        <input type="text" class="form-control" id="telegram_id" name="telegram_id"
-                                            value="">
+                                        <label for="linkedin" class="form-label">LinkedIn</label>
+                                        <input type="text" class="form-control" id="linkedin" name="linkedin" style="background-image: none;"
+                                            value="<?= $row['linkedin']?>">
                                     </div>
-
-                                    <div class="col-4">
-                                        <label for="skype_id" class="form-label">Skype </label>
-                                        <input type="text" class="form-control" id="skype_id" name="skype_id"
-                                            value="">
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="age" class="form-label">Dob</label>
-                                        <input type="date" class="form-control" id="age" name="age" placeholder="">
-                                    </div>
-                                    <!-- <div class="col-4">
-                                        <label for="punchline" class="form-label">Punchline</label>
-                                        <input type="text" class="form-control" id="punchline" name="punchline"
-                                            placeholder="Enter Punchline">
-                                    </div> -->
                                     <div class="col-4">
                                         <label for="experience" class="form-label">Experience</label>
-                                        <input type="text" class="form-control" id="experience" name="experience"
-                                            placeholder="Enter Experience" value="">
+                                        <input type="text" class="form-control" id="experience" name="experience" style="background-image: none;"
+                                            placeholder="Enter Experience" value="<?= $row['experience']?>" required>
                                     </div>
                                     <div class="col-4">
-                                        <label for="projects_completed" class="form-label">Projects Completed</label>
-                                        <input type="number" class="form-control" id="projects_completed"
-                                            name="projects_completed" placeholder="Enter Projects Completed" value="">
+                                        <label for="project" class="form-label">Projects Completed</label>
+                                        <input type="number" class="form-control" id="project"
+                                            name="project" placeholder="Enter Projects Completed" style="background-image: none;" value="<?= $row['project']?>">
                                     </div>
-                                    <div class="col-4">
-                                        <label for="customer_count" class="form-label">Customer Count</label>
-                                        <input type="number" class="form-control" id="customer_count"
-                                            name="customer_count" placeholder="Enter Customer Count" value="">
-                                    </div>
-                                    <div class="col-4">
-                                        <label for="award_count" class="form-label">Award Count</label>
-                                        <input type="number" class="form-control" id="award_count" name="award_count" value=""
-                                            placeholder="Enter Award Count">
-                                    </div>
-
-                                    <!-- Reusable Submit Section -->
                                     <div class="d-flex justify-content-end mt-4">
-                                        <button type="submit" id="" name="" class="btn btn-primary">Submit</button>
+                                        <button type="submit" id="" name="" class="btn btn-primary">Update</button>
                                     </div>
-
-                                    <!-- <div class="mt-4 d-flex justify-content-end gap-2"> -->
-                                    <!-- <button type="button" class="btn btn-danger">Close</button> -->
-                                    <!-- <button type="submit" name="submit" class="btn btn-primary">Submit</button>
-                                    </div> -->
                                 </div>
                             </form>
                         </div>
@@ -1348,6 +1275,8 @@ if (isset($_SESSION['user_email'])) {
              <?php
     require_once '../../includes/footer.php';
     ?>
+     <!-- JavaScript -->
+<script src="../../assets/js/custom/profile/profile.js"></script>
 </body>
 
 </html>
