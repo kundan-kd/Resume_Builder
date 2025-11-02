@@ -84,3 +84,26 @@
             });
         }
         </script>
+        <?php
+
+        // function getdatafromtable($con,$table,$field,$cond){
+        // $query="select ".$field." from ".$table. " where ".$cond;
+        // $grs = mysqli_query($con,$query) or die("getdatafromtable error--".mysqli_error($con));
+        // $num = mysqli_num_rows($grs);
+        // if($num>0)
+        // {    
+        //     $data = mysqli_fetch_assoc($grs);
+        //     $val = $data[$field];
+        // } 
+        // else
+        // {
+        //     $val="";
+        // }
+        // mysqli_free_result($grs);
+        // return $val;
+        // } 
+
+
+        
+
+        ?>

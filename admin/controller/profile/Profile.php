@@ -41,4 +41,37 @@ if (isset($_POST['first_name']) && isset($_SESSION['user_id'])) {
         echo json_encode(['error_success' => 'Profile not updated']);
     }
 }
+
+if(isset($_POST['skillName']) && isset($_SESSION['user_id'])){
+    $userId = (int) $_SESSION['user_id']; // Cast to int for safety
+    $skillName = mysqli_real_escape_string($conn,$_POST['skillName']);
+    $skillEfficiency = mysqli_real_escape_string($conn,$_POST['skillEfficiency']);
+    $insert = "INSERT INTO user_programming_languages(`user_id`,`programming_language_id`,`user_efficiency`)values($userId,$skillName,$skillEfficiency)";
+    if(mysqli_query($conn,$insert)){
+        echo json_encode(['success'=>'Skill added sucesfully']);
+    }else{
+        echo json_encode(['Skill not added']);
+    }
+}
+
+if (isset($_POST['GetProgrammingSkill']) && isset($_SESSION['user_id'])) {
+     $id = $_SESSION['user_id'];
+     $query = "
+        SELECT user_programming_languages.*, programming_skill_types.name
+        FROM user_programming_languages
+        JOIN programming_skill_types ON user_programming_languages.programming_language_id = programming_skill_types.id
+        WHERE user_programming_languages.user_id = $id
+    ";
+
+    $result = mysqli_query($conn, $query);
+
+    if ($result) {
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        echo json_encode(['success' => true, 'data' => $data]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Query failed']);
+    }
+
+}
+
 ?>

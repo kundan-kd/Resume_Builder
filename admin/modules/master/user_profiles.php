@@ -1,7 +1,7 @@
 <?php
 require_once '../../includes/header.php';
 require_once '../../includes/connection.php';
-$id = 1;
+$userId = $_SESSION['user_id'];
 if (isset($_SESSION['user_email'])) {
     $email = mysqli_real_escape_string($conn, $_SESSION['user_email']);
     $select = "SELECT * FROM `user_registrations` WHERE `email` = '$email'";
@@ -120,266 +120,15 @@ if (isset($_SESSION['user_email'])) {
                         </div>
                     </div>
 
-                    <!-- <div class="card mt-3 skill-card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Programming Skill To Enter</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="select-form" action="skill_viewer.php" method="POST">
-
-                                <div class="row mb-5">
-                                    <div class="col-md-3">
-                                        <label for="skill-type" class="form-label">Skill Type</label>
-                                        <select id="skill-type" class="form-select" aria-label="Skills Selection">
-                                            <option value="" selected></option>
-                                            <option value="Design">web Development</option>
-                                            <option value="Soft-Skills">Ui/UX Design</option>
-                                            </select>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label for="skill-name" class="form-label">Service Name</label>
-                                        <select id="skill-name" class="form-select" aria-label="Skill Type Selection">
-                                            <option value="" selected></option>
-                                            <option value="HTML5">HTML5</option>
-
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-3 mt-4">
-                                        <label class="visually-hidden form-label" for="skill-measure">Percentage</label>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" id="skill-measure" min="0"
-                                                max="100" placeholder="Percentage">
-                                            <div class="input-group-text">%</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3 mt-4">
-                                        <button type="button" class="btn btn-success" id="addButton"
-                                            onclick="addRow()">Add</button>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="table-responsive col-md-6">
-                                        <table class="table mb-0" id="skill-table">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">ID</th>
-                                                    <th scope="col">Skill Type</th>
-                                                    <th scope="col">Skill Name</th>
-                                                    <th scope="col">Skill Measure</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td scope="row">1</td>
-                                                    <td scope="row">Web Development</td>
-                                                    <td scope="row">Html</th>
-                                                    <td scope="row">100</td>
-                                                </tr>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div class="alert-container col-md-12"></div>
-                                <div class="col-md-12 mt-3 text-end">
-                                    <button type="submit" class="btn btn-primary" style="display: none;"
-                                        id="invisibleButton">Submit</button>
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </div> -->
-
-                    <!-- <div class="card mt-3 skill-card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">User Profiles</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="select-form" action="skill_viewer.php" method="POST">
-                                <div class="row g-3 mb-5">
-                                    <!- <div class="col-md-3">
-                                        <label for="user_id" class="form-label">User ID</label>
-                                        <input type="text" class="form-control" id="user_id" name="user_id"
-                                            placeholder="Enter User ID">
-                                    </div> -->
-                    <!-- <div class="col-md-3">
-                                        <label for="residence" class="form-label">Residence</label>
-                                        <input type="text" class="form-control" id="residence" name="residence"
-                                            placeholder="Enter Residence">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="city" class="form-label">City</label>
-                                        <input type="text" class="form-control" id="city" name="city"
-                                            placeholder="Enter City">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="state" class="form-label">State</label>
-                                        <input type="text" class="form-control" id="state" name="state"
-                                            placeholder="Enter State">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="pincode" class="form-label">Pincode</label>
-                                        <input type="number" class="form-control" id="pincode" name="pincode"
-                                            placeholder="Enter Pincode">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="age" class="form-label">Age</label>
-                                        <input type="number" class="form-control" id="age" name="age"
-                                            placeholder="Enter Age">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="punchline" class="form-label">Punchline</label>
-                                        <input type="text" class="form-control" id="punchline" name="punchline"
-                                            placeholder="Enter Punchline">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="experience" class="form-label">Experience</label>
-                                        <input type="text" class="form-control" id="experience" name="experience"
-                                            placeholder="Enter Experience">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="projects_completed" class="form-label">Projects Completed</label>
-                                        <input type="number" class="form-control" id="projects_completed"
-                                            name="projects_completed" placeholder="Enter Projects Completed">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="customer_count" class="form-label">Customer Count</label>
-                                        <input type="number" class="form-control" id="customer_count"
-                                            name="customer_count" placeholder="Enter Customer Count">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="award_count" class="form-label">Award Count</label>
-                                        <input type="number" class="form-control" id="award_count" name="award_count"
-                                            placeholder="Enter Award Count">
-                                    </div> -->
-
-                    <!-- <div class="col-md-3 mt-4">
-                                        <button type="button" class="btn btn-success" id="addButton"
-                                            onclick="addRow()">Add</button>
-                                    </div> -->
-                    <!-- </div> -->
-
-                    <!-- <div class="table-responsive">
-                                    <table class="table mb-0" id="skill-table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">ID</th>
-                                                <th scope="col">Skill Type</th>
-                                                <th scope="col">Skill Name</th>
-                                                <th scope="col">Skill Measure</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td scope="row">1</td>
-                                                <td>Web Development</td>
-                                                <td>Html</td>
-                                                <td>100</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div> -->
-                    <!-- 
-                                <div class="alert-container mt-3"></div>
-                                <div class="text-end mt-3">
-                                    <button type="submit" class="btn btn-primary" style="display: none;"
-                                        id="invisibleButton">Submit</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>  -->
-                    <!-- 
-                    <div class="card mt-3 skill-card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">User Services</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="select-form" action="skill_viewer.php" method="POST">
-
-                                <div class="row mb-5">
-                                    <div class="col-md-3">
-                                        <label for="skill-type" class="form-label">Service Type</label>
-                                        <select id="skill-type" class="form-select" aria-label="Skills Selection">
-                                            <option value="" selected disabled>-- Select Service Type --</option>
-                                            <option value="Design">web Development</option>
-                                            <option value="Soft-Skills">Ui/UX Design</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label for="skill-name" class="form-label">Service Name</label>
-                                        <select id="skill-name" class="form-select" aria-label="Skill Type Selection">
-                                            <option value="" selected disabled>-- Select Service Name--</option>
-                                            <option value="HTML5">HTML5</option>
-
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label class="form-label" for="skill-measure">Efficiency</label>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" id="skill-measure" min="0"
-                                                max="100" placeholder="Percentage">
-                                            <div class="input-group-text">%</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3 mt-4">
-                                        <button type="button" class="btn btn-success" id="addButton"
-                                            onclick="addRow()">Add</button>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="table-responsive col-md-6">
-                                        <table class="table mb-0" id="skill-table">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">ID</th>
-                                                    <th scope="col">Service Type</th>
-                                                    <th scope="col">Service Name</th>
-                                                    <th scope="col">Service Measure</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td scope="row">1</td>
-                                                    <td scope="row">Web Development</td>
-                                                    <td scope="row">Html</th>
-                                                    <td scope="row">100</td>
-                                                </tr>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div class="alert-container col-md-12"></div>
-                                <div class="col-md-12 mt-3 text-end">
-                                    <button type="submit" class="btn btn-primary" style="display: none;"
-                                        id="invisibleButton">Submit</button>
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </div> -->
-
                     <!-- Programming Cardd -->
                     <div class="card mt-3 skill-card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Programming Skill</h5>
                         </div>
                         <div class="card-body">
-                            <form id="profile-prog" method="POST">
+                            <form id="profile_programmingSkill" method="POST" class="needs-validation" novalidate>
+                            <div class="row md-5">
 
-                                <div class="row mb-5">
                                     <!-- <div class="col-md-3">
                                         <label for="skill-type" class="form-label">Skill Type</label>
                                         <select id="skill-type" class="form-select" aria-label="Skills Selection">
@@ -392,7 +141,7 @@ if (isset($_SESSION['user_email'])) {
                                     <div class="col-md-3">
                                         <label for="skill-name" class="form-label">Skill Name</label>
                                         <select id="programming-skill-name" class="form-select"
-                                            aria-label="Skill Type Selection">
+                                            aria-label="Skill Type Selection" style="background-image: none;;" required>
                                             <option value="" selected disabled>-- Select Skill Name --</option>
                                             <?php $select = "SELECT * FROM `programming_skill_types`";
                                             $result = mysqli_query($conn, $select);
@@ -415,35 +164,31 @@ if (isset($_SESSION['user_email'])) {
                                         <label class=" form-label" for="programming-skill-measure">Efficiency</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" id="programming-skill-measure"
-                                                min="0" max="100" placeholder="Percentage">
+                                                min="0" max="100" placeholder="Percentage" style="background-image: none;" required>
                                             <div class="input-group-text">%</div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-3 mt-4">
-                                        <button type="button" class="btn btn-success" id="addButton"
+                                        <button type="submit" class="btn btn-success" id="addButton"
                                             onclick="addRowProgrammingSkill()">Add</button>
                                     </div>
                                 </div>
+                            </form>
 
                                 <div class="row">
                                     <div class="table-responsive col-md-6">
-                                        <table class="table mb-0" id="profile-prog-tab">
-                                            <!-- <thead> -->
-                                            <!-- <tr>
+                                        <table class="table table-striped" id="profile-prog-tab">
+                                            <thead>
+                                            <tr>
                                                     <th scope="col">#</th>
                                                     <th scope="col">Skill Name</th>
                                                     <th scope="col">Skill Measure</th>
-                                                </tr> -->
-                                            <!-- </thead> -->
-                                            <tbody>
-                                                <!-- <tr>
-                                                    <td scope="row">1</td>
-                                                   
-                                                    <td scope="row">Html</th>
-                                                    <td scope="row">100</td>
+                                                    <!-- <th scope="col">Delete</th> -->
                                                 </tr>
-                                               -->
+                                            </thead>
+                                            <tbody>
+                                               <!-- data appended using function -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -457,7 +202,7 @@ if (isset($_SESSION['user_email'])) {
                                 <div class="d-flex justify-content-end mt-4">
                                     <button type="submit" id="" name="" class="btn btn-primary">Update</button>
                                 </div>
-                            </form>
+                            
                         </div>
                     </div>
                     <!-- Programming Card end -->
@@ -542,74 +287,6 @@ if (isset($_SESSION['user_email'])) {
 
                     <!-- Language Card end -->
 
-
-                    <!-- <div class="card mt-3 skill-card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">User Reviews</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="review-form" action="review_viewer.php" method="POST">
-                                <div class="row g-3 mb-5">
-                                  
-
-                                    <div class="col-md-3">
-                                        <label for="reviewer_name" class="form-label">Reviewer Name</label>
-                                        <input type="text" class="form-control" id="reviewer_name" name="reviewer_name"
-                                            placeholder="Enter Reviewer Name">
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label for="designation_id" class="form-label">Designation ID</label>
-                                        <input type="text" class="form-control" id="designation_id"
-                                            name="designation_id" placeholder="Enter Designation ID">
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <label for="rating" class="form-label">Rating</label>
-                                        <input type="number" class="form-control" id="rating" name="rating" min="0"
-                                            max="5" placeholder="Enter Rating">
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label for="review" class="form-label">Review</label>
-                                        <textarea class="form-control" id="review" name="review" rows="3"
-                                            placeholder="Enter Review"></textarea>
-                                    </div>
-
-                                    <div class="col-md-3 mt-4">
-                                        <button type="submit" class="btn btn-success">Add</button>
-                                    </div>
-                                </div>
-
-                                <div class="table-responsive">
-                                    <table class="table mb-0" id="review-table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Reviewer Name</th>
-                                                <th scope="col">Designation ID</th>
-                                                <th scope="col">Review</th>
-                                                <th scope="col">Rating</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>John Doe</td>
-                                                <td>101</td>
-                                                <td>Excellent service</td>
-                                                <td>5</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="alert-container mt-3"></div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
 
                     <!-- Project Card -->
                     <div class="card mt-3 skill-card">
@@ -1276,7 +953,10 @@ if (isset($_SESSION['user_email'])) {
     require_once '../../includes/footer.php';
     ?>
      <!-- JavaScript -->
-<script src="../../assets/js/custom/profile/profile.js"></script>
+     <script>
+         const user_id = <?php echo json_encode($userId);?>;
+    </script>
+         <script src="../../assets/js/custom/profile/profile.js"></script>
 </body>
 
 </html>
