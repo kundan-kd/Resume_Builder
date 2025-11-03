@@ -82,7 +82,7 @@
                         <ul class="nav-second-level">
                             <li>
                                 <!-- <a href="#" class="tp-link">Profile</a> -->
-                                <a href="user_profiles.php" class="tp-link">Profile</a>
+                                <a href="../master/user_profiles.php" class="tp-link">Profile</a>
                             </li>
                             <li>
                                 <!-- <a href="#" class="tp-link">Contacts</a> -->
