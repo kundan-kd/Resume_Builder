@@ -90,7 +90,7 @@ blockquote {
   border-color: #FFC107
 }
 
-.user-contact-form .art-input.art-active+label, .user-contact-form .art-input:focus+label {
+.art-contact-form .art-input.art-active+label, .art-contact-form .art-input:focus+label {
   background: #FFC107;
 }
 

@@ -1,3 +1,5 @@
+
+
 $('#profile-qualification').on('submit', function(e){
     e.preventDefault();
     // alert();
@@ -6,17 +8,10 @@ $('#profile-qualification').on('submit', function(e){
     let start_date = $('#qualification-start-date').val();
     let end_date = $('#qualification-end-date').val();
     let certification = $('#certification').val();
-    let image = $('#qualification-upload').val();
+    let image = $('#qualification-upload').val() || '';
     let desc = $('#description').val();
-    // console.log(qualification);
-    // console.log(qualification_name);
-    // console.log(start_date);
-    // console.log(end_date);
-    // console.log(certification);
-    // console.log(image);
-    // console.log(desc);
     if(!qualification || !start_date || !end_date || !certification || !image || !desc){
-        $('.needs-validation').addClass('was-validated');
+        $('#profile-qualification .needs-validation').addClass('was-validated');
         return;
     }else{
         $('#qualification-table tbody').append(`
@@ -33,39 +28,90 @@ $('#profile-qualification').on('submit', function(e){
     }
 });
 
-function updateQualifications(){
-    let qualification = $('select[name="qualification[]"]').map(function(){return $(this).val();}).get();
-    let start_date = $('input[name="qualification-start-date[]"]').map(function(){return $(this).val();}).get();
-    let end_date = $('input[name="qualification-end-date[]"]').map(function(){return $(this).val();}).get();
-    let certification = $('input[name="certification[]"]').map(function(){return $(this).val();}).get();
-    let image = $('input[name="qualification-upload[]"]').map(function(){return $(this).val();}).get();
-    let desc = $('input[name="description[]"]').map(function(){return $(this).val();}).get();
-    if (qualification.length == 0 || start_date.length == 0 || end_date.length == 0 || certification.length == 0 || desc.length == 0) {
-        $('.needs-validation').addClass('was-validated');
+function updateQualifications(event) {
+    if (event) event.preventDefault(); // prevent default submit behavior
+
+    const form = document.getElementById('profile-qualification');
+    const formData = new FormData(form);
+
+    // Optional: Basic client-side validation
+    const qualification = formData.getAll('qualification[]');
+    const startDates = formData.getAll('start_date[]');
+    const endDates = formData.getAll('end_date[]');
+    const certifications = formData.getAll('certification[]');
+    const descriptions = formData.getAll('description[]');
+
+    if (
+        qualification.includes('') ||
+        startDates.includes('') ||
+        endDates.includes('') ||
+        certifications.includes('') ||
+        descriptions.includes('')
+    ) {
         toastErrorAlert('Please fill all required fields');
         return;
-    } else {
-            $.ajax({
-            url:"../../controller/profile/ProfileTwo.php",
-            type:"POST",
-            data:{qualification:qualification,start_date:start_date,end_date:end_date,certification:certification,image:image,desc:desc},
-            success:function(response){
-                console.log(response);
-                 let parseResponse = JSON.parse(response); // convert response into json
-                  console.log(parseResponse);
-                // if(parseResponse.success){
-                //     //  extraSkillVIew();
-                //     // $('.needs-validation').removeClass('was-validated');
-                //     // $('#extra-skill').val('');
-                //     toastSuccessAlert(parseResponse.success);
-                //     planView();
-                   
-                // }else if(parseResponse.error_success){
-                //       toastErrorAlert(parseResponse.error_success);
-                // }else{
-                //     toastErrorAlert('something went wrong!');
-                // }
-            }
-        });
     }
+
+    $.ajax({
+        url: "../../controller/profile/ProfileTwo.php",
+        type: "POST",
+        data: formData,
+        processData: false,  // required for FormData
+        contentType: false,  // required for FormData
+        success: function (response) {
+            console.log("Server response:", response);
+            try {
+                const parseResponse = JSON.parse(response);
+                if (parseResponse.success) {
+                    toastSuccessAlert(parseResponse.success);
+                    form.reset();
+                    qualificationView();
+                } else if (parseResponse.error_success) {
+                    toastErrorAlert(parseResponse.error_success);
+                } else {
+                    toastErrorAlert('Unexpected server response');
+                }
+            } catch (error) {
+                console.error("JSON parse error:", error);
+                toastErrorAlert('Error processing response');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", error);
+            toastErrorAlert("Request failed. Check console for details.");
+        }
+    });
 }
+
+function qualificationView(){
+    $.ajax({
+        url: "../../controller/profile/ProfileTwo.php",
+        type: "POST",
+        data: { getQualification: true },
+        success: function(response) {
+            // console.log(response);
+            let data = JSON.parse(response).data;
+            // console.log('Response:', data);
+
+            $('#qualification-table tbody').empty(); // Optional: clear old rows
+
+            data.forEach((element, index) => {
+                $('#qualification-table tbody').append(`
+                    <tr>
+                        <td scope="row">${index + 1}</td>
+                        <td>${element.qualification_name}</td>
+                        <td>${element.start_date}</td>
+                        <td>${element.end_date}</td>
+                        <td>${element.description}</td>
+                        <td>${element.certification}</td>
+                        <td>${element.file_name}</td>
+                    </tr>
+                `);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+}
+qualificationView();

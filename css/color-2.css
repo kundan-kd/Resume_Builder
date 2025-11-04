@@ -90,13 +90,9 @@ blockquote {
   border-color: #f44336
 }
 
-/* .art-contact-form .art-input.art-active+label, .art-contact-form .art-input:focus+label {
-  background: #f44336;
-} */
- .user-contact-form .art-input.art-active+label, .user-contact-form .art-input:focus+label {
+.art-contact-form .art-input.art-active+label, .art-contact-form .art-input:focus+label {
   background: #f44336;
 }
-
 
 .art-pagination .art-pagination-center a.art-active-pag {
   color: #f44336

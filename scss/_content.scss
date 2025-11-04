@@ -491,12 +491,12 @@ content
   }
 }
 
-.user-contact-form .art-input:focus {
+.art-contact-form .art-input:focus {
   outline: none;
 }
 
-.user-contact-form .art-input.art-active + label,
-.user-contact-form .art-input:focus + label {
+.art-contact-form .art-input.art-active + label,
+.art-contact-form .art-input:focus + label {
   background: $main-color;
   color: $info-bar-1-color;
 }
@@ -506,7 +506,7 @@ content
   margin-bottom: 30px;
 }
 
-.user-contact-form label {
+.art-contact-form label {
   text-align: center;
   color: $text-color-2;
   position: absolute;

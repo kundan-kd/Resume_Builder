@@ -1,32 +1,34 @@
 <?php
-session_start();
-require_once('admin/includes/connection.php');
-
-// ✅ Ensure user is logged in
-if (!isset($_SESSION['user_id'])) {
-    die('User not logged in.');
-}
-
-$user_id = 1; //intval($_SESSION['user_id']); // Sanitize user ID
-
-// ✅ Fetch user registration details
-$select_user = "SELECT * FROM `user_registrations` WHERE `id` = $user_id";
-$user_data = mysqli_fetch_assoc(mysqli_query($conn, $select_user));
-
-// ✅ Fetch profile details
-$select_profile = "SELECT `residence`, `city`, `dob`, `file_name` FROM `user_profiles` WHERE `user_id` = $user_id";
-$profile_data = mysqli_fetch_assoc(mysqli_query($conn, $select_profile));
-
-// ✅ Utility function to check if user data exists in a table
-function itExists($tableName, $conn, $user_id)
-{
-    $select = "SELECT COUNT(1) AS count FROM `$tableName` WHERE `user_id` = $user_id";
+require_once 'admin/includes/header.php';
+require_once 'admin/includes/connection.php';
+$userId = $_SESSION['user_id'];
+if (isset($_SESSION['user_email'])) {
+    $email = mysqli_real_escape_string($conn, $_SESSION['user_email']);
+    $select = "SELECT * FROM `user_registrations` WHERE `email` = '$email'";
     $result = mysqli_query($conn, $select);
-    $row = mysqli_fetch_assoc($result);
-    return $row['count'] > 0;
-}
-?>
 
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+    } else {
+        echo "No user found.";
+    }
+} else {
+    echo "User email not set in session.";
+}
+
+// $token = 12345678;
+//     $select = "SELECT * FROM `user_registrations` WHERE `token` = '$token'";
+//     $result = mysqli_query($conn, $select);
+
+//     if ($result && mysqli_num_rows($result) > 0) {
+//         $row = mysqli_fetch_assoc($result);
+//     } else {
+//         echo "No user found.";
+//         return;
+//     }
+
+
+?>
 <!doctype html>
 <html lang="zxx">
 
@@ -37,20 +39,19 @@ function itExists($tableName, $conn, $user_id)
   <!-- color of address bar in mobile browser -->
   <meta name="theme-color" content="#2B2B35">
   <!-- favicon  -->
-  <link rel="shortcut icon" href="assets/img/thumbnail.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="img/thumbnail.ico" type="image/x-icon">
   <!-- bootstrap css -->
-  <link rel="stylesheet" href="assets//css/plugins/bootstrap.min.css">
+  <link rel="stylesheet" href="css/plugins/bootstrap.min.css">
   <!-- font awesome css -->
-  <link rel="stylesheet" href="assets/css/plugins/font-awesome.min.css">
+  <link rel="stylesheet" href="css/plugins/font-awesome.min.css">
   <!-- swiper css -->
-  <link rel="stylesheet" href="assets/css/plugins/swiper.min.css">
+  <link rel="stylesheet" href="css/plugins/swiper.min.css">
   <!-- fancybox css -->
-  <link rel="stylesheet" href="assets/css/plugins/fancybox.min.css">
+  <link rel="stylesheet" href="css/plugins/fancybox.min.css">
   <!-- main css -->
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/custom.css">
+  <link rel="stylesheet" href="css/style.css">
 
-  <title><?php echo $GLOBALS['fname']; ?> onepage</title>
+  <title>Resume</title>
 </head>
 
 <body>
@@ -88,9 +89,8 @@ function itExists($tableName, $conn, $user_id)
             <div class="art-header">
               <!-- avatar -->
               <div class="art-avatar">
-                <a data-fancybox="avatar" href="admin/assets/images/profile_pics/<?php echo $user_pic['file_name']; ?>"
-                  class="art-avatar-curtain">
-                  <img src="admin/assets/images/profile_pics/<?php echo $user_pic['file_name']; ?>" alt="avatar">
+                <a data-fancybox="avatar" href="img/face-1.jpg" class="art-avatar-curtain">
+                  <img src="img/face-1.jpg" alt="avatar">
                   <i class="fas fa-expand"></i>
                 </a>
                 <!-- available -->
@@ -100,41 +100,10 @@ function itExists($tableName, $conn, $user_id)
                 </div>
               </div>
               <!-- avatar end -->
-              <?php
-              // $select1 = "SELECT * FROM `user_registrations` WHERE `id` = "" ";
-              // $result = mysqli_query($conn, $select1);
-              // $row = mysqli_fetch_assoc($result);
-              
-              // $row['first_name'] . $row['last_name'];
-              
-              ?>
               <!-- name -->
-
-              <h5 class="art-name mb-10"><?php echo $user_global['first_name'] . ' ' . $user_global['last_name']; ?>
-              </h5>
+              <h5 class="art-name mb-10"><?= $row['first_name']?> <?= $row['last_name']?></h5>
               <!-- post -->
-              <?php
-              $select_designation_types = "SELECT `designation_id` FROM `user_profiles` WHERE `user_id` = " . $GLOBALS['id'] . " ";
-              $result_designation = mysqli_query($conn, $select_designation_types);
-
-              if (mysqli_num_rows($result_designation) > 0) {
-                $row_designation = mysqli_fetch_assoc($result_designation);
-                $designations = explode(',', str_replace("'", "", $row_designation['designation_id']));
-                //$desg_arr = [];
-
-                for ($i = 0; $i < count($designations); $i++) {
-                  $select_designation_name = "SELECT `name` FROM `designation_types` WHERE `id` = " . $designations[$i] . " ";
-                  $row_desgn_name = mysqli_fetch_assoc(mysqli_query($conn, $select_designation_name));
-
-                  //array_push($desg_arr, $row_desgn_name['name']);
-              
-              ?>
-              <div class="art-sm-text"><?php echo $row_desgn_name['name'].' ,'.'<br>'; ?></div>
-              <!-- <div class="art-sm-text">Front-end Developer <br>Ui/UX Designer, </div> -->
-            <?php
-                }
-              }
-            ?>
+              <div class="art-sm-text">Front-end Deweloper <br>Ui/UX Designer, </div>
             </div>
             <!-- info bar header end -->
 
@@ -147,15 +116,15 @@ function itExists($tableName, $conn, $user_id)
                 <ul>
                   <!-- country -->
                   <li>
-                    <h6>Residence:</h6><span><?php echo $user_profile['residence'] ?></span>
+                    <h6>Residence:</h6><span><?= $row['address']?></span>
                   </li>
                   <!-- city -->
                   <li>
-                    <h6>City:</h6><span><?php echo $user_profile['city']; ?></span>
+                    <h6>City:</h6><span><?= $row['city']?></span>
                   </li>
                   <!-- age -->
                   <li>
-                    <h6>Age:</h6><span><?php echo $user_profile['dob']; ?></span>
+                    <h6>Age:</h6><span>26</span>
                   </li>
                 </ul>
               </div>
@@ -164,132 +133,133 @@ function itExists($tableName, $conn, $user_id)
               <!-- divider -->
               <div class="art-ls-divider"></div>
 
-              <!-- Language skills -->
+              <!-- language skills -->
               <div class="art-lang-skills p-30-15">
 
-
-                <?php
-
-                // $check = "SELECT * FROM `user_languages` WHERE `user_id` = ".$GLOBALS['id']." ";
-                if (itExists('user_languages', $conn)) {
-                  $select_lang = "SELECT `language_id`, `user_efficiency` FROM `user_languages` WHERE `user_id` = '" . $GLOBALS['id'] . "' ";
-                  $result_lang = mysqli_query($conn, $select_lang);
-
-                  while ($row_lang = mysqli_fetch_assoc($result_lang)) {
-                    $select_lang_name = "SELECT `name` FROM `language_types` WHERE `id` = '" . $row_lang['language_id'] . "'";
-                    $row_lang_name = mysqli_fetch_assoc(mysqli_query($conn, query: $select_lang_name));
-                    ?>
-
-                    <div class="art-lang-skills-item">
-                      <div id="circleprog1" class="art-cirkle-progress" style="position: relative;"></div>
-                      <h6><?php echo $row_lang_name['name']; ?></h6>
-                    </div>
-
-                    <?php
-                  }
-                }
-
-
-                ?>
-
                 <!-- skill -->
-                <!-- <div class="art-lang-skills-item">
-                    <div id="circleprog2" class="art-cirkle-progress"></div> -->
-                <!-- title -->
-                <!-- <h6>English</h6>
-                  </div> -->
+                <div class="art-lang-skills-item">
+                  <div id="circleprog1" class="art-cirkle-progress"></div>
+                  <!-- title -->
+                  <h6>French</h6>
+                </div>
                 <!-- skill end -->
 
                 <!-- skill -->
-                <!-- <div class="art-lang-skills-item">
-                    <div id="circleprog3" class="art-cirkle-progress"></div> -->
-                <!-- title -->
-                <!-- <h6>Spanish</h6>
-                  </div> -->
+                <div class="art-lang-skills-item">
+                  <div id="circleprog2" class="art-cirkle-progress"></div>
+                  <!-- title -->
+                  <h6>English</h6>
+                </div>
+                <!-- skill end -->
+
+                <!-- skill -->
+                <div class="art-lang-skills-item">
+                  <div id="circleprog3" class="art-cirkle-progress"></div>
+                  <!-- title -->
+                  <h6>Spanish</h6>
+                </div>
                 <!-- skill end -->
 
               </div>
-
-              <!-- Language skills end -->
+              <!-- language skills end -->
 
               <!-- divider -->
               <div class="art-ls-divider"></div>
 
-              <!-- Programming skills -->
-              <?php
-              // $select1 = "SELECT * FROM `user_programming_languages` WHERE `id` = '$uid'";
-              // $result = mysqli_query($conn,$select1);
-              // if(mysqli_num_rows($result) > 0){
-              //     while ($row1 = myssqli_fetch_assoc($result)) { 
-              //         $select2 = "SELECT `name` FROM `programming_skill_types` WHERE `id` = "$row['programming_language_id']" ";
-              //         $row2 = mysqli_fetch_assoc(mysqli_query($conn, $select2));
-              //         echo $row2['name'];
-              //         
-              //     }
-              // }
-              // echo $row1['user_efficiency'];
-              // else{
-              //    //insert code here
-              // }
-              
-              ?>
+              <!-- hard skills -->
               <div class="art-hard-skills p-30-15">
-                <?php
-                $select1 = "SELECT * FROM `user_programming_languages` WHERE `user_id` = 9";
-                $result = mysqli_query($conn, $select1);
-                if (mysqli_num_rows($result) > 0) {
-                  while ($row1 = mysqli_fetch_assoc($result)) {
-                    $select2 = "SELECT `name` FROM `programming_skill_types` WHERE `id` = " . $row1['programming_language_id'] . " ";
-                    $row2 = mysqli_fetch_assoc(mysqli_query($conn, $select2));
-                    ?>
 
-                    <!-- skill -->
-                    <div class="art-hard-skills-item">
-                      <div class="art-skill-heading">
-                        <!-- title -->
-                        <h6><?php echo $row2['name']; ?></h6>
-                      </div>
-                      <!-- progressbar frame -->
-                      <div class="art-line-progress">
-                        <!-- progressbar -->
-                        <div id="lineprog1"></div>
-                      </div>
-                      <!-- progressbar frame end -->
-                    </div>
-                    <!-- skill end -->
-                    <?php
-                  }
-                }
-                ?>
+                <!-- skill -->
+                <div class="art-hard-skills-item">
+                  <div class="art-skill-heading">
+                    <!-- title -->
+                    <h6>html</h6>
+                  </div>
+                  <!-- progressbar frame -->
+                  <div class="art-line-progress">
+                    <!-- progressbar -->
+                    <div id="lineprog1"></div>
+                  </div>
+                  <!-- progressbar frame end -->
+                </div>
+                <!-- skill end -->
 
+                <!-- skill -->
+                <div class="art-hard-skills-item">
+                  <div class="art-skill-heading">
+                    <!-- title -->
+                    <h6>CSS</h6>
+                  </div>
+                  <!-- progressbar frame -->
+                  <div class="art-line-progress">
+                    <!-- progressbar -->
+                    <div id="lineprog2"></div>
+                  </div>
+                  <!-- progressbar frame end -->
+                </div>
+                <!-- skill end -->
+
+                <!-- skill -->
+                <div class="art-hard-skills-item">
+                  <div class="art-skill-heading">
+                    <!-- title -->
+                    <h6>Js</h6>
+                  </div>
+                  <!-- progressbar frame -->
+                  <div class="art-line-progress">
+                    <!-- progressbar -->
+                    <div id="lineprog3"></div>
+                  </div>
+                  <!-- progressbar frame end -->
+                </div>
+                <!-- skill end -->
+
+                <!-- skill -->
+                <div class="art-hard-skills-item">
+                  <div class="art-skill-heading">
+                    <!-- title -->
+                    <h6>PHP</h6>
+                  </div>
+                  <!-- progressbar frame -->
+                  <div class="art-line-progress">
+                    <!-- progressbar -->
+                    <div id="lineprog4"></div>
+                  </div>
+                  <!-- progressbar frame end -->
+                </div>
+                <!-- skill end -->
+
+                <!-- skill -->
+                <div class="art-hard-skills-item">
+                  <div class="art-skill-heading">
+                    <!-- title -->
+                    <h6>Wordpress</h6>
+                  </div>
+                  <!-- progressbar frame -->
+                  <div class="art-line-progress">
+                    <!-- progressbar -->
+                    <div id="lineprog5"></div>
+                  </div>
+                  <!-- progressbar frame end -->
+                </div>
+                <!-- skill end -->
 
               </div>
-              <!-- Programming skills end -->
+              <!-- language skills end -->
 
               <!-- divider -->
               <div class="art-ls-divider"></div>
 
               <!-- knowledge list -->
-             
               <ul class="art-knowledge-list p-15-0">
                 <!-- list item -->
-                 <?php
-                  $select_sk = "SELECT 1 FROM `user_skills_to_show` WHERE `user_id` = ".$GLOBALS['id']." ";
-                  $result_sk = mysqli_query($conn, $select_sk);
-                  if(mysqli_num_rows($result_sk) > 0){
-                    $select_skills = "SELECT  `skill_list_id` FROM `user_skills_to_show` WHERE `user_id` = ".$GLOBALS['id']." ";
-                    $result_skills = mysqli_query($conn, $select_skills);
-
-                    while($row_skills = mysqli_fetch_assoc($result_skills)){
-                      $select_skill_type = "SELECT `name` FROM  `extra_skill_types` WHERE `id` = ".$row_skills['skill_list_id']." ";
-                      $row_skill_type = mysqli_fetch_assoc(mysqli_query($conn, $select_skill_type));
-
-                 ?>
-                  <li> <?php echo $row_skill_type['name'];  ?></li>
-              <?php
-                    }
-                  }
-              ?>
+                <li>Bootstrap, Materialize</li>
+                <!-- list item -->
+                <li>Stylus, Sass, Less</li>
+                <!-- list item -->
+                <li>Gulp, Webpack, Grunt</li>
+                <!-- list item -->
+                <li>GIT knowledge</li>
               </ul>
               <!-- knowledge list end -->
 
@@ -310,21 +280,16 @@ function itExists($tableName, $conn, $user_id)
 
             <!-- sidebar social -->
             <div class="art-ls-social">
-              <?php
-              $select_icon = "SELECT * FROM `user_social_icons` WHERE `user_id` = " . $GLOBALS['id'] . " ";
-              $result_icon = mysqli_query($conn, $select_icon);
-              if (mysqli_num_rows($result_icon) > 0) {
-                //echo $GLOBALS['id'];
-                while ($row_icon = mysqli_fetch_assoc($result_icon)) {
-                  ?>
-                  <a href="<?php echo $row_icon['url']; ?>" target="_blank">
-                    <img src="<?php echo "admin/assets/images/sm_icons/" . $row_icon['filename']; ?>" alt="nothing"
-                      width="15" height="15">
-                  </a>
-                  <?php
-                }
-              }
-              ?>
+              <!-- social link -->
+              <a href="#." target="_blank"><i class="far fa-circle"></i></a>
+              <!-- social link -->
+              <a href="#." target="_blank"><i class="far fa-circle"></i></a>
+              <!-- social link -->
+              <a href="#." target="_blank"><i class="far fa-circle"></i></a>
+              <!-- social link -->
+              <a href="#." target="_blank"><i class="far fa-circle"></i></a>
+              <!-- social link -->
+              <a href="#." target="_blank"><i class="far fa-circle"></i></a>
             </div>
             <!-- sidebar social end -->
 
@@ -341,7 +306,7 @@ function itExists($tableName, $conn, $user_id)
           <div class="art-curtain"></div>
 
           <!-- top background -->
-          <div class="art-top-bg" style="background-image: url(assets/img/bg.jpg)">
+          <div class="art-top-bg" style="background-image: url(img/bg.jpg)">
             <!-- overlay -->
             <div class="art-top-bg-overlay"></div>
             <!-- overlay end -->
@@ -361,27 +326,9 @@ function itExists($tableName, $conn, $user_id)
                 <div class="row p-60-0 p-lg-30-0 p-md-15-0">
                   <!-- col -->
                   <div class="col-lg-12">
-                    <?php
-                    $select_prof = "SELECT * FROM `user_profiles` WHERE `user_id` = " . $user_global['id'] . " ";
-                    $result = mysqli_query($conn, $select_prof);
-                    $user_profile = mysqli_fetch_assoc($result);
-                    $user_services = [];
-                    $check_service = "SELECT `name` FROM `user_services` WHERE `user_id` =  " . $user_global['id'] . " ";
-                    $result_service = mysqli_query($conn, $check_service);
-                    if (mysqli_num_rows($result_service) > 0) {
-                      while ($row_service = mysqli_fetch_assoc($result_service)) {
-                        array_push($user_services, ($row_service['name']));
-                      }
-                    }
-                    // $row = $result->fetch_assoc();
-                    // echo $row['experience'];
-                    // echo $row['projects_completed'];
-                    // echo $row['customer_count'];
-                    // echo $row['award_count'];
-                    ?>
 
                     <!-- banner -->
-                    <div class="art-a art-banner" style="background-image: url(assets/img/bg.jpg)">
+                    <div class="art-a art-banner" style="background-image: url(img/bg.jpg)">
                       <!-- banner back -->
                       <div class="art-banner-back"></div>
                       <!-- banner dec -->
@@ -391,12 +338,10 @@ function itExists($tableName, $conn, $user_id)
                         <!-- main title -->
                         <div class="art-banner-title">
                           <!-- title -->
-                          <h1 class="mb-15"><?php echo $user_profile['punchline']; ?></h1>
+                          <h1 class="mb-15">Discover my Amazing <br>Art Space!</h1>
                           <!-- suptitle -->
-                          <div class="art-lg-text art-code mb-25">&lt;<i>code</i>&gt; I build <span class="txt-rotate"
-                              data-period="2000"
-                              data-rotate='<?php echo json_encode($user_services); //foreach($user_services as $us){ echo $us . ' ';} ?>'></span>&lt;/<i>code</i>&gt;
-                          </div>
+                          <div class="art-lg-text art-code mb-25">&lt;<i>code</i>&gt; I build <span class="txt-rotate" data-period="2000"
+                              data-rotate='[ "web interfaces.", "ios and android applications.", "design mocups.", "automation tools." ]'></span>&lt;/<i>code</i>&gt;</div>
                           <div class="art-buttons-frame">
                             <!-- button -->
                             <a href="#." class="art-btn art-btn-md"><span>Explore now</span></a>
@@ -406,7 +351,7 @@ function itExists($tableName, $conn, $user_id)
                         </div>
                         <!-- main title end -->
                         <!-- photo -->
-                        <img src="assets/img/face-2.png" class="art-banner-photo" alt="Your Name">
+                        <img src="img/face-2.png" class="art-banner-photo" alt="Your Name">
                       </div>
                       <!-- banner overlay end -->
                     </div>
@@ -421,7 +366,7 @@ function itExists($tableName, $conn, $user_id)
               <!-- container end -->
 
               <!-- container -->
-              <div class="container-fluid"> <!-- Experience and Projects -->
+              <div class="container-fluid">
 
                 <!-- row -->
                 <div class="row p-30-0">
@@ -429,20 +374,19 @@ function itExists($tableName, $conn, $user_id)
                   <!-- col -->
                   <div class="col-md-3 col-6">
 
-
                     <!-- couner frame -->
                     <div class="art-counter-frame">
                       <!-- counter -->
                       <div class="art-counter-box">
                         <!-- counter number -->
-                        <span class="art-counter"><?php echo $user_profile['experience']; ?></span><span
-                          class="art-counter-plus">+</span>
+                        <span class="art-counter">10</span><span class="art-counter-plus">+</span>
                       </div>
                       <!-- counter end -->
                       <!-- title -->
                       <h6>Years Experience</h6>
                     </div>
                     <!-- couner frame end -->
+
                   </div>
                   <!-- col end -->
 
@@ -454,7 +398,7 @@ function itExists($tableName, $conn, $user_id)
                       <!-- counter -->
                       <div class="art-counter-box">
                         <!-- counter number -->
-                        <span class="art-counter"><?php echo $user_profile['projects_completed']; ?></span>
+                        <span class="art-counter">143</span>
                       </div>
                       <!-- counter end -->
                       <!-- title -->
@@ -473,7 +417,7 @@ function itExists($tableName, $conn, $user_id)
                       <!-- counter -->
                       <div class="art-counter-box">
                         <!-- counter number -->
-                        <span class="art-counter"><?php echo $user_profile['customer_count']; ?></span>
+                        <span class="art-counter">114</span>
                       </div>
                       <!-- counter end -->
                       <!-- title -->
@@ -492,8 +436,7 @@ function itExists($tableName, $conn, $user_id)
                       <!-- counter -->
                       <div class="art-counter-box">
                         <!-- counter number -->
-                        <span class="art-counter"><?php echo $user_profile['award_count']; ?></span><span
-                          class="art-counter-plus">+</span>
+                        <span class="art-counter">20</span><span class="art-counter-plus">+</span>
                       </div>
                       <!-- counter end -->
                       <!-- title -->
@@ -533,181 +476,110 @@ function itExists($tableName, $conn, $user_id)
                   </div>
                   <!-- col end -->
 
-                  <?php
-                  if (itExists('user_services', $conn)) {
-                    $select_service = "SELECT `name`, `description` FROM `user_services` WHERE `user_id` = " . $GLOBALS['id'] . " ";
-                    $result_service = mysqli_query($conn, $select_service);
-
-                    while ($row_user_service = mysqli_fetch_assoc($result_service)) {
-                        
-
-                   ?>
-
-
-                      <!-- col -->
-                      <div class="col-lg-4 col-md-6">
-
-                        <!-- service -->
-                        <div class="art-a art-service-icon-box">
-                          <!-- service content -->
-                          <div class="art-service-ib-content">
-                            <!-- title -->
-                            <h5 class="mb-15"><?php echo $row_user_service['name']; ?></h5>
-                            <!-- text -->
-                            <div class="mb-15"><?php echo $row_user_service['description']; ?></div>
-                            <!-- button -->
-                            <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order
-                                now</a></div>
-                          </div>
-                          <!-- service content end -->
-                        </div>
-                        <!-- service end -->
-
-                      </div>
-                      <?php
-                    }
-                  }
-                  ?>
-                  <!-- col end -->
-
                   <!-- col -->
+                  <div class="col-lg-4 col-md-6">
 
-                  <!-- col end -->
-
-                  <!-- col -->
-
-                  <!-- col end -->
-
-                  <!-- col -->
-
-                  <!-- col end -->
-
-                  <!-- col -->
-
-
-                </div>
-                <!-- row end -->
-
-              </div>
-              <!-- container end -->
-
-              <!-- container -->
-              <div class="container-fluid">
-
-                <!-- row -->
-                <div class="row p-0-0">
-
-                  <!-- col -->
-                  <div class="col-lg-12">
-
-                    <?php
-                    // $select1 = "SELECT * FROM `user_plan_prices` WHERE `user_id` = "" ";
-                    // $result = mysqli_query($conn, $result);
-                    
-                    // while ($row1 = mysql_fetch_assoc($result)){
-                    //   $select2 = "SELECT * FROM `plan_types` WHERE `id` = "$row1['plan_type_id']" ";
-                    //   $row2 = mysqli_fetch_assoc(mysqli_query($conn, $select2));
-                    //   echo $row2['name'];
-                    
-                    //   $select3 = "SELECT * FROM `plan_types` WHERE `id` = "$row1['skill_types']" ";
-                    //   $row3 = mysqli_fetch_assoc(mysqli_query($conn, $select3));
-                    //   echo $row3['name'];
-                    //   echo $row1['popularity'];
-                    // }
-                    ?>
-
-                    <?php
-                    // $select = "SELECT * FROM `user_reviews` WHERE `user_id` = ".." ";
-                    // $result = mysqli_query($conn, $select);
-                    // while($row1= mysqli_fetch_assoc($result)){
-                    //     echo $row1['name'];
-                    //     echo $row2['review'];
-                    //     echo $row2['rating'];
-                    // }
-                    
-                    ?>
-
-                    <!-- section title -->
-                    <div class="art-section-title">
-                      <!-- title frame -->
-                      <div class="art-title-frame">
+                    <!-- service -->
+                    <div class="art-a art-service-icon-box">
+                      <!-- service content -->
+                      <div class="art-service-ib-content">
+                       
                         <!-- title -->
-                        <h4>Price Plans</h4> <!-- Plan  -->
+                        <h5 class="mb-15">Web Development</h5>
+                        <!-- text -->
+                        <div class="mb-15">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus esse commodi deserunt vitae, vero quasi! Veniam quaerat tenetur pariatur doloribus.</div>
+                        <!-- button -->
+                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
                       </div>
-                      <!-- title frame end -->
+                      <!-- service content end -->
                     </div>
-                    <!-- section title end -->
+                    <!-- service end -->
 
                   </div>
                   <!-- col end -->
 
                   <!-- col -->
-                  <?php
-                  if (itExists('user_plan_prices', $conn)) {
-                    //echo $user_global['id'];
-                    $select_plan = "SELECT * FROM `user_plan_prices` WHERE `user_id` = 62 ";
-                    $result_plan = mysqli_query($conn, $select_plan);
+                  <div class="col-lg-4 col-md-6">
 
-                    while ($row_plan = mysqli_fetch_assoc($result_plan)) {
-                      $select_plan_type = "SELECT `name` FROM `plan_types` WHERE `id` = '" . $row_plan['plan_type_id'] . "'";
-                      $row_plan_type = mysqli_fetch_assoc(mysqli_query($conn, $select_plan_type));
-
-                      $select_skill_type = "SELECT `name` FROM `programming_skill_types` WHERE `id`= '" . $row_plan['skill_types'] . "' ";
-                      $row_skill_type = mysqli_fetch_assoc(mysqli_query($conn, $select_skill_type));
-
-                      $planTypeName = $row_plan_type['name'];
-                      $skillTypeName = $row_skill_type['name'];
-                      ?>
-
-                      <div class="col-lg-4">
-
-                        <!-- price -->
-                        <div class="art-a art-price">
-                          <!-- price body -->
-                          <div class="art-price-body">
-                            <h5 class="mb-30"><?php echo $planTypeName; ?></h5>
-                            <!-- price cost -->
-                            <div class="art-price-cost">
-                              <div class="art-number"><?php echo $row_plan['price']; ?><sup>*</sup></div>
-                            </div>
-                            <!-- price cost end -->
-                            <!-- price list -->
-                            <ul class="art-price-list">
-                              <!-- list item -->
-                              <li>Ui Design</li>
-                              <!-- list item -->
-                              <li>Web Development</li>
-                              <!-- list item -->
-                              <li class="art-empty-item">Logo design</li>
-                              <!-- list item -->
-                              <li class="art-empty-item">SEO optimization</li>
-                              <!-- list item -->
-                              <li class="art-empty-item">Wordpress integration</li>
-                            </ul>
-                            <!-- price list end -->
-                            <!-- button -->
-                            <a href="#." class="art-link art-color-link art-w-chevron">Order now</a>
-                            <div class="art-asterisk"><sup>*</sup>Free only when ordering paid services</div>
-                          </div>
-                          <!-- price body end -->
-                        </div>
-                        <!-- price end -->
-
+                    <!-- service -->
+                    <div class="art-a art-service-icon-box">
+                      <!-- service content -->
+                      <div class="art-service-ib-content">
+                        <!-- title -->
+                        <h5 class="mb-15">UI/UX Design</h5>
+                        <!-- text -->
+                        <div class="mb-15">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus esse commodi deserunt vitae, vero quasi! Veniam quaerat tenetur pariatur doloribus.</div>
+                        <!-- button -->
+                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
                       </div>
-                      <?php
-                    }
-                  }
+                      <!-- service content end -->
+                    </div>
+                    <!-- service end -->
 
-                  ?>
-
-                  <!-- grid -->
-
-                  <!-- col -->
-
+                  </div>
                   <!-- col end -->
 
                   <!-- col -->
+                  <div class="col-lg-4 col-md-6">
 
+                    <!-- service -->
+                    <div class="art-a art-service-icon-box">
+                      <!-- service content -->
+                      <div class="art-service-ib-content">
+                        <!-- title -->
+                        <h5 class="mb-15">Sound Design</h5>
+                        <!-- text -->
+                        <div class="mb-15">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus esse commodi deserunt vitae, vero quasi! Veniam quaerat tenetur pariatur doloribus.</div>
+                        <!-- button -->
+                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
+                      </div>
+                      <!-- service content end -->
+                    </div>
+                    <!-- service end -->
+
+                  </div>
+                  <!-- col end -->
+
+                  <!-- col -->
+                  <div class="col-lg-4 col-md-6">
+
+                    <!-- service -->
+                    <div class="art-a art-service-icon-box">
+                      <!-- service content -->
+                      <div class="art-service-ib-content">
+                        <!-- title -->
+                        <h5 class="mb-15">Game Design</h5>
+                        <!-- text -->
+                        <div class="mb-15">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus esse commodi deserunt vitae, vero quasi! Veniam quaerat tenetur pariatur doloribus.</div>
+                        <!-- button -->
+                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
+                      </div>
+                      <!-- service content end -->
+                    </div>
+                    <!-- service end -->
+
+                  </div>
+                  <!-- col end -->
+
+                  <!-- col -->
+                  <div class="col-lg-4 col-md-6">
+
+                    <!-- service -->
+                    <div class="art-a art-service-icon-box">
+                      <!-- service content -->
+                      <div class="art-service-ib-content">
+                        <!-- title -->
+                        <h5 class="mb-15">Advertising</h5>
+                        <!-- text -->
+                        <div class="mb-15">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus esse commodi deserunt vitae, vero quasi! Veniam quaerat tenetur pariatur doloribus.</div>
+                        <!-- button -->
+                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
+                      </div>
+                      <!-- service content end -->
+                    </div>
+                    <!-- service end -->
+
+                  </div>
                   <!-- col end -->
 
                 </div>
@@ -715,39 +587,12 @@ function itExists($tableName, $conn, $user_id)
 
               </div>
               <!-- container end -->
-
               <!-- container -->
               <div class="container-fluid">
 
                 <!-- row -->
-                <div class="row">
-
-                  <!-- col -->
-                  <!-- <div class="col-lg-12">
-
-                    <div class="art-section-title">
-                      <div class="art-title-frame">
-                        <h4>Recommendations</h4>
-                      </div>
-                    </div>
-                  </div> -->
-                  <!-- col end -->
-                  <!--  Review col -->
-                  <!-- Review col end -->
-                  <!-- col -->
-                  <!-- col end -->
-
-                </div>
-                <!-- row end -->
-
-              </div>
-              <!-- container end -->
-
-              <!-- container -->
-              <div class="container-fluid">
-
-                <!-- Project row -->
                 <div class="row p-30-0">
+
                   <!-- col -->
                   <div class="col-lg-12">
 
@@ -762,28 +607,17 @@ function itExists($tableName, $conn, $user_id)
                       <!-- right frame -->
                       <div class="art-right-frame">
                         <!-- filter -->
-                        <div class="art-filter"> <!-- Categories -->
-                          <!-- <a href="#" data-filter="*" class="art-link art-current">All Categories</a> -->
-                          <?php
-                          $check = "SELECT * FROM `user_projects` WHERE `user_id` = ".$GLOBALS['id']." ";
-                          $result = mysqli_query($conn, $check);
-                          if (mysqli_num_rows($result) > 0) {
-                            while ($row1 = mysqli_fetch_assoc($result)) {
-                              $select = "SELECT * FROM `categories` WHERE `id` = " . $row1['category_id'] . "  ";
-                              $row2 = mysqli_fetch_assoc(mysqli_query($conn, $select));
-                              ?>
-                              <!-- <a href="#" data-filter="" class="art-link"><?php // echo $row2['name']; ?></a> -->
-
-                              <!-- <a href="#" data-filter=".webTemplates" class="art-link">Web Templates</a>
+                        <div class="art-filter">
+                          <!-- filter link -->
+                          <a href="#" data-filter="*" class="art-link art-current">All Categories</a>
+                          <!-- filter link -->
+                          <a href="#" data-filter=".webTemplates" class="art-link">Web Templates</a>
+                          <!-- filter link -->
                           <a href="#" data-filter=".logos" class="art-link">Logos</a>
-                          <a href="#" data-filter=".drawings" class="art-link">Drawings</a> -->
-
-
-                              <!-- <a href="#" data-filter=".ui" class="art-link">UI Elements</a> -->
-                              <?php
-                            }
-                          }
-                          ?>
+                          <!-- filter link -->
+                          <a href="#" data-filter=".drawings" class="art-link">Drawings</a>
+                          <!-- filter link -->
+                          <a href="#" data-filter=".ui" class="art-link">UI Elements</a>
                         </div>
                         <!-- filter end -->
                       </div>
@@ -796,56 +630,198 @@ function itExists($tableName, $conn, $user_id)
 
                   <div class="art-grid art-grid-3-col art-gallery">
 
-                    <?php
-                    $select_project = "SELECT `file_name`, `category_id`, `title`, `description` FROM `user_projects` WHERE `user_id` = 62 ";
-                    $result_project = mysqli_query($conn, $select_project);
-
-                    while ($row_project = mysqli_fetch_assoc($result_project)) {
-                      // $source = 'admin/assets/images/project_headers/' . $row_project['file_name'];
-                      // $dest = 'assets/img/works/user_projects/';
-                      // if (!copy($source, $dest)){
-                      //     echo "Failed to render";
-                      // }
-                      $select_catgeory = "SELECT * FROM `categories` WHERE `id` = " . $row_project['category_id'] . "";
-                      $row_category = mysqli_fetch_assoc(mysqli_query($conn, $select_catgeory));
-                      ?>
-                      <div class="art-grid-item <?php echo $row_category['name']; ?>">
-                        <!-- grid item frame -->
-                        <a data-fancybox="gallery"
-                          href="admin/assets/images/project_headers/<?php echo $row_project['file_name']; ?>"
-                          class="art-a art-portfolio-item-frame art-horizontal">
-
-                          <!-- img -->
-                          <img src="admin/assets/images/project_headers/<?php echo $row_project['file_name']; ?>"
-                            alt="item">
-                          <!-- zoom icon -->
-                          <span class="art-item-hover"><i class="fas fa-expand"></i></span>
-                        </a>
-                        <!-- grid item frame end -->
-                        <!-- description -->
-                        <div class="art-item-description">
-                          <!-- title -->
-                          <h5 class="mb-15"><?php echo $row_project['title']; ?></h5>
-                          <!-- button -->
-                          <a href="#."
-                            class="art-link art-color-link art-w-chevron"><?php echo $row_project['description']; ?></a>
-                        </div>
-                        <!-- description end -->
+                    <!-- grid item -->
+                    <div class="art-grid-item webTemplates">
+                      <!-- grid item frame -->
+                      <a data-fancybox="gallery" href="img/works/original-size/1.jpg" class="art-a art-portfolio-item-frame art-horizontal">
+                        <!-- img -->
+                        <img src="img/works/thumbnail/1.jpg" alt="item">
+                        <!-- zoom icon -->
+                        <span class="art-item-hover"><i class="fas fa-expand"></i></span>
+                      </a>
+                      <!-- grid item frame end -->
+                      <!-- description -->
+                      <div class="art-item-description">
+                        <!-- title -->
+                        <h5 class="mb-15">Project title</h5>
+                        <!-- button -->
+                        <a href="#." class="art-link art-color-link art-w-chevron">Read more</a>
                       </div>
-                      <?php
-                    }
-                    ?>
+                      <!-- description end -->
+
+                    </div>
+                    <!-- grid item end -->
+
+                    <!-- grid item -->
+                    <div class="art-grid-item logos">
+                      <!-- grid item frame -->
+                      <a data-fancybox="gallery" href="img/works/original-size/2.jpg" class="art-a art-portfolio-item-frame art-vertical">
+                        <!-- img -->
+                        <img src="img/works/thumbnail/2.jpg" alt="item">
+                        <!-- zoom icon -->
+                        <span class="art-item-hover"><i class="fas fa-expand"></i></span>
+                      </a>
+                      <!-- grid item frame end -->
+                      <!-- description -->
+                      <div class="art-item-description">
+                        <!-- title -->
+                        <h5 class="mb-15">Project title</h5>
+                        <div class="mb-15">Sit amet, consectetur adipisicing elit. Quas, architecto.</div>
+                        <!-- button -->
+                        <a href="#." class="art-link art-color-link art-w-chevron">Read more</a>
+                      </div>
+                      <!-- description end -->
+
+                    </div>
+                    <!-- grid item end -->
+
+                    <!-- grid item -->
+                    <div class="art-grid-item drawings">
+                      <!-- grid item frame -->
+                      <a data-fancybox="gallery" href="img/works/original-size/3.jpg" class="art-a art-portfolio-item-frame art-square">
+                        <!-- img -->
+                        <img src="img/works/thumbnail/3.jpg" alt="item">
+                        <!-- zoom icon -->
+                        <span class="art-item-hover"><i class="fas fa-expand"></i></span>
+                      </a>
+                      <!-- grid item frame end -->
+                      <!-- description -->
+                      <div class="art-item-description">
+                        <!-- title -->
+                        <h5 class="mb-15">Project title</h5>
+                        <div class="mb-15">Sit amet, consectetur adipisicing elit. Quas, architecto.</div>
+                        <!-- button -->
+                        <a href="#." class="art-link art-color-link art-w-chevron">Read more</a>
+                      </div>
+                      <!-- description end -->
+
+                    </div>
+                    <!-- grid item end -->
+
+                    <!-- grid item -->
+                    <div class="art-grid-item ui">
+                      <!-- grid item frame -->
+                      <a data-fancybox="gallery" href="img/works/original-size/4.jpg" class="art-a art-portfolio-item-frame art-vertical">
+                        <!-- img -->
+                        <img src="img/works/thumbnail/4.jpg" alt="item">
+                        <!-- zoom icon -->
+                        <span class="art-item-hover"><i class="fas fa-expand"></i></span>
+                      </a>
+                      <!-- grid item frame end -->
+                      <!-- description -->
+                      <div class="art-item-description">
+                        <!-- title -->
+                        <h5 class="mb-15">Project title</h5>
+                        <div class="mb-15">Sit amet, consectetur adipisicing elit. Quas, architecto.</div>
+                        <!-- button -->
+                        <a href="#." class="art-link art-color-link art-w-chevron">Read more</a>
+                      </div>
+                      <!-- description end -->
+
+                    </div>
+                    <!-- grid item end -->
+
+                    <!-- grid item -->
+                    <div class="art-grid-item webTemplates">
+                      <!-- grid item frame -->
+                      <a data-fancybox="gallery" href="img/works/original-size/5.jpg" class="art-a art-portfolio-item-frame art-square">
+                        <!-- img -->
+                        <img src="img/works/thumbnail/5.jpg" alt="item">
+                        <!-- zoom icon -->
+                        <span class="art-item-hover"><i class="fas fa-expand"></i></span>
+                      </a>
+                      <!-- grid item frame end -->
+                      <!-- description -->
+                      <div class="art-item-description">
+                        <!-- title -->
+                        <h5 class="mb-15">Project title</h5>
+                        <div class="mb-15">Sit amet, consectetur adipisicing elit. Quas, architecto.</div>
+                        <!-- button -->
+                        <a href="#." class="art-link art-color-link art-w-chevron">Read more</a>
+                      </div>
+                      <!-- description end -->
+
+                    </div>
+                    <!-- grid item end -->
+
+                    <!-- grid item -->
+                    <div class="art-grid-item logos">
+                      <!-- grid item frame -->
+                      <a data-fancybox="gallery" href="img/works/original-size/6.jpg" class="art-a art-portfolio-item-frame art-vertical">
+                        <!-- img -->
+                        <img src="img/works/thumbnail/6.jpg" alt="item">
+                        <!-- zoom icon -->
+                        <span class="art-item-hover"><i class="fas fa-expand"></i></span>
+                      </a>
+                      <!-- grid item frame end -->
+                      <!-- description -->
+                      <div class="art-item-description">
+                        <!-- title -->
+                        <h5 class="mb-15">Project title</h5>
+                        <div class="mb-15">Sit amet, consectetur adipisicing elit. Quas, architecto.</div>
+                        <!-- button -->
+                        <a href="#." class="art-link art-color-link art-w-chevron">Read more</a>
+                      </div>
+                      <!-- description end -->
+
+                    </div>
+                    <!-- grid item end -->
+
+                    <!-- grid item -->
+                    <div class="art-grid-item drawings">
+                      <!-- grid item frame -->
+                      <a data-fancybox="gallery" href="img/works/original-size/7.jpg" class="art-a art-portfolio-item-frame art-square">
+                        <!-- img -->
+                        <img src="img/works/thumbnail/7.jpg" alt="item">
+                        <!-- zoom icon -->
+                        <span class="art-item-hover"><i class="fas fa-expand"></i></span>
+                      </a>
+                      <!-- grid item frame end -->
+                      <!-- description -->
+                      <div class="art-item-description">
+                        <!-- title -->
+                        <h5 class="mb-15">Project title</h5>
+                        <div class="mb-15">Sit amet, consectetur adipisicing elit. Quas, architecto.</div>
+                        <!-- button -->
+                        <a href="#." class="art-link art-color-link art-w-chevron">Read more</a>
+                      </div>
+                      <!-- description end -->
+
+                    </div>
+                    <!-- grid item end -->
+
+                    <!-- grid item -->
+                    <div class="art-grid-item ui">
+                      <!-- grid item frame -->
+                      <a data-fancybox="gallery" href="img/works/original-size/8.jpg" class="art-a art-portfolio-item-frame art-horizontal">
+                        <!-- img -->
+                        <img src="img/works/thumbnail/8.jpg" alt="item">
+                        <!-- zoom icon -->
+                        <span class="art-item-hover"><i class="fas fa-expand"></i></span>
+                      </a>
+                      <!-- grid item frame end -->
+                      <!-- description -->
+                      <div class="art-item-description">
+                        <!-- title -->
+                        <h5 class="mb-15">Project title</h5>
+                        <!-- button -->
+                        <a href="#." class="art-link art-color-link art-w-chevron">Read more</a>
+                      </div>
+                      <!-- description end -->
+
+                    </div>
+                    <!-- grid item end -->
 
                   </div>
 
                 </div>
-                <!-- Project row end -->
+                <!-- row end -->
 
               </div>
               <!-- container end -->
 
               <!-- container -->
-              <div class="container-fluid"> <!-- Work and Education -->
+              <div class="container-fluid">
 
                 <!-- row -->
                 <div class="row">
@@ -863,55 +839,95 @@ function itExists($tableName, $conn, $user_id)
                       <!-- title frame end -->
                     </div>
                     <!-- section title end -->
-                    <?php
-                    $select1 = "SELECT * FROM `user_qualification_details` WHERE `user_id` =   " . $user_global['id'] . "   ";
-                    $result = mysqli_query($conn, $select1);
-                    if (mysqli_num_rows($result) > 0) {
-                      while ($row1 = $result->fetch_assoc()) {
-                        if ($row1['type'] == 'edu') {
-                          $select2 = "SELECT * FROM `qualification_types` WHERE `id` = " . $row1['qualification_id'] . " ";
-                          $row2 = mysqli_fetch_assoc(mysqli_query($conn, $select2));
-                          // echo $row2['start_date'];
-                          // echo $row2['end_date'];
-                          // echo $row2['description'];
-                          // echo $row2['certification'];
-                    
-                          ?>
 
-                          <!-- Education timeline -->
-                          <div class="art-timeline art-gallery" id="history">
+                    <!-- timeline -->
+                    <div class="art-timeline art-gallery" id="history">
+                      <?php 
+                        $query = "SELECT  * FROM user_qualification_details WHERE user_id = $row[id]";
+                        $result = mysqli_query($conn,$query);
+                        if ($result && mysqli_num_rows($result) > 0) {
+                          while ($qualification = mysqli_fetch_assoc($result)) {
+                        $q_name = getdatafromtable($conn, "qualification_types", "name", "id = {$qualification['qualification_id']}");
 
-                            <div class="art-timeline-item">
-                              <div class="art-timeline-mark-light"></div>
-                              <div class="art-timeline-mark"></div>
+                      ?>
+                      <div class="art-timeline-item">
+                        <div class="art-timeline-mark-light"></div>
+                        <div class="art-timeline-mark"></div>
 
-                              <div class="art-a art-timeline-content">
-                                <div class="art-card-header">
-                                  <div class="art-left-side">
-                                    <h5><?php echo $row2['name']; ?></h5>
-                                    <div class="art-el-suptitle mb-15">
-                                      <?php echo $user_global['first_name'] . ' ' . $user_global['last_name']; ?>
-                                    </div>
-                                  </div>
-                                  <div class="art-right-side">
-                                    <span class="art-date"><?php echo $row1['start_date'] . ' ' . $row1['end_date']; ?></span>
-                                  </div>
-                                </div>
-
-                                <p><?php echo $row1['description']; ?></p>
-                                <a data-fancybox="diplome" href="files/certificate.jpg"
-                                  class="art-link art-color-link art-w-chevron"><?php echo $row1['certification']; ?></a>
-                              </div>
+                        <div class="art-a art-timeline-content">
+                          <div class="art-card-header">
+                            <div class="art-left-side">
+                              <h5><?=$q_name?></h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
                             </div>
+                            <div class="art-right-side">
+                              <span class="art-date"><?=$qualification['start_date']?> - <?=$qualification['end_date']?></span>
+                            </div>
+                          </div>
+ 
 
-                            <?php
-                        }
-                      }
-                    }
+                          <p>Dolor sit amet, consectetur adipisicing elit.</p>
+                          <a data-fancybox="diplome" href="files/certificate.jpg" class="art-link art-color-link art-w-chevron">Diplome</a>
+                        </div>
+                      </div>
+                      <?php }}?>
+                      <div class="art-timeline-item">
+                        <div class="art-timeline-mark-light"></div>
+                        <div class="art-timeline-mark"></div>
 
-                    ?>
+                        <div class="art-a art-timeline-content">
+                          <div class="art-card-header">
+                            <div class="art-left-side">
+                              <h5>Title of section 1</h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
+                            </div>
+                            <div class="art-right-side">
+                              <span class="art-date">jan 2018 - may 2020</span>
+                            </div>
+                          </div>
+                          <div>Consectetur adipisicing elit. Iusto, optio, dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde?</div>
+                        </div>
+                      </div>
 
+                      <div class="art-timeline-item">
+                        <div class="art-timeline-mark-light"></div>
+                        <div class="art-timeline-mark"></div>
 
+                        <div class="art-a art-timeline-content">
+                          <div class="art-card-header">
+                            <div class="art-left-side">
+                              <h5>Title of section 1</h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
+                            </div>
+                            <div class="art-right-side">
+                              <span class="art-date">jan 2018 - may 2020</span>
+                            </div>
+                          </div>
+                          <p>Dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde? Iste voluptatibus minus veritatis qui ut.</p>
+                          <a data-fancybox="diplome" href="files/certificate.jpg" class="art-link art-color-link art-w-chevron">Licence</a>
+                        </div>
+
+                      </div>
+
+                      <div class="art-timeline-item">
+                        <div class="art-timeline-mark-light"></div>
+                        <div class="art-timeline-mark"></div>
+
+                        <div class="art-a art-timeline-content">
+                          <div class="art-card-header">
+                            <div class="art-left-side">
+                              <h5>Title of section 1</h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
+                            </div>
+                            <div class="art-right-side">
+                              <span class="art-date">jan 2018 - may 2020</span>
+                            </div>
+                          </div>
+                          <p>Ipsum dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum.</p>
+                          <a data-fancybox="diplome" href="files/certificate.jpg" class="art-link art-color-link art-w-chevron">Certificate</a>
+                        </div>
+
+                      </div>
 
                     </div>
                     <!-- timeline end -->
@@ -929,49 +945,215 @@ function itExists($tableName, $conn, $user_id)
                       <!-- title frame end -->
                     </div>
                     <!-- section title end -->
-                    <?php
-                    if (itExists('user_qualification_details', $conn)) {
-                      //$select_work = "SELECT `us` FROM `user_qualification_details` WHERE `user_id` = ".$GLOBALS['id']."";
-                      $select_work = "SELECT `qualification_id`, `type`, `start_date`, `end_date`, `description`, `certification`
-                          FROM `user_qualification_details` 
-                          WHERE `user_id` = " . $GLOBALS['id'] . "";
-                      $result_work = mysqli_query($conn, $select_work);
 
-                      while ($row_work = mysqli_fetch_assoc($result_work)) {
-                        if ($row_work['type'] == 'job') {
-                          $select_qual_name = "SELECT `name` FROM `qualification_types` WHERE `id` = " . $row_work['qualification_id'] . " ";
-                          $row_qual_name = mysqli_fetch_assoc(mysqli_query($conn, $select_qual_name));
-                          ?>
+                    <!-- timeline -->
+                    <div class="art-timeline">
 
-                          <!-- timeline -->
-                          <div class="art-timeline">
-
-                            <div class="art-timeline-item">
-                              <div class="art-timeline-mark-light"></div>
-                              <div class="art-timeline-mark"></div>
+                      <div class="art-timeline-item">
+                        <div class="art-timeline-mark-light"></div>
+                        <div class="art-timeline-mark"></div>
 
 
-                              <div class="art-a art-timeline-content">
-                                <div class="art-card-header">
-                                  <div class="art-left-side">
-                                    <h5><?php echo $row_qual_name['name']; ?></h5>
-                                    <div class="art-el-suptitle mb-15">
-                                      <?php echo $user_global['first_name'] . ' ', $user_global['last_name']; ?>
-                                    </div>
-                                  </div>
-                                  <div class="art-right-side">
-                                    <span
-                                      class="art-date"><?php echo $row_work['start_date'] . ' ' . $row_work['end_date']; ?></span>
-                                  </div>
-                                </div>
-                                <p><?php echo $row_work['description']; ?></p>
+                        <div class="art-a art-timeline-content">
+                          <div class="art-card-header">
+                            <div class="art-left-side">
+                              <h5>Title of section 1</h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
+                            </div>
+                            <div class="art-right-side">
+                              <span class="art-date">jan 2018 - may 2020</span>
+                            </div>
+                          </div>
+                          <p>Placeat iure tempora laudantium ipsa ad debitis unde? Iste voluptatibus minus veritatis qui ut.</p>
+                        </div>
+                      </div>
+
+                      <div class="art-timeline-item">
+                        <div class="art-timeline-mark-light"></div>
+                        <div class="art-timeline-mark"></div>
+
+
+                        <div class="art-a art-timeline-content">
+                          <div class="art-card-header">
+                            <div class="art-left-side">
+                              <h5>Title of section 1</h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
+                            </div>
+                            <div class="art-right-side">
+                              <span class="art-date">jan 2018 - may 2020</span>
+                            </div>
+                          </div>
+                          <p>Adipisicing elit. Iusto, optio, dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde?</p>
+                          <a data-fancybox="recommendation" href="#art-recomendation-popup-1" class="art-link art-color-link art-w-chevron">Recommendation</a>
+                        </div>
+
+                        <!-- popup -->
+                        <div class="art-recomendation-popup" style="display: none;" id="art-recomendation-popup-1">
+
+                          <!-- testimonial -->
+                          <div class="art-a art-testimonial">
+                            <!-- testimonial body -->
+                            <div class="testimonial-body">
+                              <!-- photo -->
+                              <img class="art-testimonial-face" src="img/testimonials/face-3.jpg" alt="face">
+                              <!-- name -->
+                              <h5>Paul Trueman</h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
+                              <!-- text -->
+                              <div class="mb-15">Working with Artur has been a pleasure. Better yet - I alerted them of a minor issue before going to sleep. The issue was fixed the next morning. I couldn't ask for better support. Thank you Artur!
+                                This is easily a 5 star freelancer.</div>
+                            </div>
+                            <!-- testimonial body end -->
+                            <!-- testimonial footer -->
+                            <div class="art-testimonial-footer">
+                              <div class="art-left-side">
+                                <!-- star rate -->
+                                <ul class="art-star-rate">
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                </ul>
+                                <!-- star rate end -->
+                              </div>
+                              <div class="art-right-side">
+
                               </div>
                             </div>
-                            <?php
-                        }
-                      }
-                    }
-                    ?>
+                            <!-- testimonial footer end -->
+                          </div>
+                          <!-- testimonial end -->
+
+                        </div>
+                        <!-- popup end -->
+
+                      </div>
+
+                      <div class="art-timeline-item">
+                        <div class="art-timeline-mark-light"></div>
+                        <div class="art-timeline-mark"></div>
+
+                        <div class="art-a art-timeline-content">
+                          <div class="art-card-header">
+                            <div class="art-left-side">
+                              <h5>Title of section 1</h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
+                            </div>
+                            <div class="art-right-side">
+                              <span class="art-date">jan 2018 - may 2020</span>
+                            </div>
+                          </div>
+                          <p>Consectetur adipisicing elit. Excepturi, obcaecati, quisquam id molestias eaque asperiores voluptatibus cupiditate error assumenda delectus odit similique earum voluptatem doloremque dolorem
+                            ipsam quae rerum quis. Odit, itaque, deserunt corporis vero ipsum nisi eius odio natus ullam provident pariatur temporibus quia eos repellat consequuntur perferendis enim amet quae quasi repudiandae sed quod veniam
+                            dolore
+                            possimus rem voluptatum eveniet eligendi quis fugiat aliquam sunt similique aut adipisci.</p>
+                          <a data-fancybox="recommendation" href="#art-recomendation-popup-2" class="art-link art-color-link art-w-chevron">Recommendation</a>
+                        </div>
+
+                        <!-- popup -->
+                        <div class="art-recomendation-popup" style="display: none;" id="art-recomendation-popup-2">
+
+                          <!-- testimonial -->
+                          <div class="art-a art-testimonial">
+                            <!-- testimonial body -->
+                            <div class="testimonial-body">
+                              <!-- photo -->
+                              <img class="art-testimonial-face" src="img/testimonials/face-4.jpg" alt="face">
+                              <!-- name -->
+                              <h5>Paul Trueman</h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
+                              <!-- text -->
+                              <div class="mb-15">Working with Artur has been a pleasure. Better yet - I alerted them of a minor issue before going to sleep. The issue was fixed the next morning. I couldn't ask for better support. Thank you Artur!
+                                This is easily a 5 star freelancer.</div>
+                            </div>
+                            <!-- testimonial body end -->
+                            <!-- testimonial footer -->
+                            <div class="art-testimonial-footer">
+                              <div class="art-left-side">
+                                <!-- star rate -->
+                                <ul class="art-star-rate">
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                </ul>
+                                <!-- star rate end -->
+                              </div>
+                              <div class="art-right-side">
+
+                              </div>
+                            </div>
+                            <!-- testimonial footer end -->
+                          </div>
+                          <!-- testimonial end -->
+
+                        </div>
+                        <!-- popup end -->
+
+                      </div>
+
+                      <div class="art-timeline-item">
+                        <div class="art-timeline-mark-light"></div>
+                        <div class="art-timeline-mark"></div>
+
+                        <div class="art-a art-timeline-content">
+                          <div class="art-card-header">
+                            <div class="art-left-side">
+                              <h5>Title of section 1</h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
+                            </div>
+                            <div class="art-right-side">
+                              <span class="art-date">jan 2018 - tonight</span>
+                            </div>
+                          </div>
+                          <p>Dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum.</p>
+                          <a data-fancybox="recommendation" href="#art-recomendation-popup-3" class="art-link art-color-link art-w-chevron">Recommendation</a>
+                        </div>
+
+                        <!-- popup -->
+                        <div class="art-recomendation-popup" style="display: none;" id="art-recomendation-popup-3">
+
+                          <!-- testimonial -->
+                          <div class="art-a art-testimonial">
+                            <!-- testimonial body -->
+                            <div class="testimonial-body">
+                              <!-- photo -->
+                              <img class="art-testimonial-face" src="img/testimonials/face-2.jpg" alt="face">
+                              <!-- name -->
+                              <h5>Paul Trueman</h5>
+                              <div class="art-el-suptitle mb-15">Template author</div>
+                              <!-- text -->
+                              <div class="mb-15">Working with Artur has been a pleasure. Better yet - I alerted them of a minor issue before going to sleep. The issue was fixed the next morning. I couldn't ask for better support. Thank you Artur!
+                                This is easily a 5 star freelancer.</div>
+                            </div>
+                            <!-- testimonial body end -->
+                            <!-- testimonial footer -->
+                            <div class="art-testimonial-footer">
+                              <div class="art-left-side">
+                                <!-- star rate -->
+                                <ul class="art-star-rate">
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li><i class="fas fa-star"></i></li>
+                                  <li class="art-empty-item"><i class="fas fa-star"></i></li>
+                                </ul>
+                                <!-- star rate end -->
+                              </div>
+                              <div class="art-right-side">
+
+                              </div>
+                            </div>
+                            <!-- testimonial footer end -->
+                          </div>
+                          <!-- testimonial end -->
+
+                        </div>
+                        <!-- popup end -->
+
+                      </div>
 
                     </div>
                     <!-- timeline end -->
@@ -984,31 +1166,8 @@ function itExists($tableName, $conn, $user_id)
 
               </div>
               <!-- container end -->
-
-              <!-- (Blog Post) container -->
-
-              <!-- (Blog Post) container end -->
-
               <!-- container -->
               <div class="container-fluid">
-                <?php
-                // $select1 = "SELECT * FROM `user_registrations` WHERE `id` = "" ";
-                // $result = mysqli_query($conn, $select1);
-                // $row1 = mysqli_fetch_assoc($result);
-                // echo $row1['country'];
-                // echo $row1['street'];
-                // echo $row1['email'];
-                // echo $row1['telegram'];
-                // echo $row1['skype'];
-                // echo $row1['personal_no'];
-                // echo $row1['support_no'];
-                // echo $row1['office_no'];
-                // $select2 = "SELECT `city`, `residence` FROM `user_profiles` WHERE `id` = ""  ";
-                // $result = mysqli_query($conn, $select2); 
-                // $row2 = mysqli_fetch_assoc($result);
-                // echo $row2['city'];
-                // echo $row2['residence'];
-                ?>
 
                 <!-- row -->
                 <div class="row p-30-0">
@@ -1036,14 +1195,14 @@ function itExists($tableName, $conn, $user_id)
                       <div class="art-table p-15-15">
                         <ul>
                           <li>
-                            <h6>Country:</h6><span><?php echo $user_global['country']; ?></span>
+                            <h6>Country:</h6><span>Canada</span>
                           </li>
                           <li>
                             <h6>City:</h6><span>Toronto</span>
                           </li>
 
                           <li>
-                            <h6>Streat:</h6><span><?php echo $user_global['street']; ?></span>
+                            <h6>Streat:</h6><span>20 Dellbank Rd</span>
                           </li>
                         </ul>
                       </div>
@@ -1058,13 +1217,13 @@ function itExists($tableName, $conn, $user_id)
                       <div class="art-table p-15-15">
                         <ul>
                           <li>
-                            <h6>Email:</h6><span><?php echo $user_global['email']; ?></span>
+                            <h6>Email:</h6><span>carter.inbox@mail.com</span>
                           </li>
                           <li>
-                            <h6>Telegram:</h6><span><?php echo $user_global['telegram']; ?></span>
+                            <h6>Telegram:</h6><span>@arter</span>
                           </li>
                           <li>
-                            <h6>Skype:</h6><span><?php echo $user_global['skype']; ?> </span>
+                            <h6>Skype:</h6><span>Arter</span>
                           </li>
                         </ul>
                       </div>
@@ -1079,13 +1238,13 @@ function itExists($tableName, $conn, $user_id)
                       <div class="art-table p-15-15">
                         <ul>
                           <li>
-                            <h6>Support service:</h6><span><?php echo $user_global['support_no']; ?></span>
+                            <h6>Support service:</h6><span>+78 (098) 333 11 22</span>
                           </li>
                           <li>
-                            <h6>Office:</h6><span><?php echo $user_global['office_no']; ?></span>
+                            <h6>Office:</h6><span>+78 (098) 326 11 22</span>
                           </li>
                           <li>
-                            <h6>Personal:</h6><span><?php echo $user_global['personal_no']; ?> </span>
+                            <h6>Personal:</h6><span>+78 (077) 114 26 53</span>
                           </li>
                         </ul>
                       </div>
@@ -1113,44 +1272,34 @@ function itExists($tableName, $conn, $user_id)
                     <div class="art-a art-card">
 
                       <!-- contact form -->
-                      <form id="form" class="user-contact-form">
+                      <form id="form" class="art-contact-form">
                         <!-- form field -->
-                        <input type="hidden" id="user_id" value="62"></input>
                         <div class="art-form-field">
                           <!-- name input -->
-                          <input id="customer_name" name="customer_name" class="art-input" type="text"
-                            placeholder="Name" required>
+                          <input id="name" name="name" class="art-input" type="text" placeholder="Name" required>
                           <!-- label -->
-                          <label for="cutomer_name"><i class="fas fa-user"></i></label>
+                          <label for="name"><i class="fas fa-user"></i></label>
                         </div>
                         <!-- form field end -->
                         <!-- form field -->
                         <div class="art-form-field">
                           <!-- email input -->
-                          <input id="customer_email" name="customer_email" class="art-input" type="email"
-                            placeholder="Email" required>
+                          <input id="email" name="email" class="art-input" type="email" placeholder="Email" required>
                           <!-- label -->
-                          <label for="customer_email"><i class="fas fa-at"></i></label>
-                        </div>
-                        <div class="art-form-field">
-                          <input id="customer_no" name="customer_no" class="art-input" type="number"
-                            placeholder="Number">
-                          <label for="customer_no"><i class="fas fa-user"></i></label>
+                          <label for="email"><i class="fas fa-at"></i></label>
                         </div>
                         <!-- form field end -->
                         <!-- form field -->
                         <div class="art-form-field">
                           <!-- message textarea -->
-                          <textarea id="customer_message" name="text" class="art-input" placeholder="Message"
-                            required></textarea>
+                          <textarea id="message" name="text" class="art-input" placeholder="Message" required></textarea>
                           <!-- label -->
-                          <label for="customer_message"><i class="far fa-envelope"></i></label>
+                          <label for="message"><i class="far fa-envelope"></i></label>
                         </div>
                         <!-- form field end -->
                         <!-- button -->
                         <div class="art-submit-frame">
-                          <button class="art-btn art-btn-md art-submit" type="button"
-                            onclick="submitContactForm()"><span>Send message</span></button>
+                          <button class="art-btn art-btn-md art-submit" type="submit"><span>Send message</span></button>
                           <!-- success -->
                           <div class="art-success">Success <i class="fas fa-check"></i></div>
                         </div>
@@ -1178,28 +1327,28 @@ function itExists($tableName, $conn, $user_id)
                   <!-- col -->
                   <div class="col-6 col-lg-3">
                     <!-- brand -->
-                    <img class="art-brand" src="assets/img/brands/1.png" alt="brand">
+                    <img class="art-brand" src="img/brands/1.png" alt="brand">
                   </div>
                   <!-- col end -->
 
                   <!-- col -->
                   <div class="col-6 col-lg-3">
                     <!-- brand -->
-                    <img class="art-brand" src="assets/img/brands/2.png" alt="brand">
+                    <img class="art-brand" src="img/brands/2.png" alt="brand">
                   </div>
                   <!-- col end -->
 
                   <!-- col -->
                   <div class="col-6 col-lg-3">
                     <!-- brand -->
-                    <img class="art-brand" src="assets/img/brands/3.png" alt="brand">
+                    <img class="art-brand" src="img/brands/3.png" alt="brand">
                   </div>
                   <!-- col end -->
 
                   <!-- col -->
                   <div class="col-6 col-lg-3">
                     <!-- brand -->
-                    <img class="art-brand" src="assets/img/brands/1.png" alt="brand">
+                    <img class="art-brand" src="img/brands/1.png" alt="brand">
                   </div>
                   <!-- col end -->
 
@@ -1215,11 +1364,9 @@ function itExists($tableName, $conn, $user_id)
                 <!-- footer -->
                 <footer>
                   <!-- copyright -->
-                  <div>© <?php echo date('Y') . ' ' . $user_global['first_name'] . ' ' . $user_global['last_name']; ?>
-                  </div>
+                  <div>© 2025 Knack Media</div>
                   <!-- author ( Please! Do not delete it. You are awesome! :) -->
-                  <div>Template author:&#160; <a href="https://themeforest.net/user/millerdigitaldesign"
-                      target="_blank">Nazar Miller</a></div>
+                  <div>Template author:&#160; <a href="#" target="_blank">Knack Media</a></div>
                 </footer>
                 <!-- footer end -->
 
@@ -1242,16 +1389,16 @@ function itExists($tableName, $conn, $user_id)
     <!-- app wrapper end -->
 
     <!-- preloader -->
-    <!-- <div class="art-preloader"> -->
-    <!-- preloader content -->
-    <!-- <div class="art-preloader-content"> -->
-    <!-- title -->
-    <!-- <h4>Artur Carter</h4> -->
-    <!-- progressbar -->
-    <!-- <div id="preloader" class="art-preloader-load"></div> -->
-    <!-- </div> -->
-    <!-- preloader content end -->
-    <!-- </div> -->
+    <div class="art-preloader">
+      <!-- preloader content -->
+      <div class="art-preloader-content">
+        <!-- title -->
+        <h4>Knack Media</h4>
+        <!-- progressbar -->
+        <div id="preloader" class="art-preloader-load"></div>
+      </div>
+      <!-- preloader content end -->
+    </div>
     <!-- preloader end -->
 
   </div>
@@ -1259,28 +1406,28 @@ function itExists($tableName, $conn, $user_id)
   <div id="swupMenu"></div>
 
   <!-- jquery js -->
-  <script src="assets/js/plugins/jquery.min.js"></script>
+  <script src="js/plugins/jquery.min.js"></script>
   <!-- anime js -->
-  <script src="assets/js/plugins/anime.min.js"></script>
+  <script src="js/plugins/anime.min.js"></script>
   <!-- swiper js -->
-  <script src="assets/js/plugins/swiper.min.js"></script>
+  <script src="js/plugins/swiper.min.js"></script>
   <!-- progressbar js -->
-  <script src="assets/js/plugins/progressbar.min.js"></script>
+  <script src="js/plugins/progressbar.min.js"></script>
   <!-- smooth scrollbar js -->
-  <script src="assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="js/plugins/smooth-scrollbar.min.js"></script>
   <!-- overscroll js -->
-  <script src="assets/js/plugins/overscroll.min.js"></script>
+  <script src="js/plugins/overscroll.min.js"></script>
   <!-- typing js -->
-  <script src="assets/js/plugins/typing.min.js"></script>
+  <script src="js/plugins/typing.min.js"></script>
   <!-- isotope js -->
-  <script src="assets/js/plugins/isotope.min.js"></script>
+  <script src="js/plugins/isotope.min.js"></script>
   <!-- fancybox js -->
-  <script src="assets/js/plugins/fancybox.min.js"></script>
+  <script src="js/plugins/fancybox.min.js"></script>
   <!-- swup js -->
-  <script src="assets/js/plugins/swup.min.js"></script>
+  <script src="js/plugins/swup.min.js"></script>
+
   <!-- main js -->
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/custom.js"></script>
+  <script src="js/main.js"></script>
 
 </body>
 

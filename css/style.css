@@ -2024,12 +2024,12 @@ content
   border-color: #FFC107;
 }
 
-.user-contact-form .art-input:focus {
+.art-contact-form .art-input:focus {
   outline: none;
 }
 
-.user-contact-form .art-input.art-active + label,
-.user-contact-form .art-input:focus + label {
+.art-contact-form .art-input.art-active + label,
+.art-contact-form .art-input:focus + label {
   background: #FFC107;
   color: #20202a;
 }
@@ -2039,7 +2039,7 @@ content
   margin-bottom: 30px;
 }
 
-.user-contact-form label {
+.art-contact-form label {
   text-align: center;
   color: #8c8c8e;
   position: absolute;

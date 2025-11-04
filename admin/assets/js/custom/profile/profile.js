@@ -29,14 +29,23 @@ $('#profile_details').on('submit',function(e){
     }
 });
 
+$('#programming-skill-name').on('change',function(){
+    const selectVal = $(this).val();
+    if(selectVal == 0){
+        $('.progSkillAdd').removeClass('d-none');
+    }else{
+        $('.progSkillAdd').addClass('d-none');
+    }
+});
 function programmingSkillAdd() {
     $.ajax({
         url: "../../controller/profile/Profile.php",
         type: "POST",
         data: { GetProgrammingSkill: true },
         success: function(response) {
-            // console.log('Response:', response);
-            let data = JSON.parse(response).data;
+            //  console.log('Response:', response);
+           let data = JSON.parse(response).data;
+            // console.log(data);
 
             $('#profile-prog-tab tbody').empty(); // Optional: clear old rows
 
@@ -58,31 +67,106 @@ function programmingSkillAdd() {
 programmingSkillAdd();
 $('#profile_programmingSkill').on('submit',function(e){
     e.preventDefault();
-    let skillName = $('#programming-skill-name').val();
-    let skillEfficiency = $('#programming-skill-measure').val();
-    // console.log(skillName,skillEfficiency);
-    if(skillName == '' || skillEfficiency == ''){
-        $('.needs-validation').addClass('was-validated');
+    let skillName_id = $('#programming-skill-name').val();
+    let skillName = '';
+    if(skillName_id == 0){
+        skillName = $('#programming-skill-new').val();
     }else{
+        skillName = $('#programming-skill-name option:selected').text();
+    }
+    let skillEfficiency = $('#programming-skill-measure').val();
+    if(skillName_id == '' || skillEfficiency == ''){
+        $('#profile_programmingSkill .needs-validation').addClass('was-validated');
+    }else{
+        $('#profile-prog-tab tbody').append(`
+            <tr>
+                <th>#</th>
+                <td>${skillName}<input type="hidden" name="skillNameID[]" value="${skillName_id}">
+                <input type="hidden" name="skillName[]" value="${skillName}"></td>
+                <td>${skillEfficiency}<input type="hidden" name="skillEfficiency[]" value="${skillEfficiency}"></td>
+            </tr>
+        `);
+    }
+});
+
+// function updateProgrammingSkill(){
+//     let name_id = $('input[name="skillNameID[]"]').map(function(){return $(this).val();}).get();
+//     let name = $('input[name="skillName[]"]').map(function(){return $(this).val();}).get();
+//     let efficiency = $('input[name="skillEfficiency[]"]').map(function(){return $(this).val();}).get();
+//     if(name_id == '' || efficiency == ''){
+//         $('needs-validation').addClass('was-validated');
+//     }else{
+//            $.ajax({
+//             url:"../../controller/profile/Profile.php",
+//             type:"POST",
+//             data:{skillNameID:name_id,skillName:name,skillEfficiency:efficiency},
+//             success:function(response){
+//                 // console.log(response);
+//                 let parseResponse = JSON.parse(response);
+//                 if(parseResponse.success){
+//                     $('.needs-validation').removeClass('was-validated');
+//                     $('#programming-skill-name').val('');
+//                     $('#programming-skill-measure').val('');
+//                     toastSuccessAlert(parseResponse.success);
+//                     programmingSkillAdd();
+//                     if(name_id.includes(0)){
+//                         window.location.reload();
+//                     }
+//                 }else if(parseResponse.error_success){
+//                     toastErrorAlert(parseResponse.error_success);
+//                 }else{
+//                     toastErrorAlert('sonething went wrong!');
+//                 }
+              
+//             }
+//         });
+//     }
+// }
+
+function updateProgrammingSkill() {
+    let name_id = $('input[name="skillNameID[]"]').map(function() {return $(this).val();}).get();
+    let name = $('input[name="skillName[]"]').map(function() {return $(this).val();}).get();
+    let efficiency = $('input[name="skillEfficiency[]"]').map(function() {return $(this).val();}).get();
+    if (name_id.length === 0 || efficiency.length === 0) {
+        $('.needs-validation').addClass('was-validated');
+    } else {
         $.ajax({
-            url:"../../controller/profile/Profile.php",
-            type:"POST",
-            data:{skillName:skillName,skillEfficiency:skillEfficiency},
-            success:function(response){
-                $('.needs-validation').removeClass('was-validated');
-                $('#programming-skill-name').val('');
-                $('#programming-skill-measure').val('');
-                // alert("success");
-                programmingSkillAdd();
+            url: "../../controller/profile/Profile.php",
+            type: "POST",
+            data: {
+                skillNameID: name_id,
+                skillName: name,
+                skillEfficiency: efficiency
+            },
+            success: function(response) {
+                let parseResponse = JSON.parse(response);
+                if (parseResponse.success) {
+                    $('.needs-validation').removeClass('was-validated');
+                    $('#programming-skill-name').val('');
+                    $('#programming-skill-measure').val('');
+                    toastSuccessAlert(parseResponse.success);
+                    programmingSkillAdd();
+                    if (name_id.includes("0") || name_id.includes(0)) {
+                        window.location.reload();
+                    }
+                } else if (parseResponse.error_success) {
+                    toastErrorAlert(parseResponse.error_success);
+                } else {
+                    toastErrorAlert('Something went wrong!');
+                }
             }
         });
     }
+}
 
+$('#language-name').on('change',function(){
+    const selectVal = $(this).val();
+    if(selectVal == 0){
+        $('.languageNewAdd').removeClass('d-none');
+    }else{
+        $('.languageNewAdd').addClass('d-none');
+    }
 });
-
-
-
-
 
 function languageAdd() {
     $.ajax({
@@ -91,7 +175,7 @@ function languageAdd() {
         data: { getLanguage: true },
         success: function(response) {
             let data = JSON.parse(response).data;
-            console.log('Response:', data);
+            // console.log('Response:', data);
 
             $('#profie-lang-table tbody').empty(); // Optional: clear old rows
 
@@ -113,15 +197,40 @@ function languageAdd() {
 languageAdd();
  $('#profile-language').on('submit',function(e){
     e.preventDefault();
-    let languageName = $('#language-name').val();
-    let languageEfficiency = $('#language-measure').val();
-    if(languageName == '' || languageEfficiency == ''){
-         $('.needs-validation').addClass('was-validated');
+    let languageName_id = $('#language-name').val();
+    let languageName = '';
+    if(languageName_id == 0){
+        languageName = $('#language-name-new').val();
     }else{
-        $.ajax({
+        languageName = $('#language-name option:selected').text();
+    }
+    let languageEfficiency = $('#language-measure').val();
+    // console.log(languageName_id,languageName,languageEfficiency);
+    if(languageName == '' || languageEfficiency == ''){
+         $('#profile-language .needs-validation').addClass('was-validated');
+    }else{
+// console.log(languageName_id);
+// console.log(languageName);
+// console.log(languageEfficiency);
+ // Append row to table
+        $('#profie-lang-table tbody').append(`
+            <tr>
+                <th>#</th>
+                <td>${languageName}<input type="hidden" name="languageNameID[]" value="${languageName_id}"><input type="hidden" name="languageName[]" value="${languageName}"></td>
+                <td>${languageEfficiency}<input type="hidden" name="languageEfficiency[]" value="${languageEfficiency}"></td>
+            </tr>
+        `);
+    }
+ });
+
+ function updateLanguage(){
+    let name_id = $('input[name="languageNameID[]"]').map(function(){return $(this).val()}).get();
+    let name = $('input[name="languageName[]"]').map(function(){return $(this).val()}).get();
+    let efficiency = $('input[name="languageEfficiency[]"]').map(function(){return $(this).val()}).get();
+     $.ajax({
             url:"../../controller/profile/Profile.php",
             type:"POST",
-            data:{languageName:languageName,languageEfficiency:languageEfficiency},
+            data:{languageNameID:name_id,languageName:name,languageEfficiency:efficiency},
             success:function(response){
                 let parseResponse = JSON.parse(response); // convert response into json
                 if(parseResponse.success){
@@ -130,6 +239,9 @@ languageAdd();
                     $('#language-measure').val('');
                     toastSuccessAlert(parseResponse.success);
                     languageAdd();
+                     if (name_id.includes("0") || name_id.includes(0)) {
+                        window.location.reload();
+                    }
                 }else if(parseResponse.error_success){
                       toastErrorAlert(parseResponse.error_success);
                 }else{
@@ -137,8 +249,7 @@ languageAdd();
                 }
             }
         });
-    }
- });
+ }
 
 //  $('#profile-extra-skill').on('submit',function(e){
 //     e.preventDefault();
@@ -191,7 +302,7 @@ $('#profile-extra-skill').on('submit', function(e) {
     // console.log(extraSkillId);
 
     if (extraSkillId == '' || extraSkillId == null) {
-        $('.needs-validation').addClass('was-validated');
+        $('#profile-extra-skill .needs-validation').addClass('was-validated');
         return;
     } else {
         // Append row to table
@@ -279,7 +390,7 @@ $('#profile-plan').on('submit', function(e) {
     let popularity = $('#popularity-type').val();
 
     if (!plan_type_id || !plan_price || !skill_type_id || !popularity) {
-        $('.needs-validation').addClass('was-validated');
+        $('#profile-plan .needs-validation').addClass('was-validated');
     } else {
         $('#profile-plan-table tbody').append(`
             <tr>
@@ -328,3 +439,86 @@ function updateProfilePlan(){
     }
 }
 
+
+function projectView(){
+    $.ajax({
+        url: "../../controller/profile/Profile.php",
+        type: "POST",
+        data: { getProjectData: true },
+        success: function(response) {
+            let data = JSON.parse(response).data;
+            //   console.log('Response:', data);
+
+            $('#project-table tbody').empty(); // Optional: clear old rows
+
+            data.forEach((element, index) => {
+                $('#project-table tbody').append(`
+                    <tr>
+                        <td scope="row">${index + 1}</td>
+                        <td>${element.name}</td>
+                        <td>${element.title}</td>
+                        <td>${element.description}</td>
+                        <td>#</td>
+                    </tr>
+                `);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+}
+projectView();
+ $('#profile-projects').on('submit',function(e){
+    e.preventDefault();
+    let category_id = $('#project-category').val();
+    let categoryName = $('#project-category option:selected').text();
+    let title = $('#project-title').val();
+    let desc = $('#project-desc').val();
+    if(category_id == '' || title == '' || desc == ''){
+        $('#profile-projects .needs-validation').addClass('was-validated');
+    }else{
+        $('#project-table tbody').append(`
+            <tr>
+                <td>#</td>
+                <td>${categoryName}<input type="hidden" name="category[]" value="${category_id}"></td>
+                <td>${title}<input type="hidden" name="title[]" value="${title}"></td>
+                <td>${desc}<input type="hidden" name="desc[]" value="${desc}"></td>
+                <td>#</td>
+                <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
+            </tr>
+            `);
+
+            $('#project-category').val('');
+            $('#project-title').val('');
+            $('#project-desc').val('');
+            $('.needs-validation').removeClass('was-validated');
+
+    }
+ });
+$('#project-table').on('click', '.delete-row', function() {
+    $(this).closest('tr').remove();
+});
+
+ function updateProject(){
+    let category = $('input[name="category[]"]').map(function(){return $(this).val()}).get();
+    let title = $('input[name="title[]"]').map(function(){return $(this).val()}).get();
+    let desc = $('input[name="desc[]"]').map(function(){return $(this).val()}).get();
+    $.ajax({
+        url:"../../controller/profile/Profile.php",
+        type:"POST",
+        data:{projectCategory:category,projectTitle:title,projectDesc:desc},
+        success:function(response){
+            let parseResponse = JSON.parse(response);
+            $('#profile-projects')[0].reset();
+            projectView();
+            if(parseResponse.success){
+                toastSuccessAlert(parseResponse.success);
+            }else if(parseResponse.error_success){
+                toastErrorAlert(parseResponse.error_success);
+            }else{
+                toastErrorAlert("something went wrong!");
+            }
+        }
+    });
+ }

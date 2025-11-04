@@ -108,11 +108,112 @@ if (isset($_SESSION['user_email'])) {
                                         <input type="text" class="form-control" id="experience" name="experience" style="background-image: none;"
                                             placeholder="Enter Experience" value="<?= $row['experience']?>" required>
                                     </div>
+                                   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    
+
+
+                                  
+
                                     <div class="col-4">
+                                        <label for="designation" class="form-label">Designation</label>
+                                        <input type="text" class="form-control" id="designation" name="designation"
+                                            placeholder="">
+                                    </div>
+
+                                  
+
+                                    <div class="col-4">
+                                        <label for="personal_no" class="form-label">Personal No</label>
+                                        <input type="number" class="form-control" id="personal_no" name="personal_no"
+                                            value="">
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label for="support_no" class="form-label">Support No</label>
+                                        <input type="number" class="form-control" id="support_no" name="support_no"
+                                            value="" r>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label for="office_no" class="form-label">Office No</label>
+                                        <input type="number" class="form-control" id="office_no" name="office_no"
+                                            value="">
+                                    </div>
+
+                                 
+
+                                    <div class="col-4">
+                                        <label for="telegram_id" class="form-label">Telegram</label>
+                                        <input type="text" class="form-control" id="telegram_id" name="telegram_id"
+                                            value="">
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label for="skype_id" class="form-label">Skype </label>
+                                        <input type="text" class="form-control" id="skype_id" name="skype_id"
+                                            value="">
+                                    </div>
+
+                                 
+                                    <div class="col-4">
+                                        <label for="punchline" class="form-label">Punchline</label>
+                                        <input type="text" class="form-control" id="punchline" name="punchline"
+                                            placeholder="Enter Punchline">
+                                    </div>
+                                     <div class="col-4">
                                         <label for="project" class="form-label">Projects Completed</label>
                                         <input type="number" class="form-control" id="project"
                                             name="project" placeholder="Enter Projects Completed" style="background-image: none;" value="<?= $row['project']?>">
                                     </div>
+                                    <div class="col-4">
+                                        <label for="experience" class="form-label">Experience</label>
+                                        <input type="text" class="form-control" id="experience" name="experience"
+                                            placeholder="Enter Experience" value="">
+                                    </div>
+                                 
+                                    <div class="col-4">
+                                        <label for="customer_count" class="form-label">Customer Count</label>
+                                        <input type="number" class="form-control" id="customer_count"
+                                            name="customer_count" placeholder="Enter Customer Count" value="">
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="award_count" class="form-label">Award Count</label>
+                                        <input type="number" class="form-control" id="award_count" name="award_count" value=""
+                                            placeholder="Enter Award Count">
+                                    </div>
+                                      <div class="col-4">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="text" class="form-control" id="password1" name="password1" value="<?=$row['plain_password']?>"
+                                            placeholder="">
+                                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                     <div class="d-flex justify-content-end mt-4">
                                         <button type="submit" id="" name="" class="btn btn-primary">Update</button>
                                     </div>
@@ -120,6 +221,267 @@ if (isset($_SESSION['user_email'])) {
                             </form>
                         </div>
                     </div>
+
+<!-- ----------------------------------------------------- -->
+     <!-- <div class="card mt-3 skill-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Programming Skill To Enter</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="select-form" action="skill_viewer.php" method="POST">
+
+                                <div class="row mb-5">
+                                    <div class="col-md-3">
+                                        <label for="skill-type" class="form-label">Skill Type</label>
+                                        <select id="skill-type" class="form-select" aria-label="Skills Selection">
+                                            <option value="" selected></option>
+                                            <option value="Design">web Development</option>
+                                            <option value="Soft-Skills">Ui/UX Design</option>
+                                            </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="skill-name" class="form-label">Service Name</label>
+                                        <select id="skill-name" class="form-select" aria-label="Skill Type Selection">
+                                            <option value="" selected></option>
+                                            <option value="HTML5">HTML5</option>
+
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3 mt-4">
+                                        <label class="visually-hidden form-label" for="skill-measure">Percentage</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="skill-measure" min="0"
+                                                max="100" placeholder="Percentage">
+                                            <div class="input-group-text">%</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 mt-4">
+                                        <button type="button" class="btn btn-success" id="addButton"
+                                            onclick="addRow()">Add</button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="table-responsive col-md-6">
+                                        <table class="table mb-0" id="skill-table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">ID</th>
+                                                    <th scope="col">Skill Type</th>
+                                                    <th scope="col">Skill Name</th>
+                                                    <th scope="col">Skill Measure</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td scope="row">1</td>
+                                                    <td scope="row">Web Development</td>
+                                                    <td scope="row">Html</th>
+                                                    <td scope="row">100</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="alert-container col-md-12"></div>
+                                <div class="col-md-12 mt-3 text-end">
+                                    <button type="submit" class="btn btn-primary" style="display: none;"
+                                        id="invisibleButton">Submit</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div> 
+
+                    <div class="card mt-3 skill-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">User Profiles</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="select-form" action="skill_viewer.php" method="POST">
+                                <div class="row g-3 mb-5">
+                                    <!- <div class="col-md-3">
+                                        <label for="user_id" class="form-label">User ID</label>
+                                        <input type="text" class="form-control" id="user_id" name="user_id"
+                                            placeholder="Enter User ID">
+                                    </div>
+                     <div class="col-md-3">
+                                        <label for="residence" class="form-label">Residence</label>
+                                        <input type="text" class="form-control" id="residence" name="residence"
+                                            placeholder="Enter Residence">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="city" class="form-label">City</label>
+                                        <input type="text" class="form-control" id="city" name="city"
+                                            placeholder="Enter City">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="state" class="form-label">State</label>
+                                        <input type="text" class="form-control" id="state" name="state"
+                                            placeholder="Enter State">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="pincode" class="form-label">Pincode</label>
+                                        <input type="number" class="form-control" id="pincode" name="pincode"
+                                            placeholder="Enter Pincode">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="age" class="form-label">Age</label>
+                                        <input type="number" class="form-control" id="age" name="age"
+                                            placeholder="Enter Age">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="punchline" class="form-label">Punchline</label>
+                                        <input type="text" class="form-control" id="punchline" name="punchline"
+                                            placeholder="Enter Punchline">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="experience" class="form-label">Experience</label>
+                                        <input type="text" class="form-control" id="experience" name="experience"
+                                            placeholder="Enter Experience">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="projects_completed" class="form-label">Projects Completed</label>
+                                        <input type="number" class="form-control" id="projects_completed"
+                                            name="projects_completed" placeholder="Enter Projects Completed">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="customer_count" class="form-label">Customer Count</label>
+                                        <input type="number" class="form-control" id="customer_count"
+                                            name="customer_count" placeholder="Enter Customer Count">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="award_count" class="form-label">Award Count</label>
+                                        <input type="number" class="form-control" id="award_count" name="award_count"
+                                            placeholder="Enter Award Count">
+                                    </div> 
+
+                     <div class="col-md-3 mt-4">
+                                        <button type="button" class="btn btn-success" id="addButton"
+                                            onclick="addRow()">Add</button>
+                                    </div> 
+                    </div> 
+
+                    <<div class="table-responsive">
+                                    <table class="table mb-0" id="skill-table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Skill Type</th>
+                                                <th scope="col">Skill Name</th>
+                                                <th scope="col">Skill Measure</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td scope="row">1</td>
+                                                <td>Web Development</td>
+                                                <td>Html</td>
+                                                <td>100</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                               </div> 
+                    
+                                <div class="alert-container mt-3"></div>
+                                <div class="text-end mt-3">
+                                    <button type="submit" class="btn btn-primary" style="display: none;"
+                                        id="invisibleButton">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>  
+                    
+                    <div class="card mt-3 skill-card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">User Services</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="select-form" action="skill_viewer.php" method="POST">
+
+                                <div class="row mb-5">
+                                    <div class="col-md-3">
+                                        <label for="skill-type" class="form-label">Service Type</label>
+                                        <select id="skill-type" class="form-select" aria-label="Skills Selection">
+                                            <option value="" selected disabled>-- Select Service Type --</option>
+                                            <option value="Design">web Development</option>
+                                            <option value="Soft-Skills">Ui/UX Design</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="skill-name" class="form-label">Service Name</label>
+                                        <select id="skill-name" class="form-select" aria-label="Skill Type Selection">
+                                            <option value="" selected disabled>-- Select Service Name--</option>
+                                            <option value="HTML5">HTML5</option>
+
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label" for="skill-measure">Efficiency</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="skill-measure" min="0"
+                                                max="100" placeholder="Percentage">
+                                            <div class="input-group-text">%</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 mt-4">
+                                        <button type="button" class="btn btn-success" id="addButton"
+                                            onclick="addRow()">Add</button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="table-responsive col-md-6">
+                                        <table class="table mb-0" id="skill-table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">ID</th>
+                                                    <th scope="col">Service Type</th>
+                                                    <th scope="col">Service Name</th>
+                                                    <th scope="col">Service Measure</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td scope="row">1</td>
+                                                    <td scope="row">Web Development</td>
+                                                    <td scope="row">Html</th>
+                                                    <td scope="row">100</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="alert-container col-md-12"></div>
+                                <div class="col-md-12 mt-3 text-end">
+                                    <button type="submit" class="btn btn-primary" style="display: none;"
+                                        id="invisibleButton">Submit</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div> -->
+<!-- -------------------------------------------------------------------- -->
+                    <!-- Programming Cardd -->
+
+
+
+
+
+
+
 
                     <!-- Programming Cardd -->
                     <div class="card mt-3 skill-card">
@@ -144,7 +506,7 @@ if (isset($_SESSION['user_email'])) {
                                         <select id="programming-skill-name" class="form-select"
                                             aria-label="Skill Type Selection" style="background-image: none;;" required>
                                             <option value="" selected disabled>-- Select Skill Name --</option>
-                                            <?php $select = "SELECT * FROM `programming_skill_types`";
+                                            <?php $select = "SELECT * FROM `programming_skill_types` WHERE `deleted_at` IS NULL";
                                             $result = mysqli_query($conn, $select);
                                             if ($result && $result->num_rows > 0) {
                                                 while ($row = $result->fetch_assoc()) {
@@ -157,8 +519,15 @@ if (isset($_SESSION['user_email'])) {
                                             }
 
                                             ?>
+                                            <option value="0">Add More ✏️</option>
                                         </select>
                                         <input type="hidden" id="programming-skill-id" name="programming-skill-id">
+                                    </div>
+                                     <div class="col-md-3 progSkillAdd d-none">
+                                        <label class=" form-label" for="programming-skill-new">Skill Name</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="programming-skill-new" placeholder="Enter Skill Name" style="background-image: none;" required>
+                                        </div>
                                     </div>
 
                                     <div class="col-md-3">
@@ -172,8 +541,10 @@ if (isset($_SESSION['user_email'])) {
 
                                     <div class="col-md-3 mt-4">
                                         <button type="submit" class="btn btn-success" id="addButton"
-                                            onclick="addRowProgrammingSkill()">Add</button>
+                                            >Add</button>
                                     </div>
+
+
                                 </div>
                             </form>
 
@@ -201,7 +572,7 @@ if (isset($_SESSION['user_email'])) {
                                         id="invisibleButton">Submit</button>
                                 </div> -->
                                 <div class="d-flex justify-content-end mt-4">
-                                    <button type="submit" id="" name="" class="btn btn-primary">Update</button>
+                                    <button type="button" id="" name="" class="btn btn-primary" onclick="updateProgrammingSkill()">Update</button>
                                 </div>
                             
                         </div>
@@ -231,11 +602,16 @@ if (isset($_SESSION['user_email'])) {
                                                 }
                                             }
                                             ?>
-
+                                            <option value="0">Add More ✏️</option>
                                         </select>
                                         <input type="hidden" id="language-id" name="language-id">
                                     </div>
-
+                                    <div class="col-md-3 languageNewAdd d-none">
+                                        <label class=" form-label" for="language-name-new">Langauage Name</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="language-name-new" placeholder="Enter Language Name" style="background-image: none;" required>
+                                        </div>
+                                    </div>
                                     <div class="col-md-3" style="margin-top: 2.9rem;">
                                         <label class="visually-hidden form-label" for="skill-measure">Efficiency</label>
                                         <div class="input-group">
@@ -249,9 +625,9 @@ if (isset($_SESSION['user_email'])) {
                                             class="btn btn-success">Add</button>
                                     </div>
                                 </div>
-                                             </form>
+                            </form>
                                 <div class="table-responsive">
-                                    <table class="table mb-0" id="profie-lang-table">
+                                    <table class="table table-striped" id="profie-lang-table">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
@@ -266,8 +642,8 @@ if (isset($_SESSION['user_email'])) {
                                 </div>
                                 <div class="alert-container mt-3"></div>
                                 <div class="d-flex justify-content-end mt-4">
-                                    <button type="submit" id="lang-sub" name="lang-sub"
-                                        class="btn btn-primary">Update</button>
+                                    <button type="button" id="lang-sub" name="lang-sub"
+                                        class="btn btn-primary" onclick="updateLanguage()">Update</button>
                                 </div>
                            
                         </div>
@@ -284,12 +660,6 @@ if (isset($_SESSION['user_email'])) {
                         <div class="card-body">
                             <form id="profile-projects" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                                 <div class="row g-3 mb-5">
-
-                                    <!-- <div class="col-md-3">
-                                <label for="user_id" class="form-label">User ID</label>
-                                <input type="text" class="form-control" id="user_id" name="user_id"
-                                    placeholder="Enter User ID" required>
-                            </div> -->
                                     <div class="col-md-2 mb-3">
                                         <label for="project-category" class="form-label">Category</label>
                                         <select class="form-select" id="project-category" name="project-category"
@@ -297,7 +667,7 @@ if (isset($_SESSION['user_email'])) {
                                             <option value="" selected disabled>-- Select Category --</option>
                                             <!-- <option value="">Web Development</option> -->
                                             <?php
-                                            $select = "SELECT * FROM `categories`";
+                                            $select = "SELECT * FROM `category_types`";
                                             $result = mysqli_query($conn, $select);
                                             if ($result && $result->num_rows > 0) {
                                                 while ($row = $result->fetch_assoc()) {
@@ -312,8 +682,8 @@ if (isset($_SESSION['user_email'])) {
                                         <!-- <input type="hidden" id="project-id" name="project-id"> -->
                                     </div>
 
-                                    <input type="text" class="form-control" id="custom-category" name="custom-category"
-                                        placeholder="Enter category" style="display:none;">
+                                    <!-- <input type="text" class="form-control" id="custom-category" name="custom-category"
+                                        placeholder="Enter category" style="display:none;"> -->
 
 
                                     <div class="col-md-2">
@@ -327,43 +697,29 @@ if (isset($_SESSION['user_email'])) {
                                         <input type="text" class="form-control" id="project-desc" name="project-desc"
                                             placeholder="Enter Description" required>
                                     </div>
-                                    <!-- 
-                                    <div class="col-md-3">
-                                        <label for="file_name" class="form-label">File Name</label>
-                                        <input type="text" class="form-control" id="file_name" name="file_name"
-                                            placeholder="Enter File Name" required>
-                                    </div> -->
-
                                     <div class="col-md-3">
                                         <label for="file_name" class="form-label">Upload Image</label>
                                         <input type="file" class="form-control" id="file_name" name="file_name"
-                                            accept="image/*" required>
+                                            accept="image/*">
                                     </div>
-                                    <!-- <div class="col-md-3 d-flex flex-column justify-content-end">
-                                        <button type="submit" class="btn btn-success">Add</button>
-                                    </div> -->
-                                    <!-- <div class="col-md-3 d-flex align-items-end"  style="margin-top: 2.9rem;">
-                                        <button type="submit" class="btn btn-success">Add</button>
-                                    </div>   -->
                                     <div class="col-3" style="margin-top: 3rem;">
-                                        <button type="button" class="btn btn-primary"
-                                            onclick="addRowProject()">Update</button>
+                                        <button type="submit" class="btn btn-success"
+                                           >Add</button>
                                     </div>
 
                                 </div>
-  </form>
+                                </form>
                                 <div class="table-responsive">
                                     <table class="table mb-0" id="project-table">
-                                        <!-- <thead>
+                                        <thead>
                                             <tr>
                                                 <th scope="col">#</th>
                                                 <th scope="col">Category Name</th>
-
                                                 <th scope="col">Title</th>
                                                 <th scope="col">Description</th>
                                                 <th scope="col">File Name</th>
                                             </tr>
-                                        </thead> -->
+                                        </thead>
                                         <tbody>
 
                                         </tbody>
@@ -371,9 +727,9 @@ if (isset($_SESSION['user_email'])) {
                                 </div>
 
                                 <div class="alert-container mt-3"></div>
-                                <!-- <div class="d-flex justify-content-end mt-4">
-                                    <button type="submit" id="" name="" class="btn btn-primary">Update</button>
-                                </div> -->
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="button" id="" name="" class="btn btn-primary" onclick="updateProject()">Update</button>
+                                </div>
                           
                         </div>
                     </div>
@@ -535,90 +891,86 @@ if (isset($_SESSION['user_email'])) {
                     <!-- Plan Card end-->
 
                     <!-- Qualification Card -->
-                    <div class="card mt-3 skill-card">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Qualification</h5>
-                        </div>
-                        <div class="card-body">
-                            <form id="profile-qualification" enctype="multipart/form-data" method="POST" class="needs-validation" novalidate>
-                                <div class="row g-3 mb-5">
-                                    <div class="col-md-3">
-                                        <label for="qualification" class="form-label">Qualification ID</label>
-                                        <select class="form-select" id="qualification" name="qualification" required>
-                                            <option value="" selected disabled>-- Select Qualification --</option>
-                                            <?php $select = "SELECT * FROM `qualification_types`";
-                                            $result = mysqli_query($conn, $select);
-                                            if ($result && $result->num_rows > 0) {
-                                                while ($row = $result->fetch_assoc()) {
-                                                    ?>
-                                                    <option value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
+             <div class="card mt-3 skill-card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Qualification</h5>
+    </div>
+    <div class="card-body">
+        <form id="profile-qualification" enctype="multipart/form-data" method="POST" class="needs-validation" novalidate>
+            <div class="row g-3 mb-5">
+                <div class="col-md-3">
+                    <label for="qualification" class="form-label">Qualification ID</label>
+                    <select class="form-select" id="qualification" name="qualification[]" required>
+                        <option value="" selected disabled>-- Select Qualification --</option>
+                        <?php
+                        $select = "SELECT * FROM `qualification_types`";
+                        $result = mysqli_query($conn, $select);
+                        if ($result && $result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) { ?>
+                                <option value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
+                        <?php }
+                        } ?>
+                    </select>
+                </div>
 
-                                    <div class="col-md-3">
-                                        <label for="start-date" class="form-label">Start Date</label>
-                                        <input type="date" class="form-control" id="qualification-start-date" name="qualification-start-date"
-                                            required>
-                                    </div>
+                <div class="col-md-3">
+                    <label for="qualification-start-date" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="qualification-start-date" name="start_date[]" required>
+                </div>
 
-                                    <div class="col-md-3">
-                                        <label for="end-date" class="form-label">End Date</label>
-                                        <input type="date" class="form-control" id="qualification-end-date" name="qualification-end-date" required>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="certification" class="form-label">Certification</label>
-                                        <input type="text" class="form-control" id="certification" name="certification"
-                                            placeholder="Enter Certification" required>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="qualification-upload" class="form-label">Upload Image</label>
-                                        <input type="file" class="form-control" id="qualification-upload" name="qualification-upload"
-                                            accept="image/*" >
-                                    </div>
-                                     <div class="col-md-6">
-                                        <label for="description" class="form-label">Description</label>
-                                        <textarea class="form-control" id="description" name="description" rows="2"
-                                            placeholder="Enter Description" required></textarea>
-                                    </div>
-                                    <div class="col-md-3 mt-5">
-                                        <button type="submit"
-                                            class="btn btn-success">Add</button>
-                                    </div>
-                                </div>
-                                </form>
+                <div class="col-md-3">
+                    <label for="qualification-end-date" class="form-label">End Date</label>
+                    <input type="date" class="form-control" id="qualification-end-date" name="end_date[]" required>
+                </div>
 
-                                <div class="table-responsive">
-                                    <table class="table table-striped" id="qualification-table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Qualification ID</th>
-                                                <th scope="col">Start Date</th>
-                                                <th scope="col">End Date</th>
-                                                <th scope="col">Description</th>
-                                                <th scope="col">Certification</th>
-                                                <th scope="col">File Name</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                <div class="col-md-3">
+                    <label for="certification" class="form-label">Certification</label>
+                    <input type="text" class="form-control" id="certification" name="certification[]" placeholder="Enter Certification" required>
+                </div>
 
-                                        </tbody>
-                                    </table>
-                                </div>
+                <div class="col-md-3">
+                    <label for="qualification-upload" class="form-label">Upload Image</label>
+                    <input type="file" class="form-control" id="qualification-upload" name="qualification_upload[]" accept="image/*">
+                </div>
 
-                                <div class="alert-container mt-3"></div>
-                                <div class="d-flex justify-content-end mt-4">
-                                    <button type="button" onclick="updateQualifications()"
-                                        class="btn btn-primary">Update</button>
-                                </div>
-                        </div>
-                    </div>
+                <div class="col-md-6">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description[]" rows="2" placeholder="Enter Description" required></textarea>
+                </div>
+
+                <div class="col-md-3 mt-5">
+                    <button type="submit" class="btn btn-success">Add</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-striped" id="qualification-table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Qualification</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Certification</th>
+                        <th scope="col">File Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="alert-container mt-3"></div>
+        <div class="d-flex justify-content-end mt-4">
+            <button type="button" onclick="updateQualifications()" class="btn btn-primary">Update</button>
+        </div>
+    </div>
+</div>
+
                  
-                    <!-- <div class="card mt-3 skill-card">
+                    <div class="card mt-3 skill-card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Icon</h5>
                         </div>
@@ -652,7 +1004,7 @@ if (isset($_SESSION['user_email'])) {
                                 <div class="alert-container mt-3"></div>
                             </form>
                         </div>
-                    </div> -->
+                    </div>
                     <!-- Social Icons Card end -->
 
 
@@ -675,10 +1027,10 @@ if (isset($_SESSION['user_email'])) {
                                             // if ($result && $result->num_rows > 0) {
                                             //     while ($row = $result->fetch_assoc()) {
                                             //         ?>
-                                            //         <option value="<? //= $row['id'] ?>"><? //= $row['name'] ?></option>
-                                            //         <?php
-                                            //     }
-                                            // }
+                                            //          <option value="<?//= $row['id'] ?>"><?//= $row['name'] ?></option>
+                                            //          <?php
+                                            //      }
+                                            //  }
                                             ?>
                                         </select>
                                     </div>
@@ -722,6 +1074,7 @@ if (isset($_SESSION['user_email'])) {
     </script>
          <script src="../../assets/js/custom/profile/profile.js"></script>
          <script src="../../assets/js/custom/profile/profileTwo.js"></script>
+         <script src="../../assets/js/custom/profile/programming-skills.js"></script>
 </body>
 
 </html>
