@@ -1,6 +1,6 @@
 <?php
 require_once 'admin/includes/header.php';
-require_once 'admin/includes/connection.php';
+// require_once 'admin/includes/connection.php';
 $userId = $_SESSION['user_id'];
 if (isset($_SESSION['user_email'])) {
     $email = mysqli_real_escape_string($conn, $_SESSION['user_email']);
@@ -27,7 +27,7 @@ if (isset($_SESSION['user_email'])) {
 //         return;
 //     }
 
-
+ 
 ?>
 <!doctype html>
 <html lang="zxx">
@@ -338,7 +338,7 @@ if (isset($_SESSION['user_email'])) {
                         <!-- main title -->
                         <div class="art-banner-title">
                           <!-- title -->
-                          <h1 class="mb-15">Discover my Amazing <br>Art Space!</h1>
+                          <h1 class="mb-15"><?=$row['punchline']?></h1>
                           <!-- suptitle -->
                           <div class="art-lg-text art-code mb-25">&lt;<i>code</i>&gt; I build <span class="txt-rotate" data-period="2000"
                               data-rotate='[ "web interfaces.", "ios and android applications.", "design mocups.", "automation tools." ]'></span>&lt;/<i>code</i>&gt;</div>
@@ -379,7 +379,7 @@ if (isset($_SESSION['user_email'])) {
                       <!-- counter -->
                       <div class="art-counter-box">
                         <!-- counter number -->
-                        <span class="art-counter">10</span><span class="art-counter-plus">+</span>
+                        <span class="art-counter"><?=$row['experience']?></span><span class="art-counter-plus">+</span>
                       </div>
                       <!-- counter end -->
                       <!-- title -->
@@ -398,7 +398,7 @@ if (isset($_SESSION['user_email'])) {
                       <!-- counter -->
                       <div class="art-counter-box">
                         <!-- counter number -->
-                        <span class="art-counter">143</span>
+                        <span class="art-counter"><?=$row['project']?></span>
                       </div>
                       <!-- counter end -->
                       <!-- title -->
@@ -417,7 +417,7 @@ if (isset($_SESSION['user_email'])) {
                       <!-- counter -->
                       <div class="art-counter-box">
                         <!-- counter number -->
-                        <span class="art-counter">114</span>
+                        <span class="art-counter"><?=$row['customer_count']?></span>
                       </div>
                       <!-- counter end -->
                       <!-- title -->
@@ -430,13 +430,12 @@ if (isset($_SESSION['user_email'])) {
 
                   <!-- col -->
                   <div class="col-md-3 col-6">
-
                     <!-- couner frame -->
                     <div class="art-counter-frame">
                       <!-- counter -->
                       <div class="art-counter-box">
                         <!-- counter number -->
-                        <span class="art-counter">20</span><span class="art-counter-plus">+</span>
+                        <span class="art-counter"><?=$row['award_count']?></span><span class="art-counter-plus">+</span>
                       </div>
                       <!-- counter end -->
                       <!-- title -->
@@ -477,7 +476,13 @@ if (isset($_SESSION['user_email'])) {
                   <!-- col end -->
 
                   <!-- col -->
-                  <div class="col-lg-4 col-md-6">
+                   <?php
+                   $query = "SELECT name,description FROM user_services WHERE user_id = $row[id]"; 
+                   $result = mysqli_query($conn,$query);
+                   if($result && mysqli_num_rows($result) > 0){
+                     while($data = mysqli_fetch_assoc($result)){
+                      ?>
+                         <div class="col-lg-4 col-md-6">
 
                     <!-- service -->
                     <div class="art-a art-service-icon-box">
@@ -485,102 +490,23 @@ if (isset($_SESSION['user_email'])) {
                       <div class="art-service-ib-content">
                        
                         <!-- title -->
-                        <h5 class="mb-15">Web Development</h5>
+                        <h5 class="mb-15"><?=$data['name']?></h5>
                         <!-- text -->
-                        <div class="mb-15">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus esse commodi deserunt vitae, vero quasi! Veniam quaerat tenetur pariatur doloribus.</div>
+                        <div class="mb-15"><?=$data['description']?></div>
                         <!-- button -->
-                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
+                        <!-- <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div> -->
                       </div>
                       <!-- service content end -->
                     </div>
                     <!-- service end -->
 
                   </div>
-                  <!-- col end -->
-
-                  <!-- col -->
-                  <div class="col-lg-4 col-md-6">
-
-                    <!-- service -->
-                    <div class="art-a art-service-icon-box">
-                      <!-- service content -->
-                      <div class="art-service-ib-content">
-                        <!-- title -->
-                        <h5 class="mb-15">UI/UX Design</h5>
-                        <!-- text -->
-                        <div class="mb-15">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus esse commodi deserunt vitae, vero quasi! Veniam quaerat tenetur pariatur doloribus.</div>
-                        <!-- button -->
-                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
-                      </div>
-                      <!-- service content end -->
-                    </div>
-                    <!-- service end -->
-
-                  </div>
-                  <!-- col end -->
-
-                  <!-- col -->
-                  <div class="col-lg-4 col-md-6">
-
-                    <!-- service -->
-                    <div class="art-a art-service-icon-box">
-                      <!-- service content -->
-                      <div class="art-service-ib-content">
-                        <!-- title -->
-                        <h5 class="mb-15">Sound Design</h5>
-                        <!-- text -->
-                        <div class="mb-15">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus esse commodi deserunt vitae, vero quasi! Veniam quaerat tenetur pariatur doloribus.</div>
-                        <!-- button -->
-                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
-                      </div>
-                      <!-- service content end -->
-                    </div>
-                    <!-- service end -->
-
-                  </div>
-                  <!-- col end -->
-
-                  <!-- col -->
-                  <div class="col-lg-4 col-md-6">
-
-                    <!-- service -->
-                    <div class="art-a art-service-icon-box">
-                      <!-- service content -->
-                      <div class="art-service-ib-content">
-                        <!-- title -->
-                        <h5 class="mb-15">Game Design</h5>
-                        <!-- text -->
-                        <div class="mb-15">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus esse commodi deserunt vitae, vero quasi! Veniam quaerat tenetur pariatur doloribus.</div>
-                        <!-- button -->
-                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
-                      </div>
-                      <!-- service content end -->
-                    </div>
-                    <!-- service end -->
-
-                  </div>
-                  <!-- col end -->
-
-                  <!-- col -->
-                  <div class="col-lg-4 col-md-6">
-
-                    <!-- service -->
-                    <div class="art-a art-service-icon-box">
-                      <!-- service content -->
-                      <div class="art-service-ib-content">
-                        <!-- title -->
-                        <h5 class="mb-15">Advertising</h5>
-                        <!-- text -->
-                        <div class="mb-15">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus esse commodi deserunt vitae, vero quasi! Veniam quaerat tenetur pariatur doloribus.</div>
-                        <!-- button -->
-                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
-                      </div>
-                      <!-- service content end -->
-                    </div>
-                    <!-- service end -->
-
-                  </div>
-                  <!-- col end -->
+                      <?php
+                     }
+                   }
+                   ?>
+               
+                  
 
                 </div>
                 <!-- row end -->
@@ -1272,11 +1198,11 @@ if (isset($_SESSION['user_email'])) {
                     <div class="art-a art-card">
 
                       <!-- contact form -->
-                      <form id="form" class="art-contact-form">
+                      <form id="form_contact" class="art-contact-form">
                         <!-- form field -->
                         <div class="art-form-field">
                           <!-- name input -->
-                          <input id="name" name="name" class="art-input" type="text" placeholder="Name" required>
+                          <input id="contact_name" name="name" class="art-input" type="text" placeholder="Name" required>
                           <!-- label -->
                           <label for="name"><i class="fas fa-user"></i></label>
                         </div>
@@ -1284,7 +1210,7 @@ if (isset($_SESSION['user_email'])) {
                         <!-- form field -->
                         <div class="art-form-field">
                           <!-- email input -->
-                          <input id="email" name="email" class="art-input" type="email" placeholder="Email" required>
+                          <input id="contact_email" name="email" class="art-input" type="email" placeholder="Email" required>
                           <!-- label -->
                           <label for="email"><i class="fas fa-at"></i></label>
                         </div>
@@ -1292,7 +1218,7 @@ if (isset($_SESSION['user_email'])) {
                         <!-- form field -->
                         <div class="art-form-field">
                           <!-- message textarea -->
-                          <textarea id="message" name="text" class="art-input" placeholder="Message" required></textarea>
+                          <textarea id="contact_message" name="text" class="art-input" placeholder="Message" required></textarea>
                           <!-- label -->
                           <label for="message"><i class="far fa-envelope"></i></label>
                         </div>
@@ -1428,6 +1354,44 @@ if (isset($_SESSION['user_email'])) {
 
   <!-- main js -->
   <script src="js/main.js"></script>
+
+  <script>
+$('#form_contact').on('submit', function(e) {
+  e.preventDefault();
+
+  let name = $('#contact_name').val();
+  let email = $('#contact_email').val();
+  let message = $('#contact_message').val();
+  let id = <?php echo json_encode($row['id']); ?>; // safer output
+
+  $.ajax({
+    url: "action.php",
+    type: "POST",
+    data: {
+      id: id,
+      contactName: name,
+      email: email,
+      message: message
+    },
+     dataType: "json", // jQuery will parse response automatically
+    success: function(response) {
+      if (response.success) {
+        $('#form_contact')[0].reset();
+        alert(response.success);
+      } else if (response.error_success) {
+        alert(response.error_success);
+      } else {
+        alert('Something went wrong!');
+      }
+    },
+    error: function(xhr, status, error) {
+      console.error('AJAX error:', error);
+      alert('Server error. Please try again later.');
+    }
+  });
+});
+
+  </script>
 
 </body>
 

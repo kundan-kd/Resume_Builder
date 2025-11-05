@@ -3,45 +3,145 @@
 session_start();
 include '../../includes/connection.php';
 
+// if (isset($_POST['first_name']) && isset($_SESSION['user_id'])) {
+//     $id = $_SESSION['user_id'];
+//     $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
+//     $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
+//     $email = mysqli_real_escape_string($conn, $_POST['email']);
+//     $mobile = mysqli_real_escape_string($conn, $_POST['mobile']);
+//     $dob = mysqli_real_escape_string($conn, $_POST['dob']);
+//     $address = mysqli_real_escape_string($conn, $_POST['address']);
+//     $city = mysqli_real_escape_string($conn, $_POST['city']);
+//     $state = mysqli_real_escape_string($conn, $_POST['state']);
+//     $pincode = mysqli_real_escape_string($conn, $_POST['pincode']);
+//     $country = mysqli_real_escape_string($conn, $_POST['country']);
+//     $linkedin = mysqli_real_escape_string($conn, $_POST['linkedin']);
+//     $experience = mysqli_real_escape_string($conn, $_POST['experience']);
+//     $project = mysqli_real_escape_string($conn, $_POST['project']);
+
+//     $update = "UPDATE user_registrations SET 
+//         first_name = '$first_name',
+//         last_name = '$last_name',
+//         email = '$email',
+//         mobile = '$mobile',
+//         dob = '$dob',
+//         address = '$address',
+//         city = '$city',
+//         state = '$state',
+//         pincode = '$pincode',
+//         country = '$country',
+//         linkedin = '$linkedin',
+//         experience = '$experience',
+//         project = '$project',
+//         updated_at = NOW()
+//         WHERE id = '$id'";
+
+//     if (mysqli_query($conn, $update)) {
+//         echo json_encode(['success' => 'Profile updated successfully']);
+//     } else {
+//         echo json_encode(['error_success' => 'Profile not updated']);
+//     }
+// }
 if (isset($_POST['first_name']) && isset($_SESSION['user_id'])) {
     $id = $_SESSION['user_id'];
-    $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
-    $last_name = mysqli_real_escape_string($conn, $_POST['last_name']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $mobile = mysqli_real_escape_string($conn, $_POST['mobile']);
-    $dob = mysqli_real_escape_string($conn, $_POST['dob']);
-    $address = mysqli_real_escape_string($conn, $_POST['address']);
-    $city = mysqli_real_escape_string($conn, $_POST['city']);
-    $state = mysqli_real_escape_string($conn, $_POST['state']);
-    $pincode = mysqli_real_escape_string($conn, $_POST['pincode']);
-    $country = mysqli_real_escape_string($conn, $_POST['country']);
-    $linkedin = mysqli_real_escape_string($conn, $_POST['linkedin']);
-    $experience = mysqli_real_escape_string($conn, $_POST['experience']);
-    $project = mysqli_real_escape_string($conn, $_POST['project']);
-
+    $first_name    = mysqli_real_escape_string($conn, $_POST['first_name']);
+    $last_name     = mysqli_real_escape_string($conn, $_POST['last_name']);
+    $email         = mysqli_real_escape_string($conn, $_POST['email']);
+    $mobile        = mysqli_real_escape_string($conn, $_POST['mobile']);
+    $dob           = mysqli_real_escape_string($conn, $_POST['dob']);
+    $address       = mysqli_real_escape_string($conn, $_POST['address']);
+    $city          = mysqli_real_escape_string($conn, $_POST['city']);
+    $state         = mysqli_real_escape_string($conn, $_POST['state']);
+    $pincode       = mysqli_real_escape_string($conn, $_POST['pincode']);
+    $country       = mysqli_real_escape_string($conn, $_POST['country']);
+    $linkedin      = mysqli_real_escape_string($conn, $_POST['linkedin']);
+    $experience    = mysqli_real_escape_string($conn, $_POST['experience']);
+    $project       = mysqli_real_escape_string($conn, $_POST['project']);
+    // new ones:
+    $designation   = mysqli_real_escape_string($conn, $_POST['designation']);
+    $personal_no   = mysqli_real_escape_string($conn, $_POST['personal_no']);
+    $support_no    = mysqli_real_escape_string($conn, $_POST['support_no']);
+    $office_no     = mysqli_real_escape_string($conn, $_POST['office_no']);
+    $telegram      = mysqli_real_escape_string($conn, $_POST['telegram']);
+    $skype         = mysqli_real_escape_string($conn, $_POST['skype']);
+    $punchline     = mysqli_real_escape_string($conn, $_POST['punchline']);
+    $customer_count= mysqli_real_escape_string($conn, $_POST['customer_count']);
+    $award_count   = mysqli_real_escape_string($conn, $_POST['award_count']);
+    
     $update = "UPDATE user_registrations SET 
-        first_name = '$first_name',
-        last_name = '$last_name',
-        email = '$email',
-        mobile = '$mobile',
-        dob = '$dob',
-        address = '$address',
-        city = '$city',
-        state = '$state',
-        pincode = '$pincode',
-        country = '$country',
-        linkedin = '$linkedin',
-        experience = '$experience',
-        project = '$project',
-        updated_at = NOW()
-        WHERE id = '$id'";
-
+        first_name     = '$first_name',
+        last_name      = '$last_name',
+        email          = '$email',
+        mobile         = '$mobile',
+        dob            = '$dob',
+        address        = '$address',
+        city           = '$city',
+        state          = '$state',
+        pincode        = '$pincode',
+        country        = '$country',
+        linkedin       = '$linkedin',
+        experience     = '$experience',
+        project        = '$project',
+        designation    = '$designation',
+        personal_no    = '$personal_no',
+        support_no     = '$support_no',
+        office_no      = '$office_no',
+        telegram       = '$telegram',
+        skype          = '$skype',
+        punchline      = '$punchline',
+        customer_count = '$customer_count',
+        award_count    = '$award_count',
+        updated_at     = NOW()
+      WHERE id           = '$id'";
+    
     if (mysqli_query($conn, $update)) {
         echo json_encode(['success' => 'Profile updated successfully']);
     } else {
         echo json_encode(['error_success' => 'Profile not updated']);
     }
 }
+
+if(isset($_POST['servicesName']) && isset($_SESSION['user_id'])){
+    $id = (int)$_SESSION['user_id'];
+    $servicesNames = $_POST['servicesName'];
+    $servicesDescs = $_POST['servicesDesc'];
+    $success = true;
+    for($i=0; $i < count($servicesDescs); $i++){
+        $name = mysqli_real_escape_string($conn, $servicesNames[$i]);
+        $desc = mysqli_real_escape_string($conn, $servicesDescs[$i]);
+        $insert = "INSERT INTO user_services(`user_id`,`name`,`description`,`status`,`created_at`,`updated_at`)values($id,'$name','$desc','1',NOW(),NOW())";
+        if(!mysqli_query($conn,$insert)){
+            $success = false;
+            break;
+        }
+    }
+    if($success){
+        echo json_encode(['success' =>'Service added succesfully']);
+    }else{
+        echo json_encode(['error_success' => 'Service not added']);
+    }
+}
+
+
+
+
+
+
+
+if(isset($_POST['GetServices']) && isset($_SESSION['user_id'])){
+    $id = $_SESSION['user_id'];
+     $query = "SELECT * FROM user_services WHERE user_id = $id";
+    $result = mysqli_query($conn, $query);
+    if ($result) {
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        // print_r($data);
+        echo json_encode(['status' => true, 'data' => $data]);
+        exit;
+    } else {
+        echo json_encode(['status' => false, 'error' => 'Query failed']);
+    }
+}
+
 
 if(isset($_POST['skillNameID']) && isset($_SESSION['user_id'])){
     $userId = (int) $_SESSION['user_id']; // Cast to int for safety

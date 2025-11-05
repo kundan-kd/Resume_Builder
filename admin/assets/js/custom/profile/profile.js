@@ -1,33 +1,224 @@
-$('#profile_details').on('submit',function(e){
-    e.preventDefault();
-    let first_name = $('#first_name').val();
-    let last_name = $('#last_name').val();
-    let email = $('#email').val();
-    let mobile = $('#mobile').val();
-    let dob = $('#dob').val();
-    let address = $('#address').val();
-    let city = $('#city').val();
-    let state = $('#state').val();
-    let pincode = $('#pincode').val();
-    let country = $('#country').val();
-    let linkedin = $('#linkedin').val();
-    let experience = $('#experience').val();
-    let project = $('#project').val();
-    if(first_name == '' || last_name == '' || email =='' || mobile =='' || dob =='' || address =='' || city =='' || state =='' || pincode =='' || country =='' || experience ==''){
-        $('.needs-validation').addClass('was-validated');
-    }else{
-        // console.log('ok');
-        $.ajax({
-            url:"../../controller/profile/Profile.php",
-            type:"POST",
-            data:{first_name:first_name,last_name:last_name,email:email,mobile:mobile,dob:dob,address:address,city:city,state:state,pincode:pincode,country:country,linkedin:linkedin,experience:experience,project:project},
-            success:function(response){
-                alert('success');
-            }    
+// $('#profile_details').on('submit',function(e){
+//     e.preventDefault();
+//     let first_name = $('#first_name').val();
+//     let last_name = $('#last_name').val();
+//     let email = $('#email').val();
+//     let mobile = $('#mobile').val();
+//     let dob = $('#dob').val();
+//     let address = $('#address').val();
+//     let city = $('#city').val();
+//     let state = $('#state').val();
+//     let pincode = $('#pincode').val();
+//     let country = $('#country').val();
+//     let linkedin = $('#linkedin').val();
+//     let experience = $('#experience').val();
+//     let project = $('#project').val();
+//     if(first_name == '' || last_name == '' || email =='' || mobile =='' || dob =='' || address =='' || city =='' || state =='' || pincode =='' || country =='' || experience ==''){
+//         $('.needs-validation').addClass('was-validated');
+//     }else{
+//         // console.log('ok');
+//         $.ajax({
+//             url:"../../controller/profile/Profile.php",
+//             type:"POST",
+//             data:{first_name:first_name,last_name:last_name,email:email,mobile:mobile,dob:dob,address:address,city:city,state:state,pincode:pincode,country:country,linkedin:linkedin,experience:experience,project:project},
+//             success:function(response){
+//                 alert('success');
+//             }    
 
-        });
+//         });
+//     }
+// });
+$('#profile_details').on('submit', function(e) {
+    e.preventDefault();
+
+    // collect values
+    let first_name     = $('#first_name').val().trim();
+    let last_name      = $('#last_name').val().trim();
+    let email          = $('#email').val().trim();
+    let mobile         = $('#mobile').val().trim();
+    let dob            = $('#dob').val().trim();
+    let address        = $('#address').val().trim();
+    let city           = $('#city').val().trim();
+    let state          = $('#state').val().trim();
+    let pincode        = $('#pincode').val().trim();
+    let country        = $('#country').val().trim();
+    let linkedin       = $('#linkedin').val().trim();
+    let experience     = $('#experience').val().trim();
+    let project        = $('#project').val().trim();
+
+    // new fields
+    let designation    = $('#designation').val().trim();
+    let personal_no    = $('#personal_no').val().trim();
+    let support_no     = $('#support_no').val().trim();
+    let office_no      = $('#office_no').val().trim();
+    let telegram_id    = $('#telegram').val().trim();
+    let skype_id       = $('#skype').val().trim();
+    let punchline      = $('#punchline').val().trim();
+    let customer_count = $('#customer_count').val().trim();
+    let award_count    = $('#award_count').val().trim();
+
+    // simple client-side validation for required fields
+    if (
+        first_name == '' ||
+        last_name == '' ||
+        email == '' ||
+        mobile == '' ||
+        dob == '' ||
+        address == '' ||
+        city == '' ||
+        state == '' ||
+        pincode == '' ||
+        country == '' ||
+        experience == ''
+    ) {
+        $('#profile_details .needs-validation').addClass('was-validated');
+        return;
+    }
+
+    // Prepare data object to send
+    let postData = {
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+        mobile: mobile,
+        dob: dob,
+        address: address,
+        city: city,
+        state: state,
+        pincode: pincode,
+        country: country,
+        linkedin: linkedin,
+        experience: experience,
+        project: project,
+        designation: designation,
+        personal_no: personal_no,
+        support_no: support_no,
+        office_no: office_no,
+        telegram: telegram_id,
+        skype: skype_id,
+        punchline: punchline,
+        customer_count: customer_count,
+        award_count: award_count,
+    };
+
+    // make AJAX request
+    $.ajax({
+        url: "../../controller/profile/Profile.php",
+        type: "POST",
+        data: postData,
+        dataType: "json",  // expecting JSON response
+        success: function(response) {
+            if (response.success) {
+                toastSuccessAlert(response.success);
+                setTimeout(() => {
+                    window.location.reload(true); // Deprecated but still works in some browsers                  
+                }, 1000);
+                // you might like to reload part of the page or redirect
+            } else if (response.error_success) {
+               toastSuccessAlert(response.error_success);
+            } else {
+                toastSuccessAlert("something went wrong!");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error: ", status, error);
+            alert("An error occurred while updating profile");
+        }
+    });
+
+});
+
+function viewServices(){
+    $.ajax({
+        url: "../../controller/profile/Profile.php",
+        type: "POST",
+        data: { GetServices: true },
+        success: function(response) {
+            //  console.log('Response:', response);
+           let data = JSON.parse(response).data;
+            // console.log(data);
+
+            $('#profile-services-tab tbody').empty(); // Optional: clear old rows
+
+            data.forEach((element, index) => {
+                $('#profile-services-tab tbody').append(`
+                    <tr>
+                        <td scope="row">${index + 1}</td>
+                        <td>${element.name}</td>
+                        <td>${element.description}</td>
+                    </tr>
+                `);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', error);
+        }
+    });
+}
+viewServices();
+$('#profile_services').on('submit', function(e) {
+    e.preventDefault();
+    let serviceCategory = $('#services_category').val().trim();
+    let serviceDesc = $('#services_desc').val().trim();
+
+    if (serviceCategory === '' || serviceDesc === '') {
+        $('#profile_services .needs-validation').addClass('was-validated');
+    } else {
+        $('#profile-services-tab tbody').append(`
+            <tr>
+                <th>#</th>
+                <td>${serviceCategory}<input type="hidden" name="serviceCategoryName[]" value="${serviceCategory}"></td>
+                <td>${serviceDesc}<input type="hidden" name="serviceDesc[]" value="${serviceDesc}"></td>
+            </tr>
+        `);
+        $('#services_category').val('');
+        $('#services_desc').val('');
+        $('#profile_services .needs-validation').removeClass('was-validated');
     }
 });
+
+function updateservices(){
+    let name = $('input[name="serviceCategoryName[]"]').map(function() {return $(this).val();}).get();
+    let desc = $('input[name="serviceDesc[]"]').map(function() {return $(this).val();}).get();
+    if (name == '' || desc == '') {
+        $('.needs-validation').addClass('was-validated');
+        return;
+    } else {
+        $.ajax({
+            url: "../../controller/profile/Profile.php",
+            type: "POST",
+            data: {
+                servicesName: name,
+                servicesDesc: desc
+            },
+            success: function(response) {
+                let parseResponse = JSON.parse(response);
+                if (parseResponse.success) {
+                    toastSuccessAlert(parseResponse.success);
+                     viewServices();
+                } else if (parseResponse.error_success) {
+                    toastErrorAlert(parseResponse.error_success);
+                } else {
+                    toastErrorAlert('Something went wrong!');
+                }
+            }
+        });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 $('#programming-skill-name').on('change',function(){
     const selectVal = $(this).val();
