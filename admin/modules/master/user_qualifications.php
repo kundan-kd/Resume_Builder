@@ -1,6 +1,5 @@
 <?php
-include '../../includes/header.php';
-include '../../includes/connection.php';
+include '../../includes/main_header.php';
 ?>
 <body data-menu-color="light" data-sidebar="default">
   <?php include  '../alert/toast.php';?>
@@ -15,7 +14,7 @@ include '../../includes/connection.php';
           <!-- Page Title -->
           <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
             <div class="flex-grow-1">
-              <h4 class="fs-18 fw-semibold m-0">Qualification</h4>
+              <h4 class="fs-18 fw-semibold m-0">Education</h4>
             </div>
             <div class="text-end">
               <button class="btn btn-primary qualificationAdd" data-bs-toggle="modal" data-bs-target="#qualificationModal">
@@ -61,15 +60,15 @@ include '../../includes/connection.php';
       <div class="modal-content">
 
         <div class="modal-header" style="padding:9px 9px;">
-          <h5 class="modal-title qualificationTitle">Add Qualification</h5>
+          <h5 class="modal-title qualificationTitle">Add Education</h5>
           <button class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <form id="qualificationForm" class="needs-validation" novalidate>
           <div class="modal-body">
-            <label for="qualificationName" class="mb-2">Qualification</label>
+            <label for="qualificationName" class="mb-2">Education</label>
             <input type="hidden" id="qualificationID">
             <input class="form-control" type="text" placeholder="Enter qualification" id="qualificationName" name="qualificationName" style="background-image: none;" required>
-            <div class="invalid-feedback">Enter Qualification Name</div>
+            <div class="invalid-feedback">Enter Education Name</div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>

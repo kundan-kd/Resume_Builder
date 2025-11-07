@@ -2,7 +2,7 @@
 include '../../includes/connection.php';
 $action = $_POST['action'];
     if($action == 'loadData'){
-        $query = "SELECT * FROM qualification_types WHERE status = 1 AND deleted_at IS NULL";
+        $query = "SELECT * FROM education_types WHERE status = 1 AND deleted_at IS NULL";
         $result = mysqli_query($conn, $query);
         if ($result && mysqli_num_rows($result) > 0) {
             $count = 1;
@@ -28,7 +28,7 @@ $action = $_POST['action'];
 
     if($action == 'add'){
         $skill = trim(mysqli_real_escape_string($conn,$_POST["qualification_name"]));
-        $insert = "INSERT INTO qualification_types (`name`,`status`,`created_at`,`updated_at`) values('$skill',1,NOW(),NOW())";
+        $insert = "INSERT INTO education_types (`name`,`status`,`created_at`,`updated_at`) values('$skill',1,NOW(),NOW())";
         if(mysqli_query($conn, $insert)){
             $last_id = mysqli_insert_id($conn);
             echo json_encode([
@@ -43,7 +43,7 @@ $action = $_POST['action'];
 
     if($action == 'delete'){
         $id = trim(mysqli_real_escape_string($conn,$_POST["id"]));
-        $query = "UPDATE qualification_types SET deleted_at = NOW() WHERE id = $id";
+        $query = "UPDATE education_types SET deleted_at = NOW() WHERE id = $id";
         if(mysqli_query($conn,$query)){
             echo json_encode(['success' => 'Qualification deleted successfully']);
         }else{
@@ -53,7 +53,7 @@ $action = $_POST['action'];
 
     if($action == 'getData'){
         $id = trim(mysqli_real_escape_string($conn,$_POST["id"]));
-        $query = "SELECT `name` FROM qualification_types WHERE id = '$id'";
+        $query = "SELECT `name` FROM education_types WHERE id = '$id'";
         $result = mysqli_query($conn,$query);
         if($result && mysqli_num_rows($result)){
             while($row = mysqli_fetch_assoc($result)){
@@ -68,7 +68,7 @@ $action = $_POST['action'];
     if($action == 'update'){
         $id = trim(mysqli_real_escape_string($conn,$_POST["id"]));
         $name = trim(mysqli_real_escape_string($conn,$_POST["qualification_name"]));
-        $query = "UPDATE qualification_types SET name = '$name' WHERE id = $id";
+        $query = "UPDATE education_types SET name = '$name' WHERE id = $id";
         if(mysqli_query($conn,$query)){
             echo json_encode(['success' => 'Qualification updated successfully']);
         }else{

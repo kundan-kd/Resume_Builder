@@ -1,6 +1,6 @@
 <?php
-include '../../includes/header.php';
-include '../../includes/connection.php';
+include '../../includes/main_header.php';
+
 ?>
 <body data-menu-color="light" data-sidebar="default">
   <div id="app-layout">
@@ -16,6 +16,8 @@ include '../../includes/connection.php';
                                 <h4 class="fs-18 fw-semibold m-0">Admin Dashboard</h4>
                             </div>
                         </div>
+
+                  
                         <!-- Start Main Widgets -->
                         <!-- <div class="row">
                             <div class="col-md-6 col-lg-4 col-xl">

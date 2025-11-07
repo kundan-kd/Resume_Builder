@@ -1,73 +1,130 @@
 
 
+ $('#qualification_type').on('change', function() {
+        let value = $(this).val();
+        if (value === 'Education') {
+            $('.education-type').removeClass('d-none');
+        } else {
+            $('.education-type').addClass('d-none');
+        }
+    });
+
+
 $('#profile-qualification').on('submit', function(e){
     e.preventDefault();
     // alert();
-    let qualification = $('#qualification').val();
-    let qualification_name = $('#qualification option:selected').text();
-    let start_date = $('#qualification-start-date').val();
-    let end_date = $('#qualification-end-date').val();
-    let certification = $('#certification').val();
-    let image = $('#qualification-upload').val() || '';
-    let desc = $('#description').val();
-    if(!qualification || !start_date || !end_date || !certification || !image || !desc){
+    let qualification_type = $('#qualification_type').val();
+    let education_type = $('#education_type').val();
+    let education_type_name = $('#education_type option:selected').text();
+    let qualification_title = $('#qualification_title').val();
+    let start_date = $('#qualification_start_date').val();
+    let end_date = $('#qualification_end_date').val();
+    let certification = $('#qualification_certification').val();
+    let image = $('#qualification_upload').val() || '';
+    let desc = $('#qualification_description').val();
+    if(!qualification_type || !start_date || !end_date || !qualification_title || !desc){
         $('#profile-qualification .needs-validation').addClass('was-validated');
         return;
     }else{
         $('#qualification-table tbody').append(`
                 <tr>
                     <td>#</td>
-                    <td>${qualification_name}<input type="hidden" name="qualification[]" value="${qualification}"></td>
-                    <td>${start_date}<input type="hidden" name="qualification[]" value="${start_date}"></td>
-                    <td>${end_date}<input type="hidden" name="qualification[]" value="${end_date}"></td>
-                    <td>${certification}<input type="hidden" name="qualification[]" value="${certification}"></td>
-                    <td>${image}<input type="hidden" name="qualification[]" value="${image}"></td>
-                    <td>${desc}<input type="hidden" name="qualification[]" value="${desc}"></td>
+                    <td>${qualification_type}<input type="hidden" name="qualification_type[]" value="${qualification_type}"></td>
+                    <td>${education_type_name}<input type="hidden" name="education_type[]" value="${education_type}"></td>
+                    <td>${qualification_title}<input type="hidden" name="qualification_title[]" value="${qualification_title}"></td>
+                    <td>${start_date}<input type="hidden" name="qualification_start_date[]" value="${start_date}"></td>
+                    <td>${end_date}<input type="hidden" name="qualification_end_date[]" value="${end_date}"></td>
+                    <td>${certification}<input type="hidden" name="qualification_certification[]" value="${certification}"></td>
+                    <td>${image}<input type="hidden" name="qualification_upload[]" value="${image}"></td>
+                    <td>${desc}<input type="hidden" name="qualification_description[]" value="${desc}"></td>
                 </tr>
             `);
+             $('#profile-qualification .needs-validation').removeClass('was-validated');
     }
 });
 
 function updateQualifications(event) {
-    if (event) event.preventDefault(); // prevent default submit behavior
+    if (event) event.preventDefault();
 
-    const form = document.getElementById('profile-qualification');
-    const formData = new FormData(form);
+    // Collect data manually from hidden inputs in the table
+    let qualificationTypes = $("input[name='qualification_type[]']").map(function () {
+        return $(this).val();
+    }).get();
+    let educationType = $("input[name='education_type[]']").map(function () {
+        return $(this).val();
+    }).get();
 
-    // Optional: Basic client-side validation
-    const qualification = formData.getAll('qualification[]');
-    const startDates = formData.getAll('start_date[]');
-    const endDates = formData.getAll('end_date[]');
-    const certifications = formData.getAll('certification[]');
-    const descriptions = formData.getAll('description[]');
+    let qualificationTitles = $("input[name='qualification_title[]']").map(function () {
+        return $(this).val();
+    }).get();
 
+    let startDates = $("input[name='qualification_start_date[]']").map(function () {
+        return $(this).val();
+    }).get();
+
+    let endDates = $("input[name='qualification_end_date[]']").map(function () {
+        return $(this).val();
+    }).get();
+
+    let certifications = $("input[name='qualification_certification[]']").map(function () {
+        return $(this).val();
+    }).get();
+
+    let images = $("input[name='qualification_upload[]']").map(function () {
+        return $(this).val();
+    }).get();
+
+    let descriptions = $("input[name='qualification_description[]']").map(function () {
+        return $(this).val();
+    }).get();
+
+    // Basic validation
     if (
-        qualification.includes('') ||
+        qualificationTypes.includes('') ||
+        qualificationTitles.includes('') ||
         startDates.includes('') ||
         endDates.includes('') ||
-        certifications.includes('') ||
         descriptions.includes('')
     ) {
         toastErrorAlert('Please fill all required fields');
         return;
     }
 
+    // Construct plain object
+    // const data = {
+    //     qualification_type: qualificationTypes,
+    //     qualification_title: qualificationTitles,
+    //     start_date: startDates,
+    //     end_date: endDates,
+    //     certification: certifications,
+    //     qualification_upload: images,
+    //     desc: descriptions
+    // };
+
+    // Send via AJAX as JSON
     $.ajax({
         url: "../../controller/profile/ProfileTwo.php",
         type: "POST",
-        data: formData,
-        processData: false,  // required for FormData
-        contentType: false,  // required for FormData
+        data:{ qualification_type: qualificationTypes,
+        qualification_title: qualificationTitles,
+        education_type:educationType,
+        start_date: startDates,
+        end_date: endDates,
+        certification: certifications,
+        qualification_upload: images,
+        desc: descriptions},
+        dataType: "json",
         success: function (response) {
-            console.log("Server response:", response);
+            // console.log("Server response:", response);
             try {
-                const parseResponse = JSON.parse(response);
-                if (parseResponse.success) {
-                    toastSuccessAlert(parseResponse.success);
-                    form.reset();
+                // const parseResponse = JSON.parse(response);
+                if (response.success) {
+                    toastSuccessAlert(response.success);
+                    $('#profile-qualification .needs-validation').removeClass('was-validated');
+                    $('#profile-qualification')[0].reset();
                     qualificationView();
-                } else if (parseResponse.error_success) {
-                    toastErrorAlert(parseResponse.error_success);
+                } else if (response.error_success) {
+                    toastErrorAlert(response.error_success);
                 } else {
                     toastErrorAlert('Unexpected server response');
                 }
@@ -99,7 +156,9 @@ function qualificationView(){
                 $('#qualification-table tbody').append(`
                     <tr>
                         <td scope="row">${index + 1}</td>
-                        <td>${element.qualification_name}</td>
+                        <td>${element.qualification_type}</td>
+                        <td>${element.education_id}</td>
+                        <td>${element.qualification_title}</td>
                         <td>${element.start_date}</td>
                         <td>${element.end_date}</td>
                         <td>${element.description}</td>

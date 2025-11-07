@@ -83,7 +83,7 @@ if (isset($_POST['reg_firstname'])) {
     $email = $_POST['reg_email'];
     $plain_password = $_POST['reg_password'];
     $password = password_hash($plain_password, PASSWORD_DEFAULT);
-
+    $rand = md5('rb'.time().rand(000000000000000,111111111111111));
     $select = "SELECT * FROM `user_registrations` WHERE `email` = '{$email}'";
     $check = mysqli_query($conn,$select);
     if($check && mysqli_num_rows($check) > 0){  
@@ -91,8 +91,8 @@ if (isset($_POST['reg_firstname'])) {
         exit;
     }
     else{
-        $insert = "INSERT INTO `user_registrations` (`first_name`, `last_name`, `user_name`, `email`, `plain_password`, `password`, `created_at`) VALUES('$first_name', '$last_name', '".$first_name.' '.$last_name."', 
-        '$email', '$plain_password' , '$password', NOW())";
+        $insert = "INSERT INTO `user_registrations` (`first_name`, `last_name`, `user_name`, `email`, `plain_password`, `password`,`token`, `created_at`) VALUES('$first_name', '$last_name', '".$first_name.' '.$last_name."', 
+        '$email', '$plain_password' , '$password','$rand', NOW())";
         $result = mysqli_query($conn, $insert);
         if (!$result) {
             $error = mysqli_error($conn);

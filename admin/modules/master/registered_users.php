@@ -1,6 +1,5 @@
 <?php
-require_once '../../includes/header.php';
-require_once '../../includes/connection.php';
+require_once '../../includes/main_header.php';
 $id = 1;
 ?>
 

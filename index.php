@@ -1,7 +1,7 @@
 <?php
 require_once 'admin/includes/header.php';
 // require_once 'admin/includes/connection.php';
-$userId = $_SESSION['user_id'];
+// $userId = $_SESSION['user_id'];
 if (isset($_SESSION['user_email'])) {
     $email = mysqli_real_escape_string($conn, $_SESSION['user_email']);
     $select = "SELECT * FROM `user_registrations` WHERE `email` = '$email'";
@@ -14,18 +14,25 @@ if (isset($_SESSION['user_email'])) {
     }
 } else {
     echo "User email not set in session.";
+    $token = $_GET['token'];
+    if($token == $base_token){
+      $select = "SELECT * FROM `user_registrations` WHERE `token` = '$token'";
+      $result = mysqli_query($conn, $select);
+
+      if ($result && mysqli_num_rows($result) > 0) {
+          $row = mysqli_fetch_assoc($result);
+      } else {
+          echo "No user found.";
+          return;
+      }
+    }else{
+      echo "no user found!";
+      exit;
+    }
+    
 }
 
-// $token = 12345678;
-//     $select = "SELECT * FROM `user_registrations` WHERE `token` = '$token'";
-//     $result = mysqli_query($conn, $select);
 
-//     if ($result && mysqli_num_rows($result) > 0) {
-//         $row = mysqli_fetch_assoc($result);
-//     } else {
-//         echo "No user found.";
-//         return;
-//     }
 
  
 ?>
@@ -136,29 +143,31 @@ if (isset($_SESSION['user_email'])) {
               <!-- language skills -->
               <div class="art-lang-skills p-30-15">
 
-                <!-- skill -->
+                <!-- skill -->  
+                 <?php 
+                 $counter = 1;
+                 $query = "SELECT language_id,user_efficiency FROM user_languages WHERE user_id = $row[id]";
+                 $result = mysqli_query($conn,$query);
+                 if($result && mysqli_num_rows($result) > 0){
+                  while($language = mysqli_fetch_assoc($result)){
+                    $language_id = $language['language_id'];
+                    $efficiency = $language['user_efficiency']; // Assuming this is a value between 0 and 100
+                    $language_name = getdatafromtable($conn,"language_types","name","id = $language_id");
+
+                    ?>
+        
                 <div class="art-lang-skills-item">
-                  <div id="circleprog1" class="art-cirkle-progress"></div>
+                  <div id="circleprog<?php echo $counter;?>" class="art-cirkle-progress" data-efficiency="<?php echo $efficiency;?>"></div>
                   <!-- title -->
-                  <h6>French</h6>
+                  <h6><?=$language_name?></h6>
                 </div>
+                  <?php
+                  $counter++;
+                  }
+                 }
+                 ?>
                 <!-- skill end -->
 
-                <!-- skill -->
-                <div class="art-lang-skills-item">
-                  <div id="circleprog2" class="art-cirkle-progress"></div>
-                  <!-- title -->
-                  <h6>English</h6>
-                </div>
-                <!-- skill end -->
-
-                <!-- skill -->
-                <div class="art-lang-skills-item">
-                  <div id="circleprog3" class="art-cirkle-progress"></div>
-                  <!-- title -->
-                  <h6>Spanish</h6>
-                </div>
-                <!-- skill end -->
 
               </div>
               <!-- language skills end -->
@@ -170,78 +179,37 @@ if (isset($_SESSION['user_email'])) {
               <div class="art-hard-skills p-30-15">
 
                 <!-- skill -->
-                <div class="art-hard-skills-item">
-                  <div class="art-skill-heading">
-                    <!-- title -->
-                    <h6>html</h6>
-                  </div>
-                  <!-- progressbar frame -->
-                  <div class="art-line-progress">
-                    <!-- progressbar -->
-                    <div id="lineprog1"></div>
-                  </div>
-                  <!-- progressbar frame end -->
-                </div>
-                <!-- skill end -->
 
-                <!-- skill -->
-                <div class="art-hard-skills-item">
-                  <div class="art-skill-heading">
-                    <!-- title -->
-                    <h6>CSS</h6>
-                  </div>
-                  <!-- progressbar frame -->
-                  <div class="art-line-progress">
-                    <!-- progressbar -->
-                    <div id="lineprog2"></div>
-                  </div>
-                  <!-- progressbar frame end -->
-                </div>
-                <!-- skill end -->
+                <?php 
+                 $counter = 1;
+                 $query = "SELECT programming_language_id,user_efficiency FROM user_programming_languages WHERE user_id = $row[id]";
+                 $result = mysqli_query($conn,$query);
+                 if($result && mysqli_num_rows($result) > 0){
+                  while($language = mysqli_fetch_assoc($result)){
+                    $language_id = $language['programming_language_id'];
+                    $efficiency = $language['user_efficiency']; // Assuming this is a value between 0 and 100
+                    $language_name = getdatafromtable($conn,"programming_skill_types","name","id = $language_id");
 
-                <!-- skill -->
+                    ?>
+        
                 <div class="art-hard-skills-item">
                   <div class="art-skill-heading">
                     <!-- title -->
-                    <h6>Js</h6>
+                    <h6><?php echo $language_name;?></h6>
                   </div>
                   <!-- progressbar frame -->
-                  <div class="art-line-progress">
+                  <div class="art-line-progress" data-efficiency="<?php echo $efficiency;?>">
                     <!-- progressbar -->
-                    <div id="lineprog3"></div>
+                    <div id="lineprog<?php echo $counter;?>"></div>
                   </div>
                   <!-- progressbar frame end -->
                 </div>
-                <!-- skill end -->
+                  <?php
+                  $counter++;
+                  }
+                 }
+                 ?>
 
-                <!-- skill -->
-                <div class="art-hard-skills-item">
-                  <div class="art-skill-heading">
-                    <!-- title -->
-                    <h6>PHP</h6>
-                  </div>
-                  <!-- progressbar frame -->
-                  <div class="art-line-progress">
-                    <!-- progressbar -->
-                    <div id="lineprog4"></div>
-                  </div>
-                  <!-- progressbar frame end -->
-                </div>
-                <!-- skill end -->
-
-                <!-- skill -->
-                <div class="art-hard-skills-item">
-                  <div class="art-skill-heading">
-                    <!-- title -->
-                    <h6>Wordpress</h6>
-                  </div>
-                  <!-- progressbar frame -->
-                  <div class="art-line-progress">
-                    <!-- progressbar -->
-                    <div id="lineprog5"></div>
-                  </div>
-                  <!-- progressbar frame end -->
-                </div>
                 <!-- skill end -->
 
               </div>
@@ -252,27 +220,27 @@ if (isset($_SESSION['user_email'])) {
 
               <!-- knowledge list -->
               <ul class="art-knowledge-list p-15-0">
+                <?php 
+                  $query = "SELECT * FROM user_extra_skills WHERE user_id =$row[id]";
+                  $result = mysqli_query($conn,$query);
+                  if($result && mysqli_num_rows($result) > 0){
+                    while($extraSkill = mysqli_fetch_assoc($result)){
+                      $id = $extraSkill['skill_list_id'];
+                      $extarName = getdatafromtable($conn,"extra_skill_types","name","id=$id");
+                      ?>
+
+                     
                 <!-- list item -->
-                <li>Bootstrap, Materialize</li>
-                <!-- list item -->
-                <li>Stylus, Sass, Less</li>
-                <!-- list item -->
-                <li>Gulp, Webpack, Grunt</li>
-                <!-- list item -->
-                <li>GIT knowledge</li>
+                <li><?=$extarName?></li>
+                 <?php
+                    }
+                  }
+                ?>
               </ul>
               <!-- knowledge list end -->
 
               <!-- divider -->
-              <div class="art-ls-divider"></div>
-
-              <!-- links frame -->
-              <div class="art-links-frame p-15-15">
-
-                <!-- download cv button -->
-                <a href="files/cv.txt" class="art-link" download>Download cv <i class="fas fa-download"></i></a>
-
-              </div>
+            
               <!-- links frame end -->
 
             </div>
@@ -769,11 +737,11 @@ if (isset($_SESSION['user_email'])) {
                     <!-- timeline -->
                     <div class="art-timeline art-gallery" id="history">
                       <?php 
-                        $query = "SELECT  * FROM user_qualification_details WHERE user_id = $row[id]";
+                        $query = "SELECT  * FROM user_qualification_details WHERE user_id = $row[id] && qualification_type = 'Education'";
                         $result = mysqli_query($conn,$query);
                         if ($result && mysqli_num_rows($result) > 0) {
                           while ($qualification = mysqli_fetch_assoc($result)) {
-                        $q_name = getdatafromtable($conn, "qualification_types", "name", "id = {$qualification['qualification_id']}");
+                         $q_name = getdatafromtable($conn, "education_types", "name", "id = {$qualification['education_id']}");
 
                       ?>
                       <div class="art-timeline-item">
@@ -783,8 +751,8 @@ if (isset($_SESSION['user_email'])) {
                         <div class="art-a art-timeline-content">
                           <div class="art-card-header">
                             <div class="art-left-side">
-                              <h5><?=$q_name?></h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
+                              <h5><?=$q_name;?></h5>
+                              <div class="art-el-suptitle mb-15"><?=$qualification['qualification_title'];?></div>
                             </div>
                             <div class="art-right-side">
                               <span class="art-date"><?=$qualification['start_date']?> - <?=$qualification['end_date']?></span>
@@ -797,63 +765,8 @@ if (isset($_SESSION['user_email'])) {
                         </div>
                       </div>
                       <?php }}?>
-                      <div class="art-timeline-item">
-                        <div class="art-timeline-mark-light"></div>
-                        <div class="art-timeline-mark"></div>
-
-                        <div class="art-a art-timeline-content">
-                          <div class="art-card-header">
-                            <div class="art-left-side">
-                              <h5>Title of section 1</h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
-                            </div>
-                            <div class="art-right-side">
-                              <span class="art-date">jan 2018 - may 2020</span>
-                            </div>
-                          </div>
-                          <div>Consectetur adipisicing elit. Iusto, optio, dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde?</div>
-                        </div>
-                      </div>
-
-                      <div class="art-timeline-item">
-                        <div class="art-timeline-mark-light"></div>
-                        <div class="art-timeline-mark"></div>
-
-                        <div class="art-a art-timeline-content">
-                          <div class="art-card-header">
-                            <div class="art-left-side">
-                              <h5>Title of section 1</h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
-                            </div>
-                            <div class="art-right-side">
-                              <span class="art-date">jan 2018 - may 2020</span>
-                            </div>
-                          </div>
-                          <p>Dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde? Iste voluptatibus minus veritatis qui ut.</p>
-                          <a data-fancybox="diplome" href="files/certificate.jpg" class="art-link art-color-link art-w-chevron">Licence</a>
-                        </div>
-
-                      </div>
-
-                      <div class="art-timeline-item">
-                        <div class="art-timeline-mark-light"></div>
-                        <div class="art-timeline-mark"></div>
-
-                        <div class="art-a art-timeline-content">
-                          <div class="art-card-header">
-                            <div class="art-left-side">
-                              <h5>Title of section 1</h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
-                            </div>
-                            <div class="art-right-side">
-                              <span class="art-date">jan 2018 - may 2020</span>
-                            </div>
-                          </div>
-                          <p>Ipsum dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum.</p>
-                          <a data-fancybox="diplome" href="files/certificate.jpg" class="art-link art-color-link art-w-chevron">Certificate</a>
-                        </div>
-
-                      </div>
+                  
+                  
 
                     </div>
                     <!-- timeline end -->
@@ -874,7 +787,14 @@ if (isset($_SESSION['user_email'])) {
 
                     <!-- timeline -->
                     <div class="art-timeline">
+ <?php 
+                        $query = "SELECT  * FROM user_qualification_details WHERE user_id = $row[id] && qualification_type = 'Work'";
+                        $result = mysqli_query($conn,$query);
+                        if ($result && mysqli_num_rows($result) > 0) {
+                          while ($qualification = mysqli_fetch_assoc($result)) {
+                        // $q_name = getdatafromtable($conn, "qualification_types", "name", "id = {$qualification['qualification_id']}");
 
+                      ?>
                       <div class="art-timeline-item">
                         <div class="art-timeline-mark-light"></div>
                         <div class="art-timeline-mark"></div>
@@ -883,203 +803,21 @@ if (isset($_SESSION['user_email'])) {
                         <div class="art-a art-timeline-content">
                           <div class="art-card-header">
                             <div class="art-left-side">
-                              <h5>Title of section 1</h5>
+                              <h5><?=$qualification['qualification_title']?></h5>
                               <div class="art-el-suptitle mb-15">Template author</div>
                             </div>
                             <div class="art-right-side">
-                              <span class="art-date">jan 2018 - may 2020</span>
+                              <span class="art-date">j<?=$qualification['start_date']?> - <?=$qualification['end_date']?></span>
                             </div>
                           </div>
                           <p>Placeat iure tempora laudantium ipsa ad debitis unde? Iste voluptatibus minus veritatis qui ut.</p>
                         </div>
                       </div>
+<?php }}?>
+                   
 
-                      <div class="art-timeline-item">
-                        <div class="art-timeline-mark-light"></div>
-                        <div class="art-timeline-mark"></div>
+                    
 
-
-                        <div class="art-a art-timeline-content">
-                          <div class="art-card-header">
-                            <div class="art-left-side">
-                              <h5>Title of section 1</h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
-                            </div>
-                            <div class="art-right-side">
-                              <span class="art-date">jan 2018 - may 2020</span>
-                            </div>
-                          </div>
-                          <p>Adipisicing elit. Iusto, optio, dolorum provident rerum aut hic quasi placeat iure tempora laudantium ipsa ad debitis unde?</p>
-                          <a data-fancybox="recommendation" href="#art-recomendation-popup-1" class="art-link art-color-link art-w-chevron">Recommendation</a>
-                        </div>
-
-                        <!-- popup -->
-                        <div class="art-recomendation-popup" style="display: none;" id="art-recomendation-popup-1">
-
-                          <!-- testimonial -->
-                          <div class="art-a art-testimonial">
-                            <!-- testimonial body -->
-                            <div class="testimonial-body">
-                              <!-- photo -->
-                              <img class="art-testimonial-face" src="img/testimonials/face-3.jpg" alt="face">
-                              <!-- name -->
-                              <h5>Paul Trueman</h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
-                              <!-- text -->
-                              <div class="mb-15">Working with Artur has been a pleasure. Better yet - I alerted them of a minor issue before going to sleep. The issue was fixed the next morning. I couldn't ask for better support. Thank you Artur!
-                                This is easily a 5 star freelancer.</div>
-                            </div>
-                            <!-- testimonial body end -->
-                            <!-- testimonial footer -->
-                            <div class="art-testimonial-footer">
-                              <div class="art-left-side">
-                                <!-- star rate -->
-                                <ul class="art-star-rate">
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                </ul>
-                                <!-- star rate end -->
-                              </div>
-                              <div class="art-right-side">
-
-                              </div>
-                            </div>
-                            <!-- testimonial footer end -->
-                          </div>
-                          <!-- testimonial end -->
-
-                        </div>
-                        <!-- popup end -->
-
-                      </div>
-
-                      <div class="art-timeline-item">
-                        <div class="art-timeline-mark-light"></div>
-                        <div class="art-timeline-mark"></div>
-
-                        <div class="art-a art-timeline-content">
-                          <div class="art-card-header">
-                            <div class="art-left-side">
-                              <h5>Title of section 1</h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
-                            </div>
-                            <div class="art-right-side">
-                              <span class="art-date">jan 2018 - may 2020</span>
-                            </div>
-                          </div>
-                          <p>Consectetur adipisicing elit. Excepturi, obcaecati, quisquam id molestias eaque asperiores voluptatibus cupiditate error assumenda delectus odit similique earum voluptatem doloremque dolorem
-                            ipsam quae rerum quis. Odit, itaque, deserunt corporis vero ipsum nisi eius odio natus ullam provident pariatur temporibus quia eos repellat consequuntur perferendis enim amet quae quasi repudiandae sed quod veniam
-                            dolore
-                            possimus rem voluptatum eveniet eligendi quis fugiat aliquam sunt similique aut adipisci.</p>
-                          <a data-fancybox="recommendation" href="#art-recomendation-popup-2" class="art-link art-color-link art-w-chevron">Recommendation</a>
-                        </div>
-
-                        <!-- popup -->
-                        <div class="art-recomendation-popup" style="display: none;" id="art-recomendation-popup-2">
-
-                          <!-- testimonial -->
-                          <div class="art-a art-testimonial">
-                            <!-- testimonial body -->
-                            <div class="testimonial-body">
-                              <!-- photo -->
-                              <img class="art-testimonial-face" src="img/testimonials/face-4.jpg" alt="face">
-                              <!-- name -->
-                              <h5>Paul Trueman</h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
-                              <!-- text -->
-                              <div class="mb-15">Working with Artur has been a pleasure. Better yet - I alerted them of a minor issue before going to sleep. The issue was fixed the next morning. I couldn't ask for better support. Thank you Artur!
-                                This is easily a 5 star freelancer.</div>
-                            </div>
-                            <!-- testimonial body end -->
-                            <!-- testimonial footer -->
-                            <div class="art-testimonial-footer">
-                              <div class="art-left-side">
-                                <!-- star rate -->
-                                <ul class="art-star-rate">
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                </ul>
-                                <!-- star rate end -->
-                              </div>
-                              <div class="art-right-side">
-
-                              </div>
-                            </div>
-                            <!-- testimonial footer end -->
-                          </div>
-                          <!-- testimonial end -->
-
-                        </div>
-                        <!-- popup end -->
-
-                      </div>
-
-                      <div class="art-timeline-item">
-                        <div class="art-timeline-mark-light"></div>
-                        <div class="art-timeline-mark"></div>
-
-                        <div class="art-a art-timeline-content">
-                          <div class="art-card-header">
-                            <div class="art-left-side">
-                              <h5>Title of section 1</h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
-                            </div>
-                            <div class="art-right-side">
-                              <span class="art-date">jan 2018 - tonight</span>
-                            </div>
-                          </div>
-                          <p>Dolor sit amet, consectetur adipisicing elit. Iusto, optio, dolorum provident rerum.</p>
-                          <a data-fancybox="recommendation" href="#art-recomendation-popup-3" class="art-link art-color-link art-w-chevron">Recommendation</a>
-                        </div>
-
-                        <!-- popup -->
-                        <div class="art-recomendation-popup" style="display: none;" id="art-recomendation-popup-3">
-
-                          <!-- testimonial -->
-                          <div class="art-a art-testimonial">
-                            <!-- testimonial body -->
-                            <div class="testimonial-body">
-                              <!-- photo -->
-                              <img class="art-testimonial-face" src="img/testimonials/face-2.jpg" alt="face">
-                              <!-- name -->
-                              <h5>Paul Trueman</h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
-                              <!-- text -->
-                              <div class="mb-15">Working with Artur has been a pleasure. Better yet - I alerted them of a minor issue before going to sleep. The issue was fixed the next morning. I couldn't ask for better support. Thank you Artur!
-                                This is easily a 5 star freelancer.</div>
-                            </div>
-                            <!-- testimonial body end -->
-                            <!-- testimonial footer -->
-                            <div class="art-testimonial-footer">
-                              <div class="art-left-side">
-                                <!-- star rate -->
-                                <ul class="art-star-rate">
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li><i class="fas fa-star"></i></li>
-                                  <li class="art-empty-item"><i class="fas fa-star"></i></li>
-                                </ul>
-                                <!-- star rate end -->
-                              </div>
-                              <div class="art-right-side">
-
-                              </div>
-                            </div>
-                            <!-- testimonial footer end -->
-                          </div>
-                          <!-- testimonial end -->
-
-                        </div>
-                        <!-- popup end -->
-
-                      </div>
 
                     </div>
                     <!-- timeline end -->
@@ -1121,14 +859,14 @@ if (isset($_SESSION['user_email'])) {
                       <div class="art-table p-15-15">
                         <ul>
                           <li>
-                            <h6>Country:</h6><span>Canada</span>
+                            <h6>Country:</h6><span><?=$row['country']?></span>
                           </li>
                           <li>
-                            <h6>City:</h6><span>Toronto</span>
+                            <h6>City:</h6><span><?=$row['city']?></span>
                           </li>
 
                           <li>
-                            <h6>Streat:</h6><span>20 Dellbank Rd</span>
+                            <h6>Streat:</h6><span><?=$row['address']?></span>
                           </li>
                         </ul>
                       </div>
@@ -1143,13 +881,13 @@ if (isset($_SESSION['user_email'])) {
                       <div class="art-table p-15-15">
                         <ul>
                           <li>
-                            <h6>Email:</h6><span>carter.inbox@mail.com</span>
+                            <h6>Email:</h6><span><?=$row['email']?></span>
                           </li>
                           <li>
-                            <h6>Telegram:</h6><span>@arter</span>
+                            <h6>Telegram:</h6><span><?=$row['telegram']?></span>
                           </li>
                           <li>
-                            <h6>Skype:</h6><span>Arter</span>
+                            <h6>Skype:</h6><span><?=$row['skype']?></span>
                           </li>
                         </ul>
                       </div>
@@ -1164,13 +902,13 @@ if (isset($_SESSION['user_email'])) {
                       <div class="art-table p-15-15">
                         <ul>
                           <li>
-                            <h6>Support service:</h6><span>+78 (098) 333 11 22</span>
+                            <h6>Support service:</h6><span><?=$row['support_no']?></span>
                           </li>
                           <li>
-                            <h6>Office:</h6><span>+78 (098) 326 11 22</span>
+                            <h6>Office:</h6><span><?=$row['office_no']?></span>
                           </li>
                           <li>
-                            <h6>Personal:</h6><span>+78 (077) 114 26 53</span>
+                            <h6>Personal:</h6><span><?=$row['personal_no']?></span>
                           </li>
                         </ul>
                       </div>
@@ -1319,7 +1057,7 @@ if (isset($_SESSION['user_email'])) {
       <!-- preloader content -->
       <div class="art-preloader-content">
         <!-- title -->
-        <h4>Knack Media</h4>
+        <h4>Resume Builder</h4>
         <!-- progressbar -->
         <div id="preloader" class="art-preloader-load"></div>
       </div>
@@ -1356,6 +1094,108 @@ if (isset($_SESSION['user_email'])) {
   <script src="js/main.js"></script>
 
   <script>
+
+
+          // progressbars
+//  var bar = new ProgressBar.Circle(circleprog1, {
+//     strokeWidth: 7,
+//     easing: 'easeInOut',
+//     duration: 1400,
+//     delay: 2500,
+//     trailWidth: 7,
+//     step: function(state, circle) {
+//       var value = Math.round(circle.value() * 10);
+//       if (value === 0) {
+//         circle.setText('');
+//       } else {
+//         circle.setText(value);
+//       }
+//     }
+//   });
+//   bar.animate(1);
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const circles = document.querySelectorAll(".art-cirkle-progress");
+
+  circles.forEach((circle) => {
+    if (!(circle instanceof HTMLElement)) return;
+
+    const efficiency = parseInt(circle.getAttribute("data-efficiency")) || 0;
+    const normalizedValue = efficiency / 100;
+
+    const bar = new ProgressBar.Circle(circle, {
+      strokeWidth: 7,
+      easing: 'easeInOut',
+      duration: 1400,
+      trailWidth: 7,
+      text: {
+        value: '',
+        className: 'progress-text',
+        style: {
+          color: '#ffffffff',
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          padding: 0,
+          margin: 0,
+          transform: 'translate(-50%, -50%)'
+        }
+      },
+      step: function (state, circle) {
+        const value = Math.round(circle.value() * 100);
+        circle.setText(value > 0 ? value + "%" : '');
+      }
+    });
+
+    bar.animate(normalizedValue);
+  });
+
+  // Line Progress Bars
+  const lines = document.querySelectorAll(".art-line-progress");
+
+  lines.forEach((line) => {
+    if (!(line instanceof HTMLElement)) return;
+
+    const efficiency = parseInt(line.getAttribute("data-efficiency")) || 0;
+    const normalizedValue = efficiency / 100;
+
+    const bar = new ProgressBar.Line(line, {
+      strokeWidth: 1.72,
+      easing: 'easeInOut',
+      duration: 1400,
+      delay: 2800,
+      trailWidth: 1.72,
+      svgStyle: {
+        width: '100%',
+        height: '100%'
+      },
+      text: {
+        value: '',
+        className: 'progress-text',
+        style: {
+          color: '#ffffffff',
+          position: 'absolute',
+          right: '0',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          padding: 0,
+          margin: 0
+        }
+      },
+      step: (state, bar) => {
+        const value = Math.round(bar.value() * 100);
+        bar.setText(value + ' %');
+      }
+    });
+
+    bar.animate(normalizedValue);
+  });
+});
+
+
+
 $('#form_contact').on('submit', function(e) {
   e.preventDefault();
 

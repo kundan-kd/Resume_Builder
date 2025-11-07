@@ -1,28 +1,6 @@
 <?php
     session_start();
     include 'connection.php';
-    if (!isset($_SESSION['user_email'])) {
-       header("Location: /resume_builder/admin/");
-        exit();
-    }
-    $select = "SELECT * FROM `user_registrations` WHERE `email` = '{$_SESSION['user_email']}' ";
-    // $result = mysqli_query($conn,$select);
-    // if($result && mysqli_num_rows($result) > 0){
-    //     $row = mysqli_fetch_assoc($result); 
-    //     $_SESSION['user_id']  = $row['id'];
-    //     $_SESSION['first_name']  = $row['first_name'];
-    //     $_SESSION['last_name']   = $row['last_name'];
-    //     $_SESSION['email']       = $row['email'];
-    //     $_SESSION['country']     = $row['country'];
-    //     $_SESSION['street']      = $row['street'];
-    //     $_SESSION['pincode']     = $row['pincode'];
-    //     $_SESSION['telegram']    = $row['telegram'];
-    //     $_SESSION['skype']       = $row['skype'];
-    //     $_SESSION['personal_no'] = $row['personal_no'];
-    //     $_SESSION['support_no']  = $row['support_no'];
-    //     $_SESSION['office_no']   = $row['office_no'];
-    // }
-
 ?>
 
 <!DOCTYPE html>

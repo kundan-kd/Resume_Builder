@@ -1,5 +1,5 @@
 <?php
-require_once '../../includes/header.php';
+require_once '../../includes/main_header.php';
 // require_once '../../includes/connection.php';
 $userId = $_SESSION['user_id'];
 if (isset($_SESSION['user_email'])) {
@@ -930,13 +930,21 @@ if (isset($_SESSION['user_email'])) {
     </div>
     <div class="card-body">
         <form id="profile-qualification" enctype="multipart/form-data" method="POST" class="needs-validation" novalidate>
-            <div class="row g-3 mb-5">
-                <div class="col-md-3">
-                    <label for="qualification" class="form-label">Qualification ID</label>
-                    <select class="form-select" id="qualification" name="qualification[]" required>
+            <div class="row g-3">
+                 <div class="col-md-3">
+                    <label for="qualification_type" class="form-label">Qualification Type</label>
+                    <select class="form-select" id="qualification_type" name="qualification_type[]" required>
+                        <option value="" >-- Select Qualification --</option>
+                        <option value="Education">Education</option >
+                        <option value="Work">Work</option>
+                    </select>
+                </div>
+                <div class="col-md-3 education-type d-none">
+                    <label for="education_type" class="form-label">Qualification ID</label>
+                    <select class="form-select" id="education_type" name="education_type[]" required>
                         <option value="" selected disabled>-- Select Qualification --</option>
                         <?php
-                        $select = "SELECT * FROM `qualification_types`";
+                        $select = "SELECT * FROM `education_types`";
                         $result = mysqli_query($conn, $select);
                         if ($result && $result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) { ?>
@@ -947,34 +955,38 @@ if (isset($_SESSION['user_email'])) {
                 </div>
 
                 <div class="col-md-3">
+                    <label for="qualification_title" class="form-label">Title</label>
+                    <input type="text" class="form-control" id="qualification_title" name="qualification_title[]" required>
+                </div>
+                <div class="col-md-3">
                     <label for="qualification-start-date" class="form-label">Start Date</label>
-                    <input type="date" class="form-control" id="qualification-start-date" name="start_date[]" required>
+                    <input type="date" class="form-control" id="qualification_start_date" name="qualification_start_date[]" required>
                 </div>
 
                 <div class="col-md-3">
                     <label for="qualification-end-date" class="form-label">End Date</label>
-                    <input type="date" class="form-control" id="qualification-end-date" name="end_date[]" required>
+                    <input type="date" class="form-control" id="qualification_end_date" name="qualification_end_date[]" required>
                 </div>
 
                 <div class="col-md-3">
                     <label for="certification" class="form-label">Certification</label>
-                    <input type="text" class="form-control" id="certification" name="certification[]" placeholder="Enter Certification" required>
+                    <input type="text" class="form-control" id="qualification_certification" name="qualification_certification[]" placeholder="Enter Certification" required>
                 </div>
 
                 <div class="col-md-3">
                     <label for="qualification-upload" class="form-label">Upload Image</label>
-                    <input type="file" class="form-control" id="qualification-upload" name="qualification_upload[]" accept="image/*">
+                    <input type="file" class="form-control" id="qualification_upload" name="qualification_upload[]" accept="image/*">
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" name="description[]" rows="2" placeholder="Enter Description" required></textarea>
-                </div>
-
-                <div class="col-md-3 mt-5">
-                    <button type="submit" class="btn btn-success">Add</button>
+                    <textarea class="form-control" id="qualification_description" name="qualification_description[]" rows="1" placeholder="Enter Description" required></textarea>
                 </div>
             </div>
+
+                <div class="col-md-3 mt-2 mb-2">
+                    <button type="submit" class="btn btn-success">Add</button>
+                </div>
         </form>
 
         <div class="table-responsive">
@@ -982,7 +994,9 @@ if (isset($_SESSION['user_email'])) {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Qualification</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Education</th>
+                        <th scope="col">Title</th>
                         <th scope="col">Start Date</th>
                         <th scope="col">End Date</th>
                         <th scope="col">Description</th>
@@ -1104,6 +1118,8 @@ if (isset($_SESSION['user_email'])) {
      <!-- JavaScript -->
      <script>
          const user_id = <?php echo json_encode($userId);?>;
+
+  bar.animate(1);
     </script>
          <script src="../../assets/js/custom/profile/profile.js"></script>
          <script src="../../assets/js/custom/profile/profileTwo.js"></script>

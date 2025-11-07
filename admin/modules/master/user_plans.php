@@ -1,6 +1,5 @@
 <?php
-include '../../includes/header.php';
-include '../../includes/connection.php';
+include '../../includes/main_header.php';
 ?>
 <body data-menu-color="light" data-sidebar="default">
   <?php include  '../alert/toast.php';?>
