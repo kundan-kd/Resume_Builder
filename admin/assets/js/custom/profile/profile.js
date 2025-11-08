@@ -156,32 +156,55 @@ function viewServices(){
     });
 }
 viewServices();
+// $('#profile_services').on('submit', function(e) {
+//     e.preventDefault();
+//     let serviceCategory = $('#services_category').val().trim();
+//     let serviceDesc = $('#services_desc').val().trim();
+
+//     if (serviceCategory === '' || serviceDesc === '') {
+//         $('#profile_services .needs-validation').addClass('was-validated');
+//     } else {
+//         $('#profile-services-tab tbody').append(`
+//             <tr>
+//                 <th>#</th>
+//                 <td>${serviceCategory}<input type="hidden" name="serviceCategoryName[]" value="${serviceCategory}"></td>
+//                 <td>${serviceDesc}<input type="hidden" name="serviceDesc[]" value="${serviceDesc}"></td>
+//             </tr>
+//         `);
+//         $('#services_category').val('');
+//         $('#services_desc').val('');
+//         $('#profile_services .needs-validation').removeClass('was-validated');
+//     }
+// });
 $('#profile_services').on('submit', function(e) {
     e.preventDefault();
+    const form = this;
+
+    if (!form.checkValidity()) {
+        $(form).addClass('was-validated');
+        return;
+    }
+
     let serviceCategory = $('#services_category').val().trim();
     let serviceDesc = $('#services_desc').val().trim();
 
-    if (serviceCategory === '' || serviceDesc === '') {
-        $('#profile_services .needs-validation').addClass('was-validated');
-    } else {
-        $('#profile-services-tab tbody').append(`
-            <tr>
-                <th>#</th>
-                <td>${serviceCategory}<input type="hidden" name="serviceCategoryName[]" value="${serviceCategory}"></td>
-                <td>${serviceDesc}<input type="hidden" name="serviceDesc[]" value="${serviceDesc}"></td>
-            </tr>
-        `);
-        $('#services_category').val('');
-        $('#services_desc').val('');
-        $('#profile_services .needs-validation').removeClass('was-validated');
-    }
+    $('#profile-services-tab tbody').append(`
+        <tr>
+            <th>#</th>
+            <td>${serviceCategory}<input type="hidden" name="serviceCategoryName[]" value="${serviceCategory}"></td>
+            <td>${serviceDesc}<input type="hidden" name="serviceDesc[]" value="${serviceDesc}"></td>
+        </tr>
+    `);
+
+    form.reset();
+    $(form).removeClass('was-validated');
 });
 
 function updateservices(){
     let name = $('input[name="serviceCategoryName[]"]').map(function() {return $(this).val();}).get();
     let desc = $('input[name="serviceDesc[]"]').map(function() {return $(this).val();}).get();
     if (name == '' || desc == '') {
-        $('.needs-validation').addClass('was-validated');
+        // $('.needs-validation').addClass('was-validated');
         return;
     } else {
         $.ajax({
@@ -256,29 +279,71 @@ function programmingSkillAdd() {
     });
 }
 programmingSkillAdd();
-$('#profile_programmingSkill').on('submit',function(e){
+$('#profile_programmingSkill').on('submit', function(e) {
     e.preventDefault();
-    let skillName_id = $('#programming-skill-name').val();
+    const form = this;
+    const skillName_id = $('#programming-skill-name').val();
+    const skillEfficiency = $('#programming-skill-measure').val().trim();
     let skillName = '';
-    if(skillName_id == 0){
-        skillName = $('#programming-skill-new').val();
-    }else{
+
+    // Validate custom skill name if "Other" is selected
+    if (skillName_id == '0') {
+        skillName = $('#programming-skill-new').val().trim();
+        if (skillName === '') {
+            $('#programming-skill-new').addClass('is-invalid');
+            $(form).addClass('was-validated');
+            return;
+        } else {
+            $('#programming-skill-new').removeClass('is-invalid');
+        }
+    } else {
         skillName = $('#programming-skill-name option:selected').text();
     }
-    let skillEfficiency = $('#programming-skill-measure').val();
-    if(skillName_id == '' || skillEfficiency == ''){
-        $('#profile_programmingSkill .needs-validation').addClass('was-validated');
-    }else{
-        $('#profile-prog-tab tbody').append(`
-            <tr>
-                <th>#</th>
-                <td>${skillName}<input type="hidden" name="skillNameID[]" value="${skillName_id}">
-                <input type="hidden" name="skillName[]" value="${skillName}"></td>
-                <td>${skillEfficiency}<input type="hidden" name="skillEfficiency[]" value="${skillEfficiency}"></td>
-            </tr>
-        `);
+
+    // Validate dropdown and efficiency
+    if (skillName_id === '' || skillEfficiency === '') {
+        $(form).addClass('was-validated');
+        return;
     }
+
+    // Append to table
+    $('#profile-prog-tab tbody').append(`
+        <tr>
+            <th>#</th>
+            <td>${skillName}<input type="hidden" name="skillNameID[]" value="${skillName_id}">
+            <input type="hidden" name="skillName[]" value="${skillName}"></td>
+            <td>${skillEfficiency}<input type="hidden" name="skillEfficiency[]" value="${skillEfficiency}"></td>
+        </tr>
+    `);
+
+    // Reset form
+    form.reset();
+    $(form).removeClass('was-validated');
+    $('#programming-skill-new').removeClass('is-invalid');
 });
+// $('#profile_programmingSkill').on('submit',function(e){
+//     e.preventDefault();
+//     let skillName_id = $('#programming-skill-name').val();
+//     let skillName = '';
+//     if(skillName_id == 0){
+//         skillName = $('#programming-skill-new').val();
+//     }else{
+//         skillName = $('#programming-skill-name option:selected').text();
+//     }
+//     let skillEfficiency = $('#programming-skill-measure').val();
+//     if(skillName_id == '' || skillEfficiency == ''){
+//         $('#profile_programmingSkill .needs-validation').addClass('was-validated');
+//     }else{
+//         $('#profile-prog-tab tbody').append(`
+//             <tr>
+//                 <th>#</th>
+//                 <td>${skillName}<input type="hidden" name="skillNameID[]" value="${skillName_id}">
+//                 <input type="hidden" name="skillName[]" value="${skillName}"></td>
+//                 <td>${skillEfficiency}<input type="hidden" name="skillEfficiency[]" value="${skillEfficiency}"></td>
+//             </tr>
+//         `);
+//     }
+// });
 
 // function updateProgrammingSkill(){
 //     let name_id = $('input[name="skillNameID[]"]').map(function(){return $(this).val();}).get();
@@ -319,7 +384,8 @@ function updateProgrammingSkill() {
     let name = $('input[name="skillName[]"]').map(function() {return $(this).val();}).get();
     let efficiency = $('input[name="skillEfficiency[]"]').map(function() {return $(this).val();}).get();
     if (name_id.length === 0 || efficiency.length === 0) {
-        $('.needs-validation').addClass('was-validated');
+        // $('.needs-validation').addClass('was-validated');
+        return;
     } else {
         $.ajax({
             url: "../../controller/profile/Profile.php",
@@ -368,10 +434,10 @@ function languageAdd() {
             let data = JSON.parse(response).data;
             // console.log('Response:', data);
 
-            $('#profie-lang-table tbody').empty(); // Optional: clear old rows
+            $('#profile-lang-table tbody').empty(); // Optional: clear old rows
 
             data.forEach((element, index) => {
-                $('#profie-lang-table tbody').append(`
+                $('#profile-lang-table tbody').append(`
                     <tr>
                         <td scope="row">${index + 1}</td>
                         <td>${element.name}</td>
@@ -386,33 +452,80 @@ function languageAdd() {
     });
 }
 languageAdd();
- $('#profile-language').on('submit',function(e){
+$('#profile-language').on('submit', function(e) {
     e.preventDefault();
+    const form = this;
+
     let languageName_id = $('#language-name').val();
     let languageName = '';
-    if(languageName_id == 0){
-        languageName = $('#language-name-new').val();
-    }else{
-        languageName = $('#language-name option:selected').text();
+    let languageEfficiency = $('#language-measure').val().trim();
+
+    // Handle custom language input
+    if (languageName_id == '0') {
+        languageName = $('#language-name-new').val().trim();
+        if (languageName == '') {
+            $('#language-name-new').addClass('is-invalid');
+            $(form).addClass('was-validated');
+            return;
+        } else {
+            $('#language-name-new').removeClass('is-invalid');
+        }
+    } else {
+        languageName = $('#language-name option:selected').text().trim();
     }
-    let languageEfficiency = $('#language-measure').val();
-    // console.log(languageName_id,languageName,languageEfficiency);
-    if(languageName == '' || languageEfficiency == ''){
-         $('#profile-language .needs-validation').addClass('was-validated');
-    }else{
-// console.log(languageName_id);
-// console.log(languageName);
-// console.log(languageEfficiency);
- // Append row to table
-        $('#profie-lang-table tbody').append(`
-            <tr>
-                <th>#</th>
-                <td>${languageName}<input type="hidden" name="languageNameID[]" value="${languageName_id}"><input type="hidden" name="languageName[]" value="${languageName}"></td>
-                <td>${languageEfficiency}<input type="hidden" name="languageEfficiency[]" value="${languageEfficiency}"></td>
-            </tr>
-        `);
+
+    // Validate dropdown and efficiency
+    if (languageName_id == '' || languageEfficiency == '') {
+        $(form).addClass('was-validated');
+        return;
     }
- });
+
+    // Append row to table
+    $('#profile-lang-table tbody').append(`
+        <tr>
+            <th>#</th>
+            <td>${languageName}
+                <input type="hidden" name="languageNameID[]" value="${languageName_id}">
+                <input type="hidden" name="languageName[]" value="${languageName}">
+            </td>
+            <td>${languageEfficiency}
+                <input type="hidden" name="languageEfficiency[]" value="${languageEfficiency}">
+            </td>
+        </tr>
+    `);
+
+    // Reset form
+    form.reset();
+    $(form).removeClass('was-validated');
+    $('#language-name-new').removeClass('is-invalid');
+});
+//  $('#profile-language').on('submit',function(e){
+//     e.preventDefault();
+//     let languageName_id = $('#language-name').val();
+//     let languageName = '';
+//     if(languageName_id == 0){
+//         languageName = $('#language-name-new').val();
+//     }else{
+//         languageName = $('#language-name option:selected').text();
+//     }
+//     let languageEfficiency = $('#language-measure').val();
+//     // console.log(languageName_id,languageName,languageEfficiency);
+//     if(languageName == '' || languageEfficiency == ''){
+//          $('#profile-language .needs-validation').addClass('was-validated');
+//     }else{
+// // console.log(languageName_id);
+// // console.log(languageName);
+// // console.log(languageEfficiency);
+//  // Append row to table
+//         $('#profie-lang-table tbody').append(`
+//             <tr>
+//                 <th>#</th>
+//                 <td>${languageName}<input type="hidden" name="languageNameID[]" value="${languageName_id}"><input type="hidden" name="languageName[]" value="${languageName}"></td>
+//                 <td>${languageEfficiency}<input type="hidden" name="languageEfficiency[]" value="${languageEfficiency}"></td>
+//             </tr>
+//         `);
+//     }
+//  });
 
  function updateLanguage(){
     let name_id = $('input[name="languageNameID[]"]').map(function(){return $(this).val()}).get();
@@ -484,32 +597,57 @@ function extraSkillVIew() {
     });
 }
 extraSkillVIew();
-// let skillCount = 1;
-//  $('#extra-skill-table').DataTable();
 $('#profile-extra-skill').on('submit', function(e) {
     e.preventDefault();
+    const form = this;
+
     let extraSkillId = $('#extra-skill').val();
     let extraSkillName = $('#extra-skill option:selected').text();
-    // console.log(extraSkillId);
 
-    if (extraSkillId == '' || extraSkillId == null) {
-        $('#profile-extra-skill .needs-validation').addClass('was-validated');
+    if (!form.checkValidity() || extraSkillId === '' || extraSkillId === null) {
+        $(form).addClass('was-validated');
         return;
-    } else {
-        // Append row to table
-        $('#extra-skill-table tbody').append(`
-            <tr>
-                <th>#</th>
-                <td>${extraSkillName}</td>
-                <input type="hidden" name="extra_skills[]" value="${extraSkillId}">
-            </tr>
-        `);
-        // skillCount++;
-
-        // Optionally reset the select
-        $('#extra-skill').val('');
     }
+
+    $('#extra-skill-table tbody').append(`
+        <tr>
+            <th>#</th>
+            <td>
+                ${extraSkillName}
+                <input type="hidden" name="extra_skills[]" value="${extraSkillId}">
+            </td>
+        </tr>
+    `);
+
+    form.reset();
+    $(form).removeClass('was-validated');
 });
+// // let skillCount = 1;
+// //  $('#extra-skill-table').DataTable();
+// $('#profile-extra-skill').on('submit', function(e) {
+//     e.preventDefault();
+//     let extraSkillId = $('#extra-skill').val();
+//     let extraSkillName = $('#extra-skill option:selected').text();
+//     // console.log(extraSkillId);
+
+//     if (extraSkillId == '' || extraSkillId == null) {
+//         $('#profile-extra-skill .needs-validation').addClass('was-validated');
+//         return;
+//     } else {
+//         // Append row to table
+//         $('#extra-skill-table tbody').append(`
+//             <tr>
+//                 <th>#</th>
+//                 <td>${extraSkillName}</td>
+//                 <input type="hidden" name="extra_skills[]" value="${extraSkillId}">
+//             </tr>
+//         `);
+//         // skillCount++;
+
+//         // Optionally reset the select
+//         $('#extra-skill').val('');
+//     }
+// });
 
 function updateExtraSkill(){
     let extraSkill = $('input[name="extra_skills[]"]').map(function(){return $(this).val();}).get();
@@ -572,28 +710,57 @@ function planView(){
 planView();
 $('#profile-plan').on('submit', function(e) {
     e.preventDefault();
+    const form = this;
 
     let plan_type_id = $('#plan-type').val();
     let plan_type_name = $('#plan-type option:selected').text();
-    let plan_price = $('#plan-price').val();
+    let plan_price = $('#plan-price').val().trim();
     let skill_type_id = $('#skill-types').val();
     let skill_type_name = $('#skill-types option:selected').text();
     let popularity = $('#popularity-type').val();
 
-    if (!plan_type_id || !plan_price || !skill_type_id || !popularity) {
-        $('#profile-plan .needs-validation').addClass('was-validated');
-    } else {
-        $('#profile-plan-table tbody').append(`
-            <tr>
-                <td>#</td>
-                <td>${plan_type_name}<input type="hidden" name="plan_type_name[]" value="${plan_type_id}"></td>
-                <td>${plan_price}<input type="hidden" name="plan_price[]" value="${plan_price}"></td>
-                <td>${skill_type_name}<input type="hidden" name="skill_type_name[]" value="${skill_type_id}"></td>
-                <td>${popularity}<input type="hidden" name="popularity[]" value="${popularity}"></td>
-            </tr>
-        `);
+    if (!form.checkValidity() || !plan_type_id || !plan_price || !skill_type_id || !popularity) {
+        $(form).addClass('was-validated');
+        return;
     }
+
+    $('#profile-plan-table tbody').append(`
+        <tr>
+            <td>#</td>
+            <td>${plan_type_name}<input type="hidden" name="plan_type_name[]" value="${plan_type_id}"></td>
+            <td>${plan_price}<input type="hidden" name="plan_price[]" value="${plan_price}"></td>
+            <td>${skill_type_name}<input type="hidden" name="skill_type_name[]" value="${skill_type_id}"></td>
+            <td>${popularity}<input type="hidden" name="popularity[]" value="${popularity}"></td>
+        </tr>
+    `);
+
+    form.reset();
+    $(form).removeClass('was-validated');
 });
+// $('#profile-plan').on('submit', function(e) {
+//     e.preventDefault();
+
+//     let plan_type_id = $('#plan-type').val();
+//     let plan_type_name = $('#plan-type option:selected').text();
+//     let plan_price = $('#plan-price').val();
+//     let skill_type_id = $('#skill-types').val();
+//     let skill_type_name = $('#skill-types option:selected').text();
+//     let popularity = $('#popularity-type').val();
+
+//     if (!plan_type_id || !plan_price || !skill_type_id || !popularity) {
+//         $('#profile-plan .needs-validation').addClass('was-validated');
+//     } else {
+//         $('#profile-plan-table tbody').append(`
+//             <tr>
+//                 <td>#</td>
+//                 <td>${plan_type_name}<input type="hidden" name="plan_type_name[]" value="${plan_type_id}"></td>
+//                 <td>${plan_price}<input type="hidden" name="plan_price[]" value="${plan_price}"></td>
+//                 <td>${skill_type_name}<input type="hidden" name="skill_type_name[]" value="${skill_type_id}"></td>
+//                 <td>${popularity}<input type="hidden" name="popularity[]" value="${popularity}"></td>
+//             </tr>
+//         `);
+//     }
+// });
 
 function updateProfilePlan(){
     let plan_type = $('input[name="plan_type_name[]"]').map(function(){return $(this).val();}).get();
@@ -631,25 +798,29 @@ function updateProfilePlan(){
 }
 
 
-function projectView(){
+function projectView() {
     $.ajax({
         url: "../../controller/profile/Profile.php",
         type: "POST",
         data: { getProjectData: true },
         success: function(response) {
             let data = JSON.parse(response).data;
-            //   console.log('Response:', data);
 
-            $('#project-table tbody').empty(); // Optional: clear old rows
+            $('#project-table tbody').empty();
 
             data.forEach((element, index) => {
+                let imageHTML = 'No image';
+                if (element.file_name && element.file_name !== '') {
+                    imageHTML = `<img src="${element.file_name}" width="50" alt="Project Image">`;
+                }
+
                 $('#project-table tbody').append(`
                     <tr>
                         <td scope="row">${index + 1}</td>
                         <td>${element.name}</td>
                         <td>${element.title}</td>
                         <td>${element.description}</td>
-                        <td>#</td>
+                        <td>${imageHTML}</td>
                     </tr>
                 `);
             });
@@ -660,56 +831,193 @@ function projectView(){
     });
 }
 projectView();
- $('#profile-projects').on('submit',function(e){
+//  $('#profile-projects').on('submit',function(e){
+//     e.preventDefault();
+//     let category_id = $('#project-category').val();
+//     let categoryName = $('#project-category option:selected').text();
+//     let title = $('#project-title').val();
+//     let desc = $('#project-desc').val();
+//      let imageInput = $('#file_name')[0];
+//     let imageFile = imageInput.files[0];
+
+//     if(category_id == '' || title == '' || desc == ''){
+//         $('#profile-projects .needs-validation').addClass('was-validated');
+//     }else{
+//         $('#project-table tbody').append(`
+//             <tr>
+//                 <td>#</td>
+//                 <td>${categoryName}<input type="hidden" name="category[]" value="${category_id}"></td>
+//                 <td>${title}<input type="hidden" name="title[]" value="${title}"></td>
+//                 <td>${desc}<input type="hidden" name="desc[]" value="${desc}"></td>
+//                   <td>${imageFile}<input type="hidden" name="image_name[]" value="${imageFile}"></td>
+//                 <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
+//             </tr>
+//             `);
+
+//             $('#project-category').val('');
+//             $('#project-title').val('');
+//             $('#project-desc').val('');
+//             $('.needs-validation').removeClass('was-validated');
+
+//     }
+//  });
+
+// let projectImages = [];
+// $('#profile-projects').on('submit', function(e) {
+//     e.preventDefault();
+
+//     let category_id = $('#project-category').val();
+//     let categoryName = $('#project-category option:selected').text();
+//     let title = $('#project-title').val();
+//     let desc = $('#project-desc').val();
+//     let imageFile = $('#file_name')[0].files[0];
+
+//     if (category_id == '' || title == '' || desc == '') {
+//         $('#profile-projects .needs-validation').addClass('was-validated');
+//     } else {
+//         let imagePreview = 'No image';
+//         let imageIndex = projectImages.length;
+
+//         if (imageFile) {
+//             imagePreview = `<img src="${URL.createObjectURL(imageFile)}" width="50" alt="Preview">`;
+//             projectImages.push(imageFile); // Store the actual File object
+//         } else {
+//             projectImages.push(null); // Maintain index alignment
+//         }
+
+//         $('#project-table tbody').append(`
+//             <tr data-index="${imageIndex}">
+//                 <td>#</td>
+//                 <td>${categoryName}<input type="hidden" name="category[]" value="${category_id}"></td>
+//                 <td>${title}<input type="hidden" name="title[]" value="${title}"></td>
+//                 <td>${desc}<input type="hidden" name="desc[]" value="${desc}"></td>
+//                 <td>${imagePreview}</td>
+//                 <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
+//             </tr>
+//         `);
+
+//         $('#project-category').val('');
+//         $('#project-title').val('');
+//         $('#project-desc').val('');
+//         $('#file_name').val('');
+//         $('.needs-validation').removeClass('was-validated');
+//     }
+// });
+let projectImages = [];
+
+$('#profile-projects').on('submit', function(e) {
     e.preventDefault();
+    const form = this;
+
     let category_id = $('#project-category').val();
     let categoryName = $('#project-category option:selected').text();
-    let title = $('#project-title').val();
-    let desc = $('#project-desc').val();
-    if(category_id == '' || title == '' || desc == ''){
-        $('#profile-projects .needs-validation').addClass('was-validated');
-    }else{
-        $('#project-table tbody').append(`
-            <tr>
-                <td>#</td>
-                <td>${categoryName}<input type="hidden" name="category[]" value="${category_id}"></td>
-                <td>${title}<input type="hidden" name="title[]" value="${title}"></td>
-                <td>${desc}<input type="hidden" name="desc[]" value="${desc}"></td>
-                <td>#</td>
-                <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
-            </tr>
-            `);
+    let title = $('#project-title').val().trim();
+    let desc = $('#project-desc').val().trim();
+    let imageFile = $('#file_name')[0].files[0];
 
-            $('#project-category').val('');
-            $('#project-title').val('');
-            $('#project-desc').val('');
-            $('.needs-validation').removeClass('was-validated');
-
+    if (!form.checkValidity() || category_id === '' || title === '' || desc === '') {
+        $(form).addClass('was-validated');
+        return;
     }
- });
+
+    let imagePreview = 'No image';
+    let imageIndex = projectImages.length;
+
+    if (imageFile) {
+        imagePreview = `<img src="${URL.createObjectURL(imageFile)}" width="50" alt="Preview">`;
+        projectImages.push(imageFile);
+    } else {
+        projectImages.push(null);
+    }
+
+    $('#project-table tbody').append(`
+        <tr data-index="${imageIndex}">
+            <td>#</td>
+            <td>${categoryName}<input type="hidden" name="category[]" value="${category_id}"></td>
+            <td>${title}<input type="hidden" name="title[]" value="${title}"></td>
+            <td>${desc}<input type="hidden" name="desc[]" value="${desc}"></td>
+            <td>${imagePreview}</td>
+            <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
+        </tr>
+    `);
+
+    form.reset();
+    $(form).removeClass('was-validated');
+});
 $('#project-table').on('click', '.delete-row', function() {
     $(this).closest('tr').remove();
 });
 
- function updateProject(){
-    let category = $('input[name="category[]"]').map(function(){return $(this).val()}).get();
-    let title = $('input[name="title[]"]').map(function(){return $(this).val()}).get();
-    let desc = $('input[name="desc[]"]').map(function(){return $(this).val()}).get();
+//  function updateProject(){
+//     let category = $('input[name="category[]"]').map(function(){return $(this).val()}).get();
+//     let title = $('input[name="title[]"]').map(function(){return $(this).val()}).get();
+//     let desc = $('input[name="desc[]"]').map(function(){return $(this).val()}).get();
+//     let image = $('input[name="image[]"]').map(function(){return $(this).val()}).get();
+//     console.log(category);
+//     console.log(title);
+//     console.log(desc);
+//     console.log(image);
+//     $.ajax({
+//         url:"../../controller/profile/Profile.php",
+//         type:"POST",
+//         data:{projectCategory:category,projectTitle:title,projectDesc:desc,image:image},
+//         success:function(response){
+//             let parseResponse = JSON.parse(response);
+//             $('#profile-projects')[0].reset();
+//             projectView();
+//             if(parseResponse.success){
+//                 toastSuccessAlert(parseResponse.success);
+//             }else if(parseResponse.error_success){
+//                 toastErrorAlert(parseResponse.error_success);
+//             }else{
+//                 toastErrorAlert("something went wrong!");
+//             }
+//         }
+//     });
+//  }
+
+function updateProject() {
+    let formData = new FormData();
+
+    $('input[name="category[]"]').each(function(i) {
+        formData.append(`projectCategory[${i}]`, $(this).val());
+    });
+    $('input[name="title[]"]').each(function(i) {
+        formData.append(`projectTitle[${i}]`, $(this).val());
+    });
+    $('input[name="desc[]"]').each(function(i) {
+        formData.append(`projectDesc[${i}]`, $(this).val());
+    });
+
+    // Append matching image files
+    $('#project-table tbody tr').each(function(index) {
+        let rowIndex = $(this).data('index');
+        let file = projectImages[rowIndex];
+        if (file) {
+            formData.append('file_name[]', file);
+        } else {
+            formData.append(`file_name[${index}]`, '');
+        }
+    });
+
     $.ajax({
-        url:"../../controller/profile/Profile.php",
-        type:"POST",
-        data:{projectCategory:category,projectTitle:title,projectDesc:desc},
-        success:function(response){
+        url: "../../controller/profile/Profile.php",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(response) {
             let parseResponse = JSON.parse(response);
             $('#profile-projects')[0].reset();
+            projectImages = [];
             projectView();
-            if(parseResponse.success){
+            if (parseResponse.success) {
                 toastSuccessAlert(parseResponse.success);
-            }else if(parseResponse.error_success){
+            } else if (parseResponse.error_success) {
                 toastErrorAlert(parseResponse.error_success);
-            }else{
-                toastErrorAlert("something went wrong!");
+            } else {
+                toastErrorAlert("Something went wrong!");
             }
         }
     });
- }
+}

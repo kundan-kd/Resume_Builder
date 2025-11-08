@@ -454,8 +454,7 @@ if (isset($_SESSION['user_email'])) {
 
                                     <div class="col-md-3">
                                         <label for="services_category" class="form-label">Skill Name</label>
-                                         <input type="text" class="form-control" id="services_category" placeholder="Enter Services" style="background-image: none;" required>                                      
-                                        <input type="hidden" id="programming-skill-id" name="programming-skill-id">
+                                         <input type="text" class="form-control" id="services_category" placeholder="Enter Services" style="background-image: none;" required>   
                                     </div>
                                      <!-- <div class="col-md-3 progSkillAdd d-none">
                                         <label class=" form-label" for="services_category_new">Skill Name</label>
@@ -660,7 +659,7 @@ if (isset($_SESSION['user_email'])) {
                                 </div>
                             </form>
                                 <div class="table-responsive">
-                                    <table class="table table-striped" id="profie-lang-table">
+                                    <table class="table table-striped" id="profile-lang-table">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>
@@ -732,8 +731,7 @@ if (isset($_SESSION['user_email'])) {
                                     </div>
                                     <div class="col-md-3">
                                         <label for="file_name" class="form-label">Upload Image</label>
-                                        <input type="file" class="form-control" id="file_name" name="file_name"
-                                            accept="image/*">
+                                            <input type="file" class="form-control" id="file_name" name="file_name[]" multiple>
                                     </div>
                                     <div class="col-3" style="margin-top: 3rem;">
                                         <button type="submit" class="btn btn-success"
@@ -1119,7 +1117,6 @@ if (isset($_SESSION['user_email'])) {
      <script>
          const user_id = <?php echo json_encode($userId);?>;
 
-  bar.animate(1);
     </script>
          <script src="../../assets/js/custom/profile/profile.js"></script>
          <script src="../../assets/js/custom/profile/profileTwo.js"></script>

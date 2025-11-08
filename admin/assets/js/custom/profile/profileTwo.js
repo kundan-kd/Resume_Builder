@@ -9,39 +9,74 @@
         }
     });
 
-
-$('#profile-qualification').on('submit', function(e){
+$('#profile-qualification').on('submit', function(e) {
     e.preventDefault();
-    // alert();
+    const form = this;
+
     let qualification_type = $('#qualification_type').val();
     let education_type = $('#education_type').val();
     let education_type_name = $('#education_type option:selected').text();
-    let qualification_title = $('#qualification_title').val();
+    let qualification_title = $('#qualification_title').val().trim();
     let start_date = $('#qualification_start_date').val();
     let end_date = $('#qualification_end_date').val();
-    let certification = $('#qualification_certification').val();
+    let certification = $('#qualification_certification').val().trim();
     let image = $('#qualification_upload').val() || '';
-    let desc = $('#qualification_description').val();
-    if(!qualification_type || !start_date || !end_date || !qualification_title || !desc){
-        $('#profile-qualification .needs-validation').addClass('was-validated');
+    let desc = $('#qualification_description').val().trim();
+
+    if (!form.checkValidity() || !qualification_type || !start_date || !end_date || !qualification_title || !desc) {
+        $(form).addClass('was-validated');
         return;
-    }else{
-        $('#qualification-table tbody').append(`
-                <tr>
-                    <td>#</td>
-                    <td>${qualification_type}<input type="hidden" name="qualification_type[]" value="${qualification_type}"></td>
-                    <td>${education_type_name}<input type="hidden" name="education_type[]" value="${education_type}"></td>
-                    <td>${qualification_title}<input type="hidden" name="qualification_title[]" value="${qualification_title}"></td>
-                    <td>${start_date}<input type="hidden" name="qualification_start_date[]" value="${start_date}"></td>
-                    <td>${end_date}<input type="hidden" name="qualification_end_date[]" value="${end_date}"></td>
-                    <td>${certification}<input type="hidden" name="qualification_certification[]" value="${certification}"></td>
-                    <td>${image}<input type="hidden" name="qualification_upload[]" value="${image}"></td>
-                    <td>${desc}<input type="hidden" name="qualification_description[]" value="${desc}"></td>
-                </tr>
-            `);
-             $('#profile-qualification .needs-validation').removeClass('was-validated');
     }
+
+    $('#qualification-table tbody').append(`
+        <tr>
+            <td>#</td>
+            <td>${qualification_type}<input type="hidden" name="qualification_type[]" value="${qualification_type}"></td>
+            <td>${education_type_name}<input type="hidden" name="education_type[]" value="${education_type}"></td>
+            <td>${qualification_title}<input type="hidden" name="qualification_title[]" value="${qualification_title}"></td>
+            <td>${start_date}<input type="hidden" name="qualification_start_date[]" value="${start_date}"></td>
+            <td>${end_date}<input type="hidden" name="qualification_end_date[]" value="${end_date}"></td>
+            <td>${certification}<input type="hidden" name="qualification_certification[]" value="${certification}"></td>
+            <td>${image}<input type="hidden" name="qualification_upload[]" value="${image}"></td>
+            <td>${desc}<input type="hidden" name="qualification_description[]" value="${desc}"></td>
+        </tr>
+    `);
+
+    form.reset();
+    $(form).removeClass('was-validated');
 });
+// $('#profile-qualification').on('submit', function(e){
+//     e.preventDefault();
+//     // alert();
+//     let qualification_type = $('#qualification_type').val();
+//     let education_type = $('#education_type').val();
+//     let education_type_name = $('#education_type option:selected').text();
+//     let qualification_title = $('#qualification_title').val();
+//     let start_date = $('#qualification_start_date').val();
+//     let end_date = $('#qualification_end_date').val();
+//     let certification = $('#qualification_certification').val();
+//     let image = $('#qualification_upload').val() || '';
+//     let desc = $('#qualification_description').val();
+//     if(!qualification_type || !start_date || !end_date || !qualification_title || !desc){
+//         $('#profile-qualification .needs-validation').addClass('was-validated');
+//         return;
+//     }else{
+//         $('#qualification-table tbody').append(`
+//                 <tr>
+//                     <td>#</td>
+//                     <td>${qualification_type}<input type="hidden" name="qualification_type[]" value="${qualification_type}"></td>
+//                     <td>${education_type_name}<input type="hidden" name="education_type[]" value="${education_type}"></td>
+//                     <td>${qualification_title}<input type="hidden" name="qualification_title[]" value="${qualification_title}"></td>
+//                     <td>${start_date}<input type="hidden" name="qualification_start_date[]" value="${start_date}"></td>
+//                     <td>${end_date}<input type="hidden" name="qualification_end_date[]" value="${end_date}"></td>
+//                     <td>${certification}<input type="hidden" name="qualification_certification[]" value="${certification}"></td>
+//                     <td>${image}<input type="hidden" name="qualification_upload[]" value="${image}"></td>
+//                     <td>${desc}<input type="hidden" name="qualification_description[]" value="${desc}"></td>
+//                 </tr>
+//             `);
+//              $('#profile-qualification .needs-validation').removeClass('was-validated');
+//     }
+// });
 
 function updateQualifications(event) {
     if (event) event.preventDefault();

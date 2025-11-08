@@ -302,6 +302,36 @@ if(isset($_POST['getExtraSkill']) && isset($_SESSION['user_id'])){
     }
 }
 
+// if (isset($_POST['projectCategory']) && isset($_SESSION['user_id'])) {
+//     $id = $_SESSION['user_id'];
+//     $projectCategory = $_POST['projectCategory'];
+//     $projectTitle = $_POST['projectTitle'];
+//     $projectDesc = $_POST['projectDesc'];
+//     $success = true;
+
+//     for ($i = 0; $i < count($projectCategory); $i++) {
+//         $category = mysqli_real_escape_string($conn, trim($projectCategory[$i]));
+//         $title = mysqli_real_escape_string($conn, trim($projectTitle[$i]));
+//         $desc = mysqli_real_escape_string($conn, trim($projectDesc[$i]));
+
+//         $insert = "INSERT INTO user_projects(`user_id`,`category_id`,`title`,`description`,`status`,`created_at`,`updated_at`)
+//                    VALUES($id,$category,'$title','$desc','1',NOW(),NOW())";
+
+//         if (!mysqli_query($conn, $insert)) {
+//             $success = false;
+//             break;
+//         }
+//     }
+
+//     if ($success) {
+//         echo json_encode(['success' => 'Project added successfully']);
+//     } else {
+//         echo json_encode(['error_success' => 'Project not added']);
+//     }
+//     exit;
+// }
+
+
 if (isset($_POST['projectCategory']) && isset($_SESSION['user_id'])) {
     $id = $_SESSION['user_id'];
     $projectCategory = $_POST['projectCategory'];
@@ -309,13 +339,31 @@ if (isset($_POST['projectCategory']) && isset($_SESSION['user_id'])) {
     $projectDesc = $_POST['projectDesc'];
     $success = true;
 
+    $uploadDir = '../../uploads/projects/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
     for ($i = 0; $i < count($projectCategory); $i++) {
         $category = mysqli_real_escape_string($conn, trim($projectCategory[$i]));
         $title = mysqli_real_escape_string($conn, trim($projectTitle[$i]));
         $desc = mysqli_real_escape_string($conn, trim($projectDesc[$i]));
 
-        $insert = "INSERT INTO user_projects(`user_id`,`category_id`,`title`,`description`,`status`,`created_at`,`updated_at`)
-                   VALUES($id,$category,'$title','$desc','1',NOW(),NOW())";
+        $imagePath = null;
+        if (isset($_FILES['file_name']['tmp_name'][$i]) && $_FILES['file_name']['tmp_name'][$i] != '') {
+            $fileTmp = $_FILES['file_name']['tmp_name'][$i];
+            $fileName = basename($_FILES['file_name']['name'][$i]);
+            $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+            $newFileName = uniqid('project_') . '.' . $fileExt;
+            $targetFile = $uploadDir . $newFileName;
+
+            if (move_uploaded_file($fileTmp, $targetFile)) {
+                $imagePath = $targetFile;
+            }
+        }
+
+        $insert = "INSERT INTO user_projects(`user_id`,`category_id`,`title`,`description`,`file_name`,`status`,`created_at`,`updated_at`)
+                   VALUES($id,$category,'$title','$desc','$newFileName','1',NOW(),NOW())";
 
         if (!mysqli_query($conn, $insert)) {
             $success = false;
@@ -323,13 +371,10 @@ if (isset($_POST['projectCategory']) && isset($_SESSION['user_id'])) {
         }
     }
 
-    if ($success) {
-        echo json_encode(['success' => 'Project added successfully']);
-    } else {
-        echo json_encode(['error_success' => 'Project not added']);
-    }
+    echo json_encode($success ? ['success' => 'Project added successfully'] : ['error_success' => 'Project not added']);
     exit;
 }
+
 
 if(isset($_POST['getProjectData']) && isset($_SESSION['user_id'])){
     $id = $_SESSION['user_id'];
