@@ -116,9 +116,18 @@ if (isset($_POST['first_name']) && isset($_SESSION['user_id'])) {
         punchline      = '$punchline',
         customer_count = '$customer_count',
         award_count    = '$award_count',
-        profile_image    = '$profile_image',
-        updated_at     = NOW()
-      WHERE id           = '$id'";
+         updated_at     = NOW()";
+
+// Append profile_image only if uploaded
+if (!empty($profile_image) && trim($profile_image) !== '') {
+    $update .= ", profile_image = '$profile_image'";
+}
+
+
+// Now add the WHERE clause
+$update .= " WHERE id = '$id'";
+
+      
     
     if (mysqli_query($conn, $update)) {
         echo json_encode(['success' => 'Profile updated successfully']);
