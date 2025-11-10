@@ -56,68 +56,72 @@ $('#profile_details').on('submit', function(e) {
     let punchline      = $('#punchline').val().trim();
     let customer_count = $('#customer_count').val().trim();
     let award_count    = $('#award_count').val().trim();
+    let profile_image  = $('#profile_image')[0].files[0];
 
     // simple client-side validation for required fields
     if (
-        first_name == '' ||
-        last_name == '' ||
-        email == '' ||
-        mobile == '' ||
-        dob == '' ||
-        address == '' ||
-        city == '' ||
-        state == '' ||
-        pincode == '' ||
-        country == '' ||
-        experience == ''
+        first_name === '' ||
+        last_name === '' ||
+        email === '' ||
+        mobile === '' ||
+        dob === '' ||
+        address === '' ||
+        city === '' ||
+        state === '' ||
+        pincode === '' ||
+        country === '' ||
+        experience === ''
     ) {
         $('#profile_details .needs-validation').addClass('was-validated');
         return;
     }
 
-    // Prepare data object to send
-    let postData = {
-        first_name: first_name,
-        last_name: last_name,
-        email: email,
-        mobile: mobile,
-        dob: dob,
-        address: address,
-        city: city,
-        state: state,
-        pincode: pincode,
-        country: country,
-        linkedin: linkedin,
-        experience: experience,
-        project: project,
-        designation: designation,
-        personal_no: personal_no,
-        support_no: support_no,
-        office_no: office_no,
-        telegram: telegram_id,
-        skype: skype_id,
-        punchline: punchline,
-        customer_count: customer_count,
-        award_count: award_count,
-    };
+    // Prepare FormData object
+    let formData = new FormData();
+    formData.append('first_name', first_name);
+    formData.append('last_name', last_name);
+    formData.append('email', email);
+    formData.append('mobile', mobile);
+    formData.append('dob', dob);
+    formData.append('address', address);
+    formData.append('city', city);
+    formData.append('state', state);
+    formData.append('pincode', pincode);
+    formData.append('country', country);
+    formData.append('linkedin', linkedin);
+    formData.append('experience', experience);
+    formData.append('project', project);
+    formData.append('designation', designation);
+    formData.append('personal_no', personal_no);
+    formData.append('support_no', support_no);
+    formData.append('office_no', office_no);
+    formData.append('telegram', telegram_id);
+    formData.append('skype', skype_id);
+    formData.append('punchline', punchline);
+    formData.append('customer_count', customer_count);
+    formData.append('award_count', award_count);
+    if (profile_image) {
+        formData.append('profile_image', profile_image);
+    }
 
     // make AJAX request
     $.ajax({
         url: "../../controller/profile/Profile.php",
         type: "POST",
-        data: postData,
-        dataType: "json",  // expecting JSON response
+        data: formData,
+        contentType: false, // Important for file upload
+        processData: false, // Important for file upload
+        dataType: "json",
         success: function(response) {
             if (response.success) {
                 toastSuccessAlert(response.success);
                 setTimeout(() => {
-                    window.location.reload(true); // Deprecated but still works in some browsers                  
+                    window.location.reload(true);
                 }, 1000);
-                // you might like to reload part of the page or redirect
             } else if (response.error_success) {
-               toastSuccessAlert(response.error_success);
+                toastSuccessAlert(response.error_success);
             } else {
-                toastSuccessAlert("something went wrong!");
+                toastSuccessAlert("Something went wrong!");
             }
         },
         error: function(xhr, status, error) {
@@ -125,7 +129,6 @@ $('#profile_details').on('submit', function(e) {
             alert("An error occurred while updating profile");
         }
     });
-
 });
 
 function viewServices(){
@@ -193,13 +196,16 @@ $('#profile_services').on('submit', function(e) {
             <th>#</th>
             <td>${serviceCategory}<input type="hidden" name="serviceCategoryName[]" value="${serviceCategory}"></td>
             <td>${serviceDesc}<input type="hidden" name="serviceDesc[]" value="${serviceDesc}"></td>
+            <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
         </tr>
     `);
 
     form.reset();
     $(form).removeClass('was-validated');
 });
-
+$('#profile-services-tab').on('click', '.delete-row', function() {
+    $(this).closest('tr').remove();
+});
 function updateservices(){
     let name = $('input[name="serviceCategoryName[]"]').map(function() {return $(this).val();}).get();
     let desc = $('input[name="serviceDesc[]"]').map(function() {return $(this).val();}).get();
@@ -278,6 +284,7 @@ function programmingSkillAdd() {
         }
     });
 }
+
 programmingSkillAdd();
 $('#profile_programmingSkill').on('submit', function(e) {
     e.preventDefault();
@@ -313,6 +320,7 @@ $('#profile_programmingSkill').on('submit', function(e) {
             <td>${skillName}<input type="hidden" name="skillNameID[]" value="${skillName_id}">
             <input type="hidden" name="skillName[]" value="${skillName}"></td>
             <td>${skillEfficiency}<input type="hidden" name="skillEfficiency[]" value="${skillEfficiency}"></td>
+             <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
         </tr>
     `);
 
@@ -320,6 +328,9 @@ $('#profile_programmingSkill').on('submit', function(e) {
     form.reset();
     $(form).removeClass('was-validated');
     $('#programming-skill-new').removeClass('is-invalid');
+});
+$('#profile-prog-tab').on('click', '.delete-row', function() {
+    $(this).closest('tr').remove();
 });
 // $('#profile_programmingSkill').on('submit',function(e){
 //     e.preventDefault();
@@ -491,6 +502,7 @@ $('#profile-language').on('submit', function(e) {
             <td>${languageEfficiency}
                 <input type="hidden" name="languageEfficiency[]" value="${languageEfficiency}">
             </td>
+             <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
         </tr>
     `);
 
@@ -498,6 +510,9 @@ $('#profile-language').on('submit', function(e) {
     form.reset();
     $(form).removeClass('was-validated');
     $('#language-name-new').removeClass('is-invalid');
+});
+$('#profile-lang-table').on('click', '.delete-row', function() {
+    $(this).closest('tr').remove();
 });
 //  $('#profile-language').on('submit',function(e){
 //     e.preventDefault();
@@ -616,11 +631,15 @@ $('#profile-extra-skill').on('submit', function(e) {
                 ${extraSkillName}
                 <input type="hidden" name="extra_skills[]" value="${extraSkillId}">
             </td>
+            <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
         </tr>
     `);
 
     form.reset();
     $(form).removeClass('was-validated');
+});
+$('#extra-skill-table').on('click', '.delete-row', function() {
+    $(this).closest('tr').remove();
 });
 // // let skillCount = 1;
 // //  $('#extra-skill-table').DataTable();
@@ -731,11 +750,15 @@ $('#profile-plan').on('submit', function(e) {
             <td>${plan_price}<input type="hidden" name="plan_price[]" value="${plan_price}"></td>
             <td>${skill_type_name}<input type="hidden" name="skill_type_name[]" value="${skill_type_id}"></td>
             <td>${popularity}<input type="hidden" name="popularity[]" value="${popularity}"></td>
+            <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
         </tr>
     `);
 
     form.reset();
     $(form).removeClass('was-validated');
+});
+$('#profile-plan-table').on('click', '.delete-row', function() {
+    $(this).closest('tr').remove();
 });
 // $('#profile-plan').on('submit', function(e) {
 //     e.preventDefault();
@@ -811,7 +834,7 @@ function projectView() {
             data.forEach((element, index) => {
                 let imageHTML = 'No image';
                 if (element.file_name && element.file_name !== '') {
-                    imageHTML = `<img src="${element.file_name}" width="50" alt="Project Image">`;
+                    imageHTML = `<img src="../../uploads/projects/${element.file_name}" width="50" alt="Project Image">`;
                 }
 
                 $('#project-table tbody').append(`

@@ -37,7 +37,7 @@ if (isset($_SESSION['user_email'])) {
                             <h5 class="mb-0">Update Profile</h5>
                         </div>
                         <div class="card-body">
-                            <form method="POST" id="profile_details" class="needs-validation" novalidate>
+                            <form method="POST" id="profile_details" enctype="multipart/form-data" class="needs-validation" novalidate>
                                 <div class="row g-3">
 
                                    <div class="col-4">
@@ -171,6 +171,16 @@ if (isset($_SESSION['user_email'])) {
                                         <label for="password" class="form-label">Password</label>
                                         <input type="text" class="form-control" id="password1" name="password1" value="<?=$row['plain_password']?>"
                                             placeholder="" style="background-image: none;">
+                                    </div>
+                                      <div class="col-2">
+                                        <label for="profile_image" class="form-label">Image</label>
+                                        <input type="file" class="form-control" id="profile_image" name="profile_image" value=""
+                                            placeholder="" style="background-image: none;">
+                                        <!-- <img id="profile_image_preview" src="../../uploads/projects/<?=$row['profile_image']?>" alt="Image Preview" style="margin-top:10px; max-width:60px; border-radius:5px;"> -->
+
+                                    </div>
+                                      <div class="col-2 <<?php $row['profile_image'] == '' || null ?'d-none':''?>">
+                                        <img id="profile_image_preview" src="../../uploads/projects/<?=$row['profile_image']?>" alt="Image Preview" style="margin-top:30px; max-width:60px; border-radius:5px;">
                                     </div>
                                     <div class="d-flex justify-content-end mt-4">
                                         <button type="submit" id="" name="" class="btn btn-primary">Update</button>
@@ -480,7 +490,7 @@ if (isset($_SESSION['user_email'])) {
                             </form>
 
                                 <div class="row">
-                                    <div class="table-responsive col-md-6">
+                                    <div class="table-responsive">
                                         <table class="table table-striped mt-2" id="profile-services-tab">
                                             <thead>
                                             <tr>
@@ -621,7 +631,7 @@ if (isset($_SESSION['user_email'])) {
                                 <div class="row g-3 mb-5">
                                     <div class="col-md-3">
                                         <label for="language-name" class="form-label">Language Id</label>
-                                        <select class="form-select" id="language-name" name="language-name" required>
+                                        <select class="form-select" id="language-name" name="language-name" style="background-image: none;" required>
                                             <option value="" selected disabled>-- Select Language --</option>
                                             <?php
                                             $select = "SELECT * FROM `language_types`";
@@ -648,7 +658,7 @@ if (isset($_SESSION['user_email'])) {
                                         <label class="visually-hidden form-label" for="skill-measure">Efficiency</label>
                                         <div class="input-group">
                                             <input type="number" class="form-control" id="language-measure"
-                                                name="language-measure" min="0" max="100" placeholder="Percentage">
+                                                name="language-measure" min="0" max="100" placeholder="Percentage" style="background-image: none;">
                                             <div class="input-group-text">%</div>
                                         </div>
                                     </div>
@@ -658,7 +668,7 @@ if (isset($_SESSION['user_email'])) {
                                     </div>
                                 </div>
                             </form>
-                                <div class="table-responsive">
+                                <div class="table-responsive col-md-6">
                                     <table class="table table-striped" id="profile-lang-table">
                                         <thead>
                                             <tr>
@@ -694,7 +704,7 @@ if (isset($_SESSION['user_email'])) {
                                 <div class="row g-3 mb-5">
                                     <div class="col-md-2 mb-3">
                                         <label for="project-category" class="form-label">Category</label>
-                                        <select class="form-select" id="project-category" name="project-category"
+                                        <select class="form-select" id="project-category" name="project-category" style="background-image: none;"
                                             required>
                                             <option value="" selected disabled>-- Select Category --</option>
                                             <!-- <option value="">Web Development</option> -->
@@ -721,17 +731,17 @@ if (isset($_SESSION['user_email'])) {
                                     <div class="col-md-2">
                                         <label for="project-title" class="form-label">Title</label>
                                         <input type="text" class="form-control" id="project-title" name="project-title"
-                                            placeholder="Enter Title" required>
+                                            placeholder="Enter Title" style="background-image: none;" required>
                                     </div>
 
                                     <div class="col-md-2">
                                         <label for="project-desc" class="form-label">Description</label>
                                         <input type="text" class="form-control" id="project-desc" name="project-desc"
-                                            placeholder="Enter Description" required>
+                                            placeholder="Enter Description" style="background-image: none;" required>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="file_name" class="form-label">Upload Image</label>
-                                            <input type="file" class="form-control" id="file_name" name="file_name[]" multiple>
+                                            <input type="file" class="form-control" id="file_name" name="file_name[]" style="background-image: none;" multiple>
                                     </div>
                                     <div class="col-3" style="margin-top: 3rem;">
                                         <button type="submit" class="btn btn-success"
@@ -776,7 +786,7 @@ if (isset($_SESSION['user_email'])) {
                                 <div class="row g-3 mb-5">
                                     <div class="col-md-3">
                                         <label for="extra-skill" class="form-label">Extra Skill ID</label>
-                                        <select class="form-select" id="extra-skill" name="extra-skill" required>
+                                        <select class="form-select" id="extra-skill" name="extra-skill" style="background-image: none;" required>
                                             <option value="" selected disabled>-- Select Extra Skill --</option>
                                             <?php
                                             $select = "SELECT * FROM `extra_skill_types`";
@@ -801,7 +811,7 @@ if (isset($_SESSION['user_email'])) {
 
                                 </div>
                                 </form>
-                                <div class="table-responsive">
+                                <div class="table-responsive col-md-6">
                                     <table class="table table-striped" id="extra-skill-table">
                                         <thead>
                                             <tr>
@@ -832,7 +842,7 @@ if (isset($_SESSION['user_email'])) {
                                 <div class="row mb-5">
                                     <div class="col-md-3">
                                         <label for="plan-type" class="form-label">Plan Type ID</label>
-                                        <select id="plan-type" class="form-select" aria-label="Plan Type Selection">
+                                        <select id="plan-type" class="form-select" aria-label="Plan Type Selection" style="background-image: none;" required>
                                             <option value="" selected disabled>-- Select Plan Type --</option>
                                             <?php $select = "SELECT * FROM `plan_types`";
                                             $result = mysqli_query($conn, $select);
@@ -850,12 +860,12 @@ if (isset($_SESSION['user_email'])) {
                                     <div class="col-md-3">
                                         <label for="plan-price" class="form-label">Price</label>
                                         <input type="number" class="form-control" id="plan-price" name="plan-price"
-                                            min="0" step="1" placeholder="Enter Price">
+                                            min="0" step="1" placeholder="Enter Price" style="background-image: none;" required>
                                     </div>
 
                                     <div class="col-md-3">
                                         <label for="skill-types" class="form-label">Skill Type</label>
-                                        <select id="skill-types" class="form-select" aria-label="Skill Type Selection">
+                                        <select id="skill-types" class="form-select" aria-label="Skill Type Selection" style="background-image: none;" required>
                                             <option value="" selected disabled>-- Select Skill type --</option>
                                             <?php $select = "SELECT * FROM `skill_list_types`";
                                             $result = mysqli_query($conn, $select);
@@ -874,8 +884,8 @@ if (isset($_SESSION['user_email'])) {
 
                                     <div class="col-md-3">
                                         <label for="popularity-type" class="form-label">Popularity Type</label>
-                                        <select id="popularity-type" class="form-select"
-                                            aria-label="Popularity Selection">
+                                        <select id="popularity-type" class="form-select" style="background-image: none;"
+                                            aria-label="Popularity Selection" required>
                                             <option value="" selected disabled>-- Select Popularity --</option>
                                             <?php
                                             for ($i = 0; $i <= 10; $i++) {
@@ -931,7 +941,7 @@ if (isset($_SESSION['user_email'])) {
             <div class="row g-3">
                  <div class="col-md-3">
                     <label for="qualification_type" class="form-label">Qualification Type</label>
-                    <select class="form-select" id="qualification_type" name="qualification_type[]" required>
+                    <select class="form-select" id="qualification_type" name="qualification_type[]" style="background-image: none;" required>
                         <option value="" >-- Select Qualification --</option>
                         <option value="Education">Education</option >
                         <option value="Work">Work</option>
@@ -939,7 +949,7 @@ if (isset($_SESSION['user_email'])) {
                 </div>
                 <div class="col-md-3 education-type d-none">
                     <label for="education_type" class="form-label">Qualification ID</label>
-                    <select class="form-select" id="education_type" name="education_type[]" required>
+                    <select class="form-select" id="education_type" name="education_type[]" style="background-image: none;" required>
                         <option value="" selected disabled>-- Select Qualification --</option>
                         <?php
                         $select = "SELECT * FROM `education_types`";
@@ -954,31 +964,28 @@ if (isset($_SESSION['user_email'])) {
 
                 <div class="col-md-3">
                     <label for="qualification_title" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="qualification_title" name="qualification_title[]" required>
+                    <input type="text" class="form-control" id="qualification_title" name="qualification_title[]" style="background-image: none;" required>
                 </div>
                 <div class="col-md-3">
                     <label for="qualification-start-date" class="form-label">Start Date</label>
-                    <input type="date" class="form-control" id="qualification_start_date" name="qualification_start_date[]" required>
+                    <input type="date" class="form-control" id="qualification_start_date" name="qualification_start_date[]" style="background-image: none;" required>
                 </div>
 
                 <div class="col-md-3">
                     <label for="qualification-end-date" class="form-label">End Date</label>
-                    <input type="date" class="form-control" id="qualification_end_date" name="qualification_end_date[]" required>
+                    <input type="date" class="form-control" id="qualification_end_date" name="qualification_end_date[]" style="background-image: none;" required>
                 </div>
 
                 <div class="col-md-3">
                     <label for="certification" class="form-label">Certification</label>
-                    <input type="text" class="form-control" id="qualification_certification" name="qualification_certification[]" placeholder="Enter Certification" required>
+                    <input type="text" class="form-control" id="qualification_certification" name="qualification_certification[]" placeholder="Enter Certification" style="background-image: none;" required>
                 </div>
 
-                <div class="col-md-3">
-                    <label for="qualification-upload" class="form-label">Upload Image</label>
-                    <input type="file" class="form-control" id="qualification_upload" name="qualification_upload[]" accept="image/*">
-                </div>
+               
 
                 <div class="col-md-3">
                     <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="qualification_description" name="qualification_description[]" rows="1" placeholder="Enter Description" required></textarea>
+                    <textarea class="form-control" id="qualification_description" name="qualification_description[]" rows="1" placeholder="Enter Description" style="background-image: none;" required></textarea>
                 </div>
             </div>
 
@@ -999,7 +1006,6 @@ if (isset($_SESSION['user_email'])) {
                         <th scope="col">End Date</th>
                         <th scope="col">Description</th>
                         <th scope="col">Certification</th>
-                        <th scope="col">File Name</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1015,7 +1021,7 @@ if (isset($_SESSION['user_email'])) {
 </div>
 
                  
-                    <div class="card mt-3 skill-card">
+                    <!-- <div class="card mt-3 skill-card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Icon</h5>
                         </div>
@@ -1049,7 +1055,7 @@ if (isset($_SESSION['user_email'])) {
                                 <div class="alert-container mt-3"></div>
                             </form>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- Social Icons Card end -->
 
 

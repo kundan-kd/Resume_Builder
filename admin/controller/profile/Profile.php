@@ -67,6 +67,31 @@ if (isset($_POST['first_name']) && isset($_SESSION['user_id'])) {
     $punchline     = mysqli_real_escape_string($conn, $_POST['punchline']);
     $customer_count= mysqli_real_escape_string($conn, $_POST['customer_count']);
     $award_count   = mysqli_real_escape_string($conn, $_POST['award_count']);
+
+     // Handle image upload
+    $profile_image = '';
+    if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['profile_image']['tmp_name'];
+        $fileName = $_FILES['profile_image']['name'];
+        $fileSize = $_FILES['profile_image']['size'];
+        $fileType = $_FILES['profile_image']['type'];
+        $fileNameCmps = explode(".", $fileName);
+        $fileExtension = strtolower(end($fileNameCmps));
+
+        // Set upload directory and unique filename
+        $newFileName = uniqid() . '.' . $fileExtension;
+        $uploadFileDir = '../../uploads/profile/';
+        $dest_path = $uploadFileDir . $newFileName;
+
+        // Move file
+        if (move_uploaded_file($fileTmpPath, $dest_path)) {
+            $profile_image = $dest_path;
+        } else {
+            echo json_encode(['error_success' => 'Image upload failed']);
+            exit;
+        }
+    }
+
     
     $update = "UPDATE user_registrations SET 
         first_name     = '$first_name',
@@ -91,6 +116,7 @@ if (isset($_POST['first_name']) && isset($_SESSION['user_id'])) {
         punchline      = '$punchline',
         customer_count = '$customer_count',
         award_count    = '$award_count',
+        profile_image    = '$profile_image',
         updated_at     = NOW()
       WHERE id           = '$id'";
     

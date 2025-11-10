@@ -1,3 +1,20 @@
+<?php
+require_once 'main_header.php';
+if (isset($_SESSION['user_email'])) {
+    $email = mysqli_real_escape_string($conn, $_SESSION['user_email']);
+    $select = "SELECT * FROM `user_registrations` WHERE `email` = '$email'";
+    $result = mysqli_query($conn, $select);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+    } else {
+        echo "No user found.";
+    }
+} else {
+    echo "User email not set in session.";
+}
+
+?>
 <div class="app-sidebar-menu">
   <div class="h-100" data-simplebar>
     <!-- Sidebar -->
@@ -12,7 +29,8 @@
       <ul id="side-menu">
         <li><a href="../home/dashboard.php" class="tp-link">Dashboard</a></li>
         <!-- Master Section -->
-        <li>
+        <li class="<?php echo ($row['user_type'] == 'admin') ? '' : 'd-none'; ?>">
+
           <a href="#categories" data-bs-toggle="collapse">
             <i data-feather="settings"></i>
             <span>Master</span>
@@ -33,7 +51,7 @@
         </li>
 
         <!-- Resume Section -->
-        <li>
+        <li class="<?php echo ($row['user_type'] == 'admin') ? '' : 'd-none'; ?>">
           <a href="#users" data-bs-toggle="collapse">
             <i data-feather="users"></i>
             <span>Resume</span>
@@ -41,7 +59,7 @@
           </a>
           <div class="collapse" id="users">
             <ul class="nav-second-level">
-              <li><a href="registered_users.php" class="tp-link">Users</a></li>
+              <li><a href="../home/registered_users.php" class="tp-link">Users</a></li>
             </ul>
           </div>
         </li>
@@ -55,19 +73,13 @@
           </a>
           <div class="collapse" id="profiles">
             <ul class="nav-second-level">
-              <li><a href="../master/user_profiles.php" class="tp-link">Profile</a></li>
+              <li><a href="../home/user_profiles.php" class="tp-link">Profile</a></li>
               <!-- Future: Contacts -->
             </ul>
           </div>
         </li>
 
-        <!-- Logout -->
-        <li>
-          <a onclick="logout()" style="cursor: pointer;">
-            <i data-feather="log-out"></i>
-            <span>Logout</span>
-          </a>
-        </li>
+      
 
         <!-- Publish -->
         <li>
@@ -77,7 +89,13 @@
             </a>
             </li>
 
-
+  <!-- Logout -->
+        <li>
+          <a onclick="logout()" style="cursor: pointer;">
+            <i data-feather="log-out"></i>
+            <span>Logout</span>
+          </a>
+        </li>
       </ul>
     </div>
     <!-- End Sidebar -->
@@ -95,8 +113,8 @@
       </div>
 
       <div class="modal-body">
-        <a target="_blank" href="http://localhost/resume_builder/index.php?token=9a97eec5ec234a8d8ba8fd03deba967c1">
-          http://localhost/resume_builder/index.php?token=9a97eec5ec234a8d8ba8fd03deba967c1
+        <a target="_blank" href="http://localhost/resume_builder/index.php?token=<?php echo $row['token'];?>">
+          http://localhost/resume_builder/index.php?token=<?php echo $row['token'];?>
         </a>
       </div>
 
