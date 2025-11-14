@@ -149,6 +149,14 @@ function viewServices(){
                         <td scope="row">${index + 1}</td>
                         <td>${element.name}</td>
                         <td>${element.description}</td>
+                        <td>
+                         <button class='btn btn-outline-primary btn-sm me-2 edit-category-btn' onclick="editService(${element.id})">
+                            <i class='ri-pencil-line'></i>
+                        </button>
+                        <button class='btn btn-outline-danger btn-sm delete-category-btn' onclick="deleteService(${element.id})">
+                            <i class='ri-delete-bin-6-line'></i>
+                        </button>
+                         </td>
                     </tr>
                 `);
             });
@@ -159,38 +167,15 @@ function viewServices(){
     });
 }
 viewServices();
-// $('#profile_services').on('submit', function(e) {
-//     e.preventDefault();
-//     let serviceCategory = $('#services_category').val().trim();
-//     let serviceDesc = $('#services_desc').val().trim();
-
-//     if (serviceCategory === '' || serviceDesc === '') {
-//         $('#profile_services .needs-validation').addClass('was-validated');
-//     } else {
-//         $('#profile-services-tab tbody').append(`
-//             <tr>
-//                 <th>#</th>
-//                 <td>${serviceCategory}<input type="hidden" name="serviceCategoryName[]" value="${serviceCategory}"></td>
-//                 <td>${serviceDesc}<input type="hidden" name="serviceDesc[]" value="${serviceDesc}"></td>
-//             </tr>
-//         `);
-//         $('#services_category').val('');
-//         $('#services_desc').val('');
-//         $('#profile_services .needs-validation').removeClass('was-validated');
-//     }
-// });
 $('#profile_services').on('submit', function(e) {
     e.preventDefault();
     const form = this;
-
     if (!form.checkValidity()) {
         $(form).addClass('was-validated');
         return;
     }
-
     let serviceCategory = $('#services_category').val().trim();
     let serviceDesc = $('#services_desc').val().trim();
-
     $('#profile-services-tab tbody').append(`
         <tr>
             <th>#</th>
@@ -199,9 +184,9 @@ $('#profile_services').on('submit', function(e) {
             <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
         </tr>
     `);
-
     form.reset();
     $(form).removeClass('was-validated');
+    $('.insertServicesBtn').removeClass('d-none');
 });
 $('#profile-services-tab').on('click', '.delete-row', function() {
     $(this).closest('tr').remove();
@@ -210,7 +195,6 @@ function updateservices(){
     let name = $('input[name="serviceCategoryName[]"]').map(function() {return $(this).val();}).get();
     let desc = $('input[name="serviceDesc[]"]').map(function() {return $(this).val();}).get();
     if (name == '' || desc == '') {
-        // $('.needs-validation').addClass('was-validated');
         return;
     } else {
         $.ajax({
@@ -224,6 +208,7 @@ function updateservices(){
                 let parseResponse = JSON.parse(response);
                 if (parseResponse.success) {
                     toastSuccessAlert(parseResponse.success);
+                    $('.insertServicesBtn').addClass('d-none');
                      viewServices();
                 } else if (parseResponse.error_success) {
                     toastErrorAlert(parseResponse.error_success);
@@ -234,20 +219,95 @@ function updateservices(){
         });
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function editService(id){
+    $('.servicesAddbtn').addClass('d-none');
+    $('.servicesUpdatebtn').removeClass('d-none');
+    $.ajax({
+        url:"../../controller/profile/Profile.php",
+        type:"POST",
+        data:{GetServiceData:true, id:id},
+        dataType:'json',
+        success:function(response){
+             console.log(response);
+            let data = response.data[0];
+            $('#myServicesId').val(id);
+            $('#services_category').val(data.name);
+            $('#services_desc').val(data.description);
+        }
+    });
+}
+function updateServiceData(id){
+    let name =  $('#services_category').val();
+    let desc = $('#services_desc').val();
+    if(name == '' || desc == ''){
+       $('form#profile_services.needs-validation').addClass('was-validated'); // to target specific form class
+        return;
+    }else{
+       $('form#profile_services.needs-validation').removeClass('was-validated'); // to target specific form class
+    }
+    $.ajax({
+        url:"../../controller/profile/Profile.php",
+        type:"POST",
+        data:{updateServices:true,id:id,name:name,desc:desc},
+        dataType:'json',
+        success:function(response){
+            if (response.success) {
+                $('form#profile_services.needs-validation').removeClass('was-validated');
+                $('#myServicesId').val('');
+                $('#services_category').val('');
+                $('#services_desc').val('');
+                viewServices();
+                toastSuccessAlert(response.success);
+            } else if (parseResponse.error_success) {
+                toastErrorAlert(parseResponse.error_success);
+            } else {
+                toastErrorAlert('Something went wrong!');
+            }
+            $('.servicesUpdatebtn').addClass('d-none');
+            $('.servicesAddbtn').removeClass('d-none');
+        }        
+    });
+}
+function deleteService(id){
+    $.confirm({
+        title: 'Are you sure?',
+        content: "You won't be able to revert this!",
+        type: 'red',
+        buttons: {
+            confirm: {
+                text: 'Yes, delete it!',
+                btnClass: 'btn-red',
+                action: function () {                     
+                    $.ajax({
+                        url: "../../controller/profile/Profile.php",
+                        type: "POST",
+                        data: { deleteServices:true,id: id },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $.alert({title: 'Deleted!', content: response.success,type: 'green'});
+                                viewServices();
+                            } else {
+                                $.alert({title: 'Error!', content: 'Category not deleted.', type: 'red'});
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            $.alert({
+                                title: 'Error!',
+                                content: 'An error occurred: ' + error,
+                                type: 'red'
+                            });
+                        }
+                    });
+                }
+            },
+            cancel: function () {
+                // Optional: do nothing or show a message
+            }
+        }
+    });
+}
 
 $('#programming-skill-name').on('change',function(){
     const selectVal = $(this).val();
@@ -263,18 +323,22 @@ function programmingSkillAdd() {
         type: "POST",
         data: { GetProgrammingSkill: true },
         success: function(response) {
-            //  console.log('Response:', response);
-           let data = JSON.parse(response).data;
-            // console.log(data);
-
+            let data = JSON.parse(response).data;
             $('#profile-prog-tab tbody').empty(); // Optional: clear old rows
-
             data.forEach((element, index) => {
                 $('#profile-prog-tab tbody').append(`
                     <tr>
                         <td scope="row">${index + 1}</td>
                         <td>${element.name}</td>
                         <td>${element.user_efficiency}</td>
+                        <td>
+                         <button class='btn btn-outline-primary btn-sm me-2 edit-category-btn' onclick="editSkills(${element.id})">
+                            <i class='ri-pencil-line'></i>
+                        </button>
+                        <button class='btn btn-outline-danger btn-sm delete-category-btn' onclick="deleteSkills(${element.id})">
+                            <i class='ri-delete-bin-6-line'></i>
+                        </button>
+                         </td>
                     </tr>
                 `);
             });
@@ -328,67 +392,12 @@ $('#profile_programmingSkill').on('submit', function(e) {
     form.reset();
     $(form).removeClass('was-validated');
     $('#programming-skill-new').removeClass('is-invalid');
+    $('.insertProgrammingSkillBtn').removeClass('d-none');
 });
 $('#profile-prog-tab').on('click', '.delete-row', function() {
     $(this).closest('tr').remove();
 });
-// $('#profile_programmingSkill').on('submit',function(e){
-//     e.preventDefault();
-//     let skillName_id = $('#programming-skill-name').val();
-//     let skillName = '';
-//     if(skillName_id == 0){
-//         skillName = $('#programming-skill-new').val();
-//     }else{
-//         skillName = $('#programming-skill-name option:selected').text();
-//     }
-//     let skillEfficiency = $('#programming-skill-measure').val();
-//     if(skillName_id == '' || skillEfficiency == ''){
-//         $('#profile_programmingSkill .needs-validation').addClass('was-validated');
-//     }else{
-//         $('#profile-prog-tab tbody').append(`
-//             <tr>
-//                 <th>#</th>
-//                 <td>${skillName}<input type="hidden" name="skillNameID[]" value="${skillName_id}">
-//                 <input type="hidden" name="skillName[]" value="${skillName}"></td>
-//                 <td>${skillEfficiency}<input type="hidden" name="skillEfficiency[]" value="${skillEfficiency}"></td>
-//             </tr>
-//         `);
-//     }
-// });
 
-// function updateProgrammingSkill(){
-//     let name_id = $('input[name="skillNameID[]"]').map(function(){return $(this).val();}).get();
-//     let name = $('input[name="skillName[]"]').map(function(){return $(this).val();}).get();
-//     let efficiency = $('input[name="skillEfficiency[]"]').map(function(){return $(this).val();}).get();
-//     if(name_id == '' || efficiency == ''){
-//         $('needs-validation').addClass('was-validated');
-//     }else{
-//            $.ajax({
-//             url:"../../controller/profile/Profile.php",
-//             type:"POST",
-//             data:{skillNameID:name_id,skillName:name,skillEfficiency:efficiency},
-//             success:function(response){
-//                 // console.log(response);
-//                 let parseResponse = JSON.parse(response);
-//                 if(parseResponse.success){
-//                     $('.needs-validation').removeClass('was-validated');
-//                     $('#programming-skill-name').val('');
-//                     $('#programming-skill-measure').val('');
-//                     toastSuccessAlert(parseResponse.success);
-//                     programmingSkillAdd();
-//                     if(name_id.includes(0)){
-//                         window.location.reload();
-//                     }
-//                 }else if(parseResponse.error_success){
-//                     toastErrorAlert(parseResponse.error_success);
-//                 }else{
-//                     toastErrorAlert('sonething went wrong!');
-//                 }
-              
-//             }
-//         });
-//     }
-// }
 
 function updateProgrammingSkill() {
     let name_id = $('input[name="skillNameID[]"]').map(function() {return $(this).val();}).get();
@@ -413,6 +422,7 @@ function updateProgrammingSkill() {
                     $('#programming-skill-name').val('');
                     $('#programming-skill-measure').val('');
                     toastSuccessAlert(parseResponse.success);
+                    $('.insertProgrammingSkillBtn').addClass('d-none');
                     programmingSkillAdd();
                     if (name_id.includes("0") || name_id.includes(0)) {
                         window.location.reload();
@@ -425,6 +435,95 @@ function updateProgrammingSkill() {
             }
         });
     }
+}
+function editSkills(id){
+    $('.programmingSkillAddBtn').addClass('d-none');
+    $('.programmingSkillUpdateBtn').removeClass('d-none');
+    $.ajax({
+        url:"../../controller/profile/Profile.php",
+        type:"POST",
+        data:{GetProgrammingSkillData:true, id:id},
+        dataType:'json',
+        success:function(response){
+            // console.log(response);
+            let data = response.data[0];
+            $('#programmingSkillId').val(id);
+            $('#programming-skill-name').val(data.programming_language_id);
+            $('#programming-skill-measure').val(data.user_efficiency);
+        }
+    });
+}
+function updateProgrammingSkillData(id){
+    let name =  $('#programming-skill-name').val();
+    let value = $('#programming-skill-measure').val();
+    if(name == '' || value == ''){
+       $('form#profile_programmingSkill.needs-validation').addClass('was-validated'); // to target specific form class
+        return;
+    }else{
+       $('form#profile_programmingSkill.needs-validation').removeClass('was-validated'); // to target specific form class
+    }
+    $.ajax({
+        url:"../../controller/profile/Profile.php",
+        type:"POST",
+        data:{updateProgrammingSkill:true,id:id,name:name,value:value},
+        dataType:'json',
+        success:function(response){
+            if (response.success) {
+                $('form#profile_programmingSkill.needs-validation').removeClass('was-validated');
+                $('#programmingSkillId').val('');
+                $('#programming-skill-name').val('');
+                $('#programming-skill-measure').val('');
+                programmingSkillAdd();
+                toastSuccessAlert(response.success);
+            } else if (parseResponse.error_success) {
+                toastErrorAlert(parseResponse.error_success);
+            } else {
+                toastErrorAlert('Something went wrong!');
+            }
+            $('.programmingSkillUpdateBtn').addClass('d-none');
+            $('.programmingSkillAddBtn').removeClass('d-none');
+        }        
+    });
+}
+function deleteSkills(id){
+    $.confirm({
+        title: 'Are you sure?',
+        content: "You won't be able to revert this!",
+        type: 'red',
+        buttons: {
+            confirm: {
+                text: 'Yes, delete it!',
+                btnClass: 'btn-red',
+                action: function () {                     
+                    $.ajax({
+                        url: "../../controller/profile/Profile.php",
+                        type: "POST",
+                        data: { deleteProgrammingSkills:true,id: id },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $.alert({title: 'Deleted!', content: response.success,type: 'green'});
+                                programmingSkillAdd();
+                            } else {
+                                $.alert({title: 'Error!', content: 'Category not deleted.', type: 'red'});
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            $.alert({
+                                title: 'Error!',
+                                content: 'An error occurred: ' + error,
+                                type: 'red'
+                            });
+                        }
+                    });
+                }
+            },
+            cancel: function () {
+                // Optional: do nothing or show a message
+            }
+        }
+    });
 }
 
 $('#language-name').on('change',function(){

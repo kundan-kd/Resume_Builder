@@ -451,54 +451,34 @@ if (isset($_SESSION['user_email'])) {
                         </div>
                         <div class="card-body">
                             <form id="profile_services" method="POST" class="needs-validation" novalidate>
-                            <div class="row md-5">
-
-                                    <!-- <div class="col-md-3">
-                                        <label for="skill-type" class="form-label">Skill Type</label>
-                                        <select id="skill-type" class="form-select" aria-label="Skills Selection">
-                                            <option value="" selected disabled>-- Select Skill Type --</option>
-                                            <option value="Design">web Development</option>
-                                            <option value="Soft-Skills">Ui/UX Design</option>
-                                        </select>
-                                    </div> -->
-
+                                <div class="row md-5">
                                     <div class="col-md-3">
+                                        <input type="hidden" id="myServicesId">
                                         <label for="services_category" class="form-label">Skill Name</label>
-                                         <input type="text" class="form-control" id="services_category" placeholder="Enter Services" style="background-image: none;" required>   
+                                        <input type="text" class="form-control" id="services_category" placeholder="Enter Services" style="background-image: none;" required>   
                                     </div>
-                                     <!-- <div class="col-md-3 progSkillAdd d-none">
-                                        <label class=" form-label" for="services_category_new">Skill Name</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="services_category_new" placeholder="Enter Skill Name" style="background-image: none;" required>
-                                        </div>
-                                    </div> -->
-
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         <label class=" form-label" for="services_desc">Description</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="services_desc" placeholder="Enter Description" style="background-image: none;" required>
                                         </div>
                                     </div>
-
                                     <div class="col-md-3 mt-4">
-                                        <button type="submit" class="btn btn-success"
-                                            >Add</button>
+                                        <button type="submit" class="btn btn-success servicesAddbtn">Add</button>
+                                        <button type="button" class="btn btn-warning servicesUpdatebtn d-none" onclick="updateServiceData(document.getElementById('myServicesId').value)">Update</button>
                                     </div>
-
-
                                 </div>
                             </form>
-
                                 <div class="row">
                                     <div class="table-responsive">
                                         <table class="table table-striped mt-2" id="profile-services-tab">
                                             <thead>
                                             <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Services</th>
-                                                    <th scope="col">Description</th>
-                                                    <!-- <th scope="col">Delete</th> -->
-                                                </tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Services</th>
+                                                <th scope="col">Description</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
                                             </thead>
                                             <tbody>
                                                <!-- data appended using function -->
@@ -506,45 +486,23 @@ if (isset($_SESSION['user_email'])) {
                                         </table>
                                     </div>
                                 </div>
-
-                                <div class="alert-container col-md-12"></div>
-                                <!-- <div class="col-md-12 mt-3 text-end">
-                                    <button type="submit" class="btn btn-primary" style="display: none;"
-                                        id="invisibleButton">Submit</button>
-                                </div> -->
                                 <div class="d-flex justify-content-end mt-4">
-                                    <button type="button" id="" name="" class="btn btn-primary" onclick="updateservices()">Update</button>
-                                </div>
-                            
+                                    <button type="button" id="" name="" class="btn btn-primary insertServicesBtn d-none" onclick="updateservices()">Update</button>
+                                </div>                            
                         </div>
                     </div>
                     <!-- Programming Card end -->
-
-
-
-
-
-
                     <!-- Programming Cardd -->
                     <div class="card mt-3 skill-card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Programming Skill</h5>
+                            <h5 class="card-title mb-0">Skills</h5>
                         </div>
                         <div class="card-body">
                             <form id="profile_programmingSkill" method="POST" class="needs-validation" novalidate>
                             <div class="row md-5">
-
-                                    <!-- <div class="col-md-3">
-                                        <label for="skill-type" class="form-label">Skill Type</label>
-                                        <select id="skill-type" class="form-select" aria-label="Skills Selection">
-                                            <option value="" selected disabled>-- Select Skill Type --</option>
-                                            <option value="Design">web Development</option>
-                                            <option value="Soft-Skills">Ui/UX Design</option>
-                                        </select>
-                                    </div> -->
-
                                     <div class="col-md-3">
                                         <label for="skill-name" class="form-label">Skill Name</label>
+                                        <input type="hidden" id="programmingSkillId">
                                         <select id="programming-skill-name" class="form-select"
                                             aria-label="Skill Type Selection" style="background-image: none;;" required>
                                             <option value="" selected disabled>-- Select Skill Name --</option>
@@ -554,12 +512,9 @@ if (isset($_SESSION['user_email'])) {
                                                 while ($row = $result->fetch_assoc()) {
                                                     ?>
                                                     <option value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
-
-                                                    </option>
                                                     <?php
                                                 }
                                             }
-
                                             ?>
                                             <option value="0">Add More ✏️</option>
                                         </select>
@@ -571,7 +526,6 @@ if (isset($_SESSION['user_email'])) {
                                             <input type="text" class="form-control" id="programming-skill-new" placeholder="Enter Skill Name" style="background-image: none;" required>
                                         </div>
                                     </div>
-
                                     <div class="col-md-3">
                                         <label class=" form-label" for="programming-skill-measure">Efficiency</label>
                                         <div class="input-group">
@@ -580,16 +534,12 @@ if (isset($_SESSION['user_email'])) {
                                             <div class="input-group-text">%</div>
                                         </div>
                                     </div>
-
                                     <div class="col-md-3 mt-4">
-                                        <button type="submit" class="btn btn-success" id="addButton"
-                                            >Add</button>
+                                        <button type="submit" class="btn btn-success programmingSkillAddBtn" id="addButton">Add</button>
+                                        <button type="button" class="btn btn-warning programmingSkillUpdateBtn d-none" id="addButton" onclick="updateProgrammingSkillData(document.getElementById('programmingSkillId').value)">Update</button>
                                     </div>
-
-
                                 </div>
                             </form>
-
                                 <div class="row">
                                     <div class="table-responsive col-md-6">
                                         <table class="table table-striped" id="profile-prog-tab">
@@ -598,7 +548,7 @@ if (isset($_SESSION['user_email'])) {
                                                     <th scope="col">#</th>
                                                     <th scope="col">Skill Name</th>
                                                     <th scope="col">Skill Measure</th>
-                                                    <!-- <th scope="col">Delete</th> -->
+                                                    <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -607,14 +557,8 @@ if (isset($_SESSION['user_email'])) {
                                         </table>
                                     </div>
                                 </div>
-
-                                <div class="alert-container col-md-12"></div>
-                                <!-- <div class="col-md-12 mt-3 text-end">
-                                    <button type="submit" class="btn btn-primary" style="display: none;"
-                                        id="invisibleButton">Submit</button>
-                                </div> -->
                                 <div class="d-flex justify-content-end mt-4">
-                                    <button type="button" id="" name="" class="btn btn-primary" onclick="updateProgrammingSkill()">Update</button>
+                                    <button type="button" id="" name="" class="btn btn-primary insertProgrammingSkillBtn d-none" onclick="updateProgrammingSkill()">Update</button>
                                 </div>
                             
                         </div>

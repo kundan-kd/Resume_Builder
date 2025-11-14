@@ -157,15 +157,9 @@ if(isset($_POST['servicesName']) && isset($_SESSION['user_id'])){
     }
 }
 
-
-
-
-
-
-
 if(isset($_POST['GetServices']) && isset($_SESSION['user_id'])){
     $id = $_SESSION['user_id'];
-     $query = "SELECT * FROM user_services WHERE user_id = $id";
+     $query = "SELECT * FROM user_services WHERE user_id = $id AND deleted_at IS NULL";
     $result = mysqli_query($conn, $query);
     if ($result) {
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -176,6 +170,46 @@ if(isset($_POST['GetServices']) && isset($_SESSION['user_id'])){
         echo json_encode(['status' => false, 'error' => 'Query failed']);
     }
 }
+if(isset($_POST['GetServiceData'])){
+    $id = $_POST['id'];
+    $query = "SELECT name, description FROM user_services WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        echo json_encode(['status'=>true, 'data'=>$data]);
+    }else{
+        echo json_encode(['status'=>false, 'error'=>'Query failed']);
+    }exit;
+}
+if(isset($_POST['deleteServices'])){
+    $id = $_POST['id'];
+    $query = "UPDATE user_services SET deleted_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Service deleted successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Service not deleted']);
+    }exit;
+}
+if(isset($_POST['updateServices'])){
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $desc = $_POST['desc'];
+    $query ="UPDATE user_services SET name = '$name', description = '$desc', updated_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Service updated successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Service not updated']);
+    }exit;
+}
+
+
+
+
+
+
+
 
 
 if(isset($_POST['skillNameID']) && isset($_SESSION['user_id'])){
@@ -214,7 +248,7 @@ if (isset($_POST['GetProgrammingSkill']) && isset($_SESSION['user_id'])) {
      $query = "SELECT user_programming_languages.*,programming_skill_types.name
         FROM user_programming_languages
         JOIN programming_skill_types ON user_programming_languages.programming_language_id = programming_skill_types.id
-        WHERE user_programming_languages.user_id = $id
+        WHERE user_programming_languages.user_id = $id AND user_programming_languages.deleted_at IS NULL;
     ";
     $result = mysqli_query($conn, $query);
     if ($result) {
@@ -226,7 +260,40 @@ if (isset($_POST['GetProgrammingSkill']) && isset($_SESSION['user_id'])) {
         echo json_encode(['status' => false, 'error' => 'Query failed']);
     }
 }
-
+if(isset($_POST['GetProgrammingSkillData'])){
+    $id = $_POST['id'];
+    $query = "SELECT programming_language_id,user_efficiency FROM user_programming_languages WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        echo json_encode(['status'=>true, 'data'=>$data]);
+    }else{
+        echo json_encode(['status'=>false, 'error'=>'Query failed']);
+    }exit;
+}
+if(isset($_POST['updateProgrammingSkill'])){
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $value = $_POST['value'];
+    $query ="UPDATE user_programming_languages SET programming_language_id = $name, user_efficiency = $value, updated_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Skill updated successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Skill not updated']);
+    }exit;
+}
+if(isset($_POST['deleteProgrammingSkills'])){
+    $id = $_POST['id'];
+    // var_dump($id);
+    $query = "UPDATE user_programming_languages SET deleted_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Skill deleted successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Skill not deleted']);
+    }
+}
 // if(isset($_POST['languageNameID']) && isset($_SESSION['user_id'])){
 //     $userId = (int) $_SESSION['user_id'];
 //     $languageNameIDs = $_POST['languageNameID'];

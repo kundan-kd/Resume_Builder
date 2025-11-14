@@ -451,7 +451,7 @@
                         <!-- text -->
                         <div class="mb-15"><?=$data['description']?></div>
                         <!-- button -->
-                        <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div>
+                        <!-- <div class="art-buttons-frame"><a href="#." class="art-link art-color-link art-w-chevron">Order now</a></div> -->
                       </div>
                       <!-- service content end -->
                     </div>
