@@ -82,7 +82,6 @@ function updateQualifications(event) {
         },
         dataType: "json",
         success: function (response) {
-            console.log(response);
             if (response.success) {
                 toastSuccessAlert(response.success);
                 qualificationView();
@@ -104,9 +103,7 @@ function qualificationView(){
         type: "POST",
         data: { getQualification: true },
         success: function(response) {
-            // console.log(response);
             let data = JSON.parse(response).data;
-              console.log('Response:', data);
 
             $('#qualification-table tbody').empty(); // Optional: clear old rows
 

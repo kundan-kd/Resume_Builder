@@ -1,36 +1,29 @@
 <?php
-require_once 'admin/includes/header.php';
+  require_once 'admin/includes/header.php';
+  $row = null;
+  if (!empty($_GET['token'])) {
+      $token = mysqli_real_escape_string($conn, $_GET['token']);
+      $query = "SELECT * FROM `user_registrations` WHERE `token` = '$token'";
+  } 
+  else {
+  echo '<div class="alert alert-danger" role="alert" style="margin: 20px; padding: 15px; font-size: 16px; border: 1px solid #f5c2c7; background-color: #f8d7da; color: #842029;">
+          Access denied: Authentication token is missing. Please provide a valid token to proceed.
+        </div>';
+  exit;
+  }
+  // Execute query if set
+  if (isset($query)) {
+      $result = mysqli_query($conn, $query);
+      if ($result && mysqli_num_rows($result) > 0) {
+          $row = mysqli_fetch_assoc($result);
+      } else {
+          echo '<div class="alert alert-danger" role="alert" style="margin: 20px; padding: 15px; font-size: 16px; border: 1px solid #f5c2c7; background-color: #f8d7da; color: #842029;">
+          No user found with the provided token.
+        </div>';
+  exit;
 
-$row = null;
-
-// Check if user is logged in via session
-if (!empty($_SESSION['user_email'])) {
-    $email = mysqli_real_escape_string($conn, $_SESSION['user_email']);
-    $query = "SELECT * FROM `user_registrations` WHERE `email` = '$email'";
-} 
-// If not logged in, check for token in URL
-elseif (!empty($_GET['token'])) {
-    $token = mysqli_real_escape_string($conn, $_GET['token']);
-    $query = "SELECT * FROM `user_registrations` WHERE `token` = '$token'";
-} 
-// If neither session nor token is available
-else {
-    echo "Access denied: No session or token provided.";
-    exit;
-}
-
-// Execute query if set
-if (isset($query)) {
-    $result = mysqli_query($conn, $query);
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-    } else {
-        echo "No user found.";
-        exit;
-    }
-}
-
-// Now you can use $row for further processing
+      }
+  }
 ?>
 <!doctype html>
 <html lang="zxx">
@@ -648,7 +641,7 @@ if (isset($query)) {
                           <div class="art-card-header">
                             <div class="art-left-side">
                               <h5><?=$qualification['qualification_title']?></h5>
-                              <div class="art-el-suptitle mb-15">Template author</div>
+                              <!--<div class="art-el-suptitle mb-15">Template author</div>-->
                             </div>
                             <div class="art-right-side">
                               <span class="art-date"><?=$qualification['start_date']?> - <?=$qualification['end_date']?></span>
