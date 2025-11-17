@@ -35,11 +35,11 @@ if(isset($_POST['plan_type']) && $_SESSION['user_id']){
 
 if (isset($_POST['getPlanType']) && isset($_SESSION['user_id'])) {
     $id = $_SESSION['user_id'];
-    $query = "SELECT user_plan.price,popularity_type, plan_types.name As plan_type_name, skill_list_types.name As skill_type_name
+    $query = "SELECT user_plan.id,price,popularity_type, plan_types.name As plan_type_name, skill_list_types.name As skill_type_name
               FROM user_plan
               JOIN plan_types ON user_plan.plan_type_id = plan_types.id
               JOIN skill_list_types ON user_plan.skill_types = skill_list_types.id
-              WHERE user_plan.user_id = $id";
+              WHERE user_plan.user_id = $id AND user_plan.deleted_at IS NULL";
     
     $result = mysqli_query($conn,$query);
     if($result){
@@ -51,6 +51,41 @@ if (isset($_POST['getPlanType']) && isset($_SESSION['user_id'])) {
     }
 }
 
+if(isset($_POST['GetPlanData'])){
+    $id = $_POST['id'];
+    $query = "SELECT * FROM user_plan WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        echo json_encode(['status'=>true, 'data'=>$data]);
+    }else{
+        echo json_encode(['status'=>false, 'error'=>'Query failed']);
+    }exit;
+}
+if(isset($_POST['updatePlan'])){
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $price = $_POST['price'];
+    $skill = $_POST['skill'];
+    $value = $_POST['value'];
+    $query ="UPDATE user_plan SET plan_type_id = $name,price = $price, skill_types = $skill, popularity_type = $value, updated_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Plan updated successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Plan not updated']);
+    }exit;
+}
+if(isset($_POST['deletePlan'])){
+    $id = $_POST['id'];
+    $query = "UPDATE user_plan SET deleted_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Plan deleted successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Plan Skill not deleted']);
+    }exit;
+}
 if (isset($_POST['qualification_type']) && isset($_SESSION['user_id'])) {
     $id = $_SESSION['user_id'];
     $qualification_types = $_POST['qualification_type'];
@@ -60,9 +95,7 @@ if (isset($_POST['qualification_type']) && isset($_SESSION['user_id'])) {
     $end_dates = $_POST['end_date'];
     $certifications = $_POST['certification'];
     $descs = $_POST['desc'];
-
     $success = true;
-
     for ($i = 0; $i < count($qualification_types); $i++) {
         $qualification_type = mysqli_real_escape_string($conn, trim($qualification_types[$i]));
         $education_type = mysqli_real_escape_string($conn, trim($education_types[$i]));
@@ -71,12 +104,9 @@ if (isset($_POST['qualification_type']) && isset($_SESSION['user_id'])) {
         $endDate = mysqli_real_escape_string($conn, trim($end_dates[$i]));
         $certification = mysqli_real_escape_string($conn, trim($certifications[$i]));
         $desc = mysqli_real_escape_string($conn, trim($descs[$i]));
-
-        // Insert into DB (file_name removed)
         $insert = "INSERT INTO user_qualification_details 
         (`user_id`, `qualification_type`, `education_id`, `qualification_title`, `start_date`, `end_date`, `certification`, `description`, `status`, `created_at`, `updated_at`) 
         VALUES ('$id', '$qualification_type', '$education_type', '$qualification_title', '$startDate', '$endDate', '$certification', '$desc', '1', NOW(), NOW())";
-
         if (!mysqli_query($conn, $insert)) {
             error_log("Insert failed: " . mysqli_error($conn));
             $success = false;
@@ -111,5 +141,43 @@ if($result){
     exit;
 }else{
     echo json_encode(['status' =>false, 'data' => 'Query failed']);
+}
+
+if(isset($_POST['GetQualificationData'])){
+    $id = $_POST['id'];
+    var_dump("got data");
+    var_dump($id);
+    $query1 = "SELECT * FROM user_qualification_details WHERE id = '$id'";
+    $result = mysqli_query($conn,$query1);
+    if($result){
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        echo json_encode(['status'=>true, 'data'=>$data]);
+    }else{
+        echo json_encode(['status'=>false, 'error'=>'Query failed']);
+    }exit;
+}
+if(isset($_POST['updateQualification'])){
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $price = $_POST['price'];
+    $skill = $_POST['skill'];
+    $value = $_POST['value'];
+    $query ="UPDATE user_plan SET plan_type_id = $name,price = $price, skill_types = $skill, popularity_type = $value, updated_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Plan updated successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Plan not updated']);
+    }exit;
+}
+if(isset($_POST['deleteQualification'])){
+    $id = $_POST['id'];
+    $query = "UPDATE user_plan SET deleted_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Plan deleted successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Plan Skill not deleted']);
+    }exit;
 }
 ?>

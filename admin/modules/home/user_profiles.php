@@ -535,8 +535,8 @@ if (isset($_SESSION['user_email'])) {
                                         </div>
                                     </div>
                                     <div class="col-md-3 mt-4">
-                                        <button type="submit" class="btn btn-success programmingSkillAddBtn" id="addButton">Add</button>
-                                        <button type="button" class="btn btn-warning programmingSkillUpdateBtn d-none" id="addButton" onclick="updateProgrammingSkillData(document.getElementById('programmingSkillId').value)">Update</button>
+                                        <button type="submit" class="btn btn-success programmingSkillAddBtn">Add</button>
+                                        <button type="button" class="btn btn-warning programmingSkillUpdateBtn d-none" onclick="updateProgrammingSkillData(document.getElementById('programmingSkillId').value)">Update</button>
                                     </div>
                                 </div>
                             </form>
@@ -593,6 +593,7 @@ if (isset($_SESSION['user_email'])) {
                                         <input type="hidden" id="language-id" name="language-id">
                                     </div>
                                     <div class="col-md-3 languageNewAdd d-none">
+                                        <input type="hidden" id="languageId">
                                         <label class=" form-label" for="language-name-new">Langauage Name</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" id="language-name-new" placeholder="Enter Language Name" style="background-image: none;" required>
@@ -607,8 +608,8 @@ if (isset($_SESSION['user_email'])) {
                                         </div>
                                     </div>
                                     <div class="col-md-3" style="margin-top: 2.9rem;">
-                                        <button type="submit"
-                                            class="btn btn-success">Add</button>
+                                        <button type="submit" class="btn btn-success languageAddBtn">Add</button>
+                                        <button type="button" class="btn btn-warning languageUpdateBtn d-none" onclick="updateLanguageData(document.getElementById('languageId').value)">Update</button>
                                     </div>
                                 </div>
                             </form>
@@ -619,6 +620,7 @@ if (isset($_SESSION['user_email'])) {
                                                 <th scope="col">#</th>
                                                 <th scope="col">Language Name</th>
                                                 <th scope="col">Efficiency</th>
+                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -628,8 +630,7 @@ if (isset($_SESSION['user_email'])) {
                                 </div>
                                 <div class="alert-container mt-3"></div>
                                 <div class="d-flex justify-content-end mt-4">
-                                    <button type="button" id="lang-sub" name="lang-sub"
-                                        class="btn btn-primary" onclick="updateLanguage()">Update</button>
+                                    <button type="button" id="lang-sub" name="lang-sub" class="btn btn-primary" onclick="updateLanguage()">Update</button>
                                 </div>
                            
                         </div>
@@ -647,11 +648,11 @@ if (isset($_SESSION['user_email'])) {
                             <form id="profile-projects" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                                 <div class="row g-3 mb-5">
                                     <div class="col-md-2 mb-3">
+                                        <input type="hidden" id="projectId">
                                         <label for="project-category" class="form-label">Category</label>
                                         <select class="form-select" id="project-category" name="project-category" style="background-image: none;"
                                             required>
                                             <option value="" selected disabled>-- Select Category --</option>
-                                            <!-- <option value="">Web Development</option> -->
                                             <?php
                                             $select = "SELECT * FROM `category_types`";
                                             $result = mysqli_query($conn, $select);
@@ -665,13 +666,7 @@ if (isset($_SESSION['user_email'])) {
                                             ?>
                                             <option value="Other">Other</option>
                                         </select>
-                                        <!-- <input type="hidden" id="project-id" name="project-id"> -->
                                     </div>
-
-                                    <!-- <input type="text" class="form-control" id="custom-category" name="custom-category"
-                                        placeholder="Enter category" style="display:none;"> -->
-
-
                                     <div class="col-md-2">
                                         <label for="project-title" class="form-label">Title</label>
                                         <input type="text" class="form-control" id="project-title" name="project-title"
@@ -688,12 +683,12 @@ if (isset($_SESSION['user_email'])) {
                                             <input type="file" class="form-control" id="file_name" name="file_name[]" style="background-image: none;" multiple>
                                     </div>
                                     <div class="col-3" style="margin-top: 3rem;">
-                                        <button type="submit" class="btn btn-success"
-                                           >Add</button>
+                                        <button type="submit" class="btn btn-success projectAddBtn">Add</button>
+                                        <button type="button" class="btn btn-warning projectUpdateBtn d-none" onclick="updateLanguageData(document.getElementById('projectId').value)">Update</button>
                                     </div>
 
                                 </div>
-                                </form>
+                            </form>
                                 <div class="table-responsive">
                                     <table class="table mb-0" id="project-table">
                                         <thead>
@@ -729,6 +724,7 @@ if (isset($_SESSION['user_email'])) {
                             <form id="profile-extra-skill" method="POST" class="needs-validation" novalidate>
                                 <div class="row g-3 mb-5">
                                     <div class="col-md-3">
+                                        <input type="hidden" id="extraSkillId">
                                         <label for="extra-skill" class="form-label">Extra Skill ID</label>
                                         <select class="form-select" id="extra-skill" name="extra-skill" style="background-image: none;" required>
                                             <option value="" selected disabled>-- Select Extra Skill --</option>
@@ -749,8 +745,8 @@ if (isset($_SESSION['user_email'])) {
 
 
                                     <div class="col-md-3" style="margin-top: 2.9rem;">
-                                        <button type="submit" class="btn btn-success"
-                                           >Add</button>
+                                        <button type="submit" class="btn btn-success extraSkillAddBtn">Add</button>
+                                        <button type="button" class="btn btn-warning extraSkillUpdateBtn d-none" onclick="updateExtraSkillData(document.getElementById('extraSkillId').value)">Update</button>
                                     </div>
 
                                 </div>
@@ -785,6 +781,7 @@ if (isset($_SESSION['user_email'])) {
 
                                 <div class="row mb-5">
                                     <div class="col-md-3">
+                                        <input type="hidden" id="planId">
                                         <label for="plan-type" class="form-label">Plan Type ID</label>
                                         <select id="plan-type" class="form-select" aria-label="Plan Type Selection" style="background-image: none;" required>
                                             <option value="" selected disabled>-- Select Plan Type --</option>
@@ -832,7 +829,7 @@ if (isset($_SESSION['user_email'])) {
                                             aria-label="Popularity Selection" required>
                                             <option value="" selected disabled>-- Select Popularity --</option>
                                             <?php
-                                            for ($i = 0; $i <= 10; $i++) {
+                                            for ($i = 0; $i <= 5; $i++) {
                                                 ?>
                                                 <option value="<?=$i?>"><?= $i ?></option>
 
@@ -841,8 +838,8 @@ if (isset($_SESSION['user_email'])) {
                                     </div>
 
                                     <div class="col-md-3 mt-4">
-                                        <button type="submit" class="btn btn-success" id="addPlanButton"
-                                           >Add</button>
+                                        <button type="submit" class="btn btn-success planAddBtn">Add</button>
+                                        <button type="button" class="btn btn-warning planUpdateBtn d-none" onclick="updatePlanData(document.getElementById('planId').value)">Update</button>
                                     </div>
                                 </div>
                             </form>               
@@ -884,6 +881,7 @@ if (isset($_SESSION['user_email'])) {
         <form id="profile-qualification" enctype="multipart/form-data" method="POST" class="needs-validation" novalidate>
             <div class="row g-3">
                  <div class="col-md-3">
+                    <input type="hidden" id="qualificationId">
                     <label for="qualification_type" class="form-label">Qualification Type</label>
                     <select class="form-select" id="qualification_type" name="qualification_type[]" style="background-image: none;" required>
                         <option value="" >-- Select Qualification --</option>
@@ -932,9 +930,9 @@ if (isset($_SESSION['user_email'])) {
                     <textarea class="form-control" id="qualification_description" name="qualification_description[]" rows="1" placeholder="Enter Description" style="background-image: none;" required></textarea>
                 </div>
             </div>
-
                 <div class="col-md-3 mt-2 mb-2">
-                    <button type="submit" class="btn btn-success">Add</button>
+                    <button type="submit" class="btn btn-success qualificationAddBtn">Add</button>
+                    <button type="button" class="btn btn-warning qualificationUpdateBtn d-none" onclick="updateQualificationData(document.getElementById('qualificationId').value)">Update</button>
                 </div>
         </form>
 
@@ -948,8 +946,9 @@ if (isset($_SESSION['user_email'])) {
                         <th scope="col">Title</th>
                         <th scope="col">Start Date</th>
                         <th scope="col">End Date</th>
-                        <th scope="col">Description</th>
+                        <th style="width: 30%;" scope="col">Description</th>
                         <th scope="col">Certification</th>
+                        <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>

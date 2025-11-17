@@ -404,7 +404,6 @@ function updateProgrammingSkill() {
     let name = $('input[name="skillName[]"]').map(function() {return $(this).val();}).get();
     let efficiency = $('input[name="skillEfficiency[]"]').map(function() {return $(this).val();}).get();
     if (name_id.length === 0 || efficiency.length === 0) {
-        // $('.needs-validation').addClass('was-validated');
         return;
     } else {
         $.ajax({
@@ -542,16 +541,21 @@ function languageAdd() {
         data: { getLanguage: true },
         success: function(response) {
             let data = JSON.parse(response).data;
-            // console.log('Response:', data);
-
             $('#profile-lang-table tbody').empty(); // Optional: clear old rows
-
             data.forEach((element, index) => {
                 $('#profile-lang-table tbody').append(`
                     <tr>
                         <td scope="row">${index + 1}</td>
                         <td>${element.name}</td>
                         <td>${element.user_efficiency}</td>
+                        <td>
+                            <button class='btn btn-outline-primary btn-sm me-2' onclick="editLanguage(${element.id})">
+                                <i class='ri-pencil-line'></i>
+                            </button>
+                            <button class='btn btn-outline-danger btn-sm' onclick="deleteLanguage(${element.id})">
+                                <i class='ri-delete-bin-6-line'></i>
+                            </button>
+                        </td>
                     </tr>
                 `);
             });
@@ -613,33 +617,6 @@ $('#profile-language').on('submit', function(e) {
 $('#profile-lang-table').on('click', '.delete-row', function() {
     $(this).closest('tr').remove();
 });
-//  $('#profile-language').on('submit',function(e){
-//     e.preventDefault();
-//     let languageName_id = $('#language-name').val();
-//     let languageName = '';
-//     if(languageName_id == 0){
-//         languageName = $('#language-name-new').val();
-//     }else{
-//         languageName = $('#language-name option:selected').text();
-//     }
-//     let languageEfficiency = $('#language-measure').val();
-//     // console.log(languageName_id,languageName,languageEfficiency);
-//     if(languageName == '' || languageEfficiency == ''){
-//          $('#profile-language .needs-validation').addClass('was-validated');
-//     }else{
-// // console.log(languageName_id);
-// // console.log(languageName);
-// // console.log(languageEfficiency);
-//  // Append row to table
-//         $('#profie-lang-table tbody').append(`
-//             <tr>
-//                 <th>#</th>
-//                 <td>${languageName}<input type="hidden" name="languageNameID[]" value="${languageName_id}"><input type="hidden" name="languageName[]" value="${languageName}"></td>
-//                 <td>${languageEfficiency}<input type="hidden" name="languageEfficiency[]" value="${languageEfficiency}"></td>
-//             </tr>
-//         `);
-//     }
-//  });
 
  function updateLanguage(){
     let name_id = $('input[name="languageNameID[]"]').map(function(){return $(this).val()}).get();
@@ -668,18 +645,94 @@ $('#profile-lang-table').on('click', '.delete-row', function() {
             }
         });
  }
-
-//  $('#profile-extra-skill').on('submit',function(e){
-//     e.preventDefault();
-//     let extraSkill = $('#extra-skill').val();
-//     if(extraSkill == ''){
-//         $('.needs-validation').addClass('was-validated');
-//     }else{
-//         $('#extra-skill-table tbody').append(``);
-//     }
-//  });
-
-
+function editLanguage(id){
+    $('.languageAddBtn').addClass('d-none');
+    $('.languageUpdateBtn').removeClass('d-none');
+    $.ajax({
+        url:"../../controller/profile/Profile.php",
+        type:"POST",
+        data:{GetLanguageData:true, id:id},
+        dataType:'json',
+        success:function(response){
+            let data = response.data[0];
+            $('#languageId').val(id);
+            $('#language-name').val(data.language_id);
+            $('#language-measure').val(data.user_efficiency);
+        }
+    });
+}
+function updateLanguageData(id){
+    let name =  $('#language-name').val();
+    let value = $('#language-measure').val();
+    if(name == '' || value == ''){
+       $('form#profile-language.needs-validation').addClass('was-validated'); // to target specific form class
+        return;
+    }else{
+       $('form#profile-language.needs-validation').removeClass('was-validated'); // to target specific form class
+    }
+    $.ajax({
+        url:"../../controller/profile/Profile.php",
+        type:"POST",
+        data:{updateLanguage:true,id:id,name:name,value:value},
+        dataType:'json',
+        success:function(response){
+            if (response.success) {
+                $('form#profile-language.needs-validation').removeClass('was-validated');
+                $('#languageId').val('');
+                $('#language-name').val('');
+                $('#language-measure').val('');
+                languageAdd();
+                toastSuccessAlert(response.success);
+            } else if (parseResponse.error_success) {
+                toastErrorAlert(parseResponse.error_success);
+            } else {
+                toastErrorAlert('Something went wrong!');
+            }
+            $('.servicesUpdatebtn').addClass('d-none');
+            $('.servicesAddbtn').removeClass('d-none');
+        }        
+    });
+}
+function deleteLanguage(id){
+    $.confirm({
+        title: 'Are you sure?',
+        content: "You won't be able to revert this!",
+        type: 'red',
+        buttons: {
+            confirm: {
+                text: 'Yes, delete it!',
+                btnClass: 'btn-red',
+                action: function () {                     
+                    $.ajax({
+                        url: "../../controller/profile/Profile.php",
+                        type: "POST",
+                        data: { deleteLanguage:true,id: id },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $.alert({title: 'Deleted!', content: response.success,type: 'green'});
+                                languageAdd();
+                            } else {
+                                $.alert({title: 'Error!', content: 'Category not deleted.', type: 'red'});
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            $.alert({
+                                title: 'Error!',
+                                content: 'An error occurred: ' + error,
+                                type: 'red'
+                            });
+                        }
+                    });
+                }
+            },
+            cancel: function () {
+                // Optional: do nothing or show a message
+            }
+        }
+    });
+}
 
 
 
@@ -692,8 +745,6 @@ function extraSkillVIew() {
         data: { getExtraSkill: true },
         success: function(response) {
             let data = JSON.parse(response).data;
-            // console.log('Response:', data);
-
             $('#extra-skill-table tbody').empty(); // Optional: clear old rows
 
             data.forEach((element, index) => {
@@ -701,6 +752,14 @@ function extraSkillVIew() {
                     <tr>
                         <td scope="row">${index + 1}</td>
                         <td>${element.name}</td>
+                        <td>
+                            <button class='btn btn-outline-primary btn-sm me-2' onclick="editExtraSkill(${element.id})">
+                                <i class='ri-pencil-line'></i>
+                            </button>
+                            <button class='btn btn-outline-danger btn-sm' onclick="deleteExtraSkill(${element.id})">
+                                <i class='ri-delete-bin-6-line'></i>
+                            </button>
+                        </td>
                     </tr>
                 `);
             });
@@ -740,32 +799,6 @@ $('#profile-extra-skill').on('submit', function(e) {
 $('#extra-skill-table').on('click', '.delete-row', function() {
     $(this).closest('tr').remove();
 });
-// // let skillCount = 1;
-// //  $('#extra-skill-table').DataTable();
-// $('#profile-extra-skill').on('submit', function(e) {
-//     e.preventDefault();
-//     let extraSkillId = $('#extra-skill').val();
-//     let extraSkillName = $('#extra-skill option:selected').text();
-//     // console.log(extraSkillId);
-
-//     if (extraSkillId == '' || extraSkillId == null) {
-//         $('#profile-extra-skill .needs-validation').addClass('was-validated');
-//         return;
-//     } else {
-//         // Append row to table
-//         $('#extra-skill-table tbody').append(`
-//             <tr>
-//                 <th>#</th>
-//                 <td>${extraSkillName}</td>
-//                 <input type="hidden" name="extra_skills[]" value="${extraSkillId}">
-//             </tr>
-//         `);
-//         // skillCount++;
-
-//         // Optionally reset the select
-//         $('#extra-skill').val('');
-//     }
-// });
 
 function updateExtraSkill(){
     let extraSkill = $('input[name="extra_skills[]"]').map(function(){return $(this).val();}).get();
@@ -781,7 +814,7 @@ function updateExtraSkill(){
             success:function(response){
                 // console.log(response);
                 let parseResponse = JSON.parse(response); // convert response into json
-                console.log(parseResponse);
+                // console.log(parseResponse);
                 if(parseResponse.success){
                      extraSkillVIew();
                     $('.needs-validation').removeClass('was-validated');
@@ -795,6 +828,92 @@ function updateExtraSkill(){
                 }
             }
         });
+}
+
+function editExtraSkill(id){
+    $('.extraSkillAddBtn').addClass('d-none');
+    $('.extraSkillUpdateBtn').removeClass('d-none');
+    $.ajax({
+        url:"../../controller/profile/Profile.php",
+        type:"POST",
+        data:{GetExtraSkillData:true, id:id},
+        dataType:'json',
+        success:function(response){
+            let data = response.data[0];
+            $('#extraSkillId').val(id);
+            $('#extra-skill').val(data.skill_list_id);
+        }
+    });
+}
+function updateExtraSkillData(id){
+    let name =  $('#extra-skill').val();
+    if(name == ''){
+       $('form#profile-extra-skill.needs-validation').addClass('was-validated'); // to target specific form class
+        return;
+    }else{
+       $('form#profile-extra-skill.needs-validation').removeClass('was-validated'); // to target specific form class
+    }
+    $.ajax({
+        url:"../../controller/profile/Profile.php",
+        type:"POST",
+        data:{updateExtraSkill:true,id:id,name:name},
+        dataType:'json',
+        success:function(response){
+            if (response.success) {
+                $('form#profile-extra-skill.needs-validation').removeClass('was-validated');
+                $('#extraSkillId').val('');
+                $('#extra-skill').val('');
+                extraSkillVIew();
+                toastSuccessAlert(response.success);
+            } else if (parseResponse.error_success) {
+                toastErrorAlert(parseResponse.error_success);
+            } else {
+                toastErrorAlert('Something went wrong!');
+            }
+            $('.extraSkillUpdateBtn').addClass('d-none');
+            $('.extraSkillAddBtn').removeClass('d-none');
+        }        
+    });
+}
+function deleteExtraSkill(id){
+    $.confirm({
+        title: 'Are you sure?',
+        content: "You won't be able to revert this!",
+        type: 'red',
+        buttons: {
+            confirm: {
+                text: 'Yes, delete it!',
+                btnClass: 'btn-red',
+                action: function () {                     
+                    $.ajax({
+                        url: "../../controller/profile/Profile.php",
+                        type: "POST",
+                        data: { deleteExtraSKills:true,id: id },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $.alert({title: 'Deleted!', content: response.success,type: 'green'});
+                                extraSkillVIew();
+                            } else {
+                                $.alert({title: 'Error!', content: 'Category not deleted.', type: 'red'});
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            $.alert({
+                                title: 'Error!',
+                                content: 'An error occurred: ' + error,
+                                type: 'red'
+                            });
+                        }
+                    });
+                }
+            },
+            cancel: function () {
+                // Optional: do nothing or show a message
+            }
+        }
+    });
 }
 
 function planView(){
@@ -816,6 +935,14 @@ function planView(){
                         <td>${element.price}</td>
                         <td>${element.skill_type_name}</td>
                         <td>${element.popularity_type}</td>
+                        <td>
+                            <button class='btn btn-outline-primary btn-sm me-2' onclick="editPlan(${element.id})">
+                                <i class='ri-pencil-line'></i>
+                            </button>
+                            <button class='btn btn-outline-danger btn-sm' onclick="deletePlan(${element.id})">
+                                <i class='ri-delete-bin-6-line'></i>
+                            </button>
+                        </td>
                     </tr>
                 `);
             });
@@ -859,30 +986,6 @@ $('#profile-plan').on('submit', function(e) {
 $('#profile-plan-table').on('click', '.delete-row', function() {
     $(this).closest('tr').remove();
 });
-// $('#profile-plan').on('submit', function(e) {
-//     e.preventDefault();
-
-//     let plan_type_id = $('#plan-type').val();
-//     let plan_type_name = $('#plan-type option:selected').text();
-//     let plan_price = $('#plan-price').val();
-//     let skill_type_id = $('#skill-types').val();
-//     let skill_type_name = $('#skill-types option:selected').text();
-//     let popularity = $('#popularity-type').val();
-
-//     if (!plan_type_id || !plan_price || !skill_type_id || !popularity) {
-//         $('#profile-plan .needs-validation').addClass('was-validated');
-//     } else {
-//         $('#profile-plan-table tbody').append(`
-//             <tr>
-//                 <td>#</td>
-//                 <td>${plan_type_name}<input type="hidden" name="plan_type_name[]" value="${plan_type_id}"></td>
-//                 <td>${plan_price}<input type="hidden" name="plan_price[]" value="${plan_price}"></td>
-//                 <td>${skill_type_name}<input type="hidden" name="skill_type_name[]" value="${skill_type_id}"></td>
-//                 <td>${popularity}<input type="hidden" name="popularity[]" value="${popularity}"></td>
-//             </tr>
-//         `);
-//     }
-// });
 
 function updateProfilePlan(){
     let plan_type = $('input[name="plan_type_name[]"]').map(function(){return $(this).val();}).get();
@@ -919,6 +1022,101 @@ function updateProfilePlan(){
     }
 }
 
+function editPlan(id){
+    $('.planAddBtn').addClass('d-none');
+    $('.planUpdateBtn').removeClass('d-none');
+    $.ajax({
+        url:"../../controller/profile/ProfileTwo.php",
+        type:"POST",
+        data:{GetPlanData:true, id:id},
+        dataType:'json',
+        success:function(response){
+            let data = response.data[0];
+            $('#planId').val(id);
+            $('#plan-type').val(data.plan_type_id);
+            $('#plan-price').val(data.price);
+            $('#skill-types').val(data.skill_types);
+            $('#popularity-type').val(data.popularity_type);
+        }
+    });
+}
+function updatePlanData(id){
+    let name =  $('#plan-type').val();
+    let price =  $('#plan-price').val();
+    let skill =  $('#skill-types').val();
+    let value = $('#popularity-type').val();
+    if(name == '' || price == '' || skill =='' || value == ''){
+       $('form#profile-plan.needs-validation').addClass('was-validated'); // to target specific form class
+        return;
+    }else{
+       $('form#profile-plan.needs-validation').removeClass('was-validated'); // to target specific form class
+    }
+    $.ajax({
+        url:"../../controller/profile/ProfileTwo.php",
+        type:"POST",
+        data:{updatePlan:true,id:id,name:name,price:price,skill:skill,value:value},
+        dataType:'json',
+        success:function(response){
+            if (response.success) {
+                $('form#profile-plan.needs-validation').removeClass('was-validated');
+                $('#planId').val('');
+                $('#plan-type').val('');
+                $('#plan-price').val('');
+                $('#skill-types').val('');
+                $('#popularity-type').val('');
+                planView();
+                toastSuccessAlert(response.success);
+            } else if (parseResponse.error_success) {
+                toastErrorAlert(parseResponse.error_success);
+            } else {
+                toastErrorAlert('Something went wrong!');
+            }
+            $('.planUpdateBtn').addClass('d-none');
+            $('.planAddBtn').removeClass('d-none');
+        }        
+    });
+}
+function deletePlan(id){
+    $.confirm({
+        title: 'Are you sure?',
+        content: "You won't be able to revert this!",
+        type: 'red',
+        buttons: {
+            confirm: {
+                text: 'Yes, delete it!',
+                btnClass: 'btn-red',
+                action: function () {                     
+                    $.ajax({
+                        url: "../../controller/profile/ProfileTwo.php",
+                        type: "POST",
+                        data: { deletePlan:true,id: id },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $.alert({title: 'Deleted!', content: response.success,type: 'green'});
+                                planView();
+                            } else {
+                                $.alert({title: 'Error!', content: 'Category not deleted.', type: 'red'});
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            $.alert({
+                                title: 'Error!',
+                                content: 'An error occurred: ' + error,
+                                type: 'red'
+                            });
+                        }
+                    });
+                }
+            },
+            cancel: function () {
+                // Optional: do nothing or show a message
+            }
+        }
+    });
+}
+
 
 function projectView() {
     $.ajax({
@@ -943,6 +1141,14 @@ function projectView() {
                         <td>${element.title}</td>
                         <td>${element.description}</td>
                         <td>${imageHTML}</td>
+                        <td>
+                            <button class='btn btn-outline-primary btn-sm me-2' onclick="editProject(${element.id})">
+                                <i class='ri-pencil-line'></i>
+                            </button>
+                            <button class='btn btn-outline-danger btn-sm' onclick="deleteProject(${element.id})">
+                                <i class='ri-delete-bin-6-line'></i>
+                            </button>
+                        </td>
                     </tr>
                 `);
             });
@@ -953,78 +1159,6 @@ function projectView() {
     });
 }
 projectView();
-//  $('#profile-projects').on('submit',function(e){
-//     e.preventDefault();
-//     let category_id = $('#project-category').val();
-//     let categoryName = $('#project-category option:selected').text();
-//     let title = $('#project-title').val();
-//     let desc = $('#project-desc').val();
-//      let imageInput = $('#file_name')[0];
-//     let imageFile = imageInput.files[0];
-
-//     if(category_id == '' || title == '' || desc == ''){
-//         $('#profile-projects .needs-validation').addClass('was-validated');
-//     }else{
-//         $('#project-table tbody').append(`
-//             <tr>
-//                 <td>#</td>
-//                 <td>${categoryName}<input type="hidden" name="category[]" value="${category_id}"></td>
-//                 <td>${title}<input type="hidden" name="title[]" value="${title}"></td>
-//                 <td>${desc}<input type="hidden" name="desc[]" value="${desc}"></td>
-//                   <td>${imageFile}<input type="hidden" name="image_name[]" value="${imageFile}"></td>
-//                 <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
-//             </tr>
-//             `);
-
-//             $('#project-category').val('');
-//             $('#project-title').val('');
-//             $('#project-desc').val('');
-//             $('.needs-validation').removeClass('was-validated');
-
-//     }
-//  });
-
-// let projectImages = [];
-// $('#profile-projects').on('submit', function(e) {
-//     e.preventDefault();
-
-//     let category_id = $('#project-category').val();
-//     let categoryName = $('#project-category option:selected').text();
-//     let title = $('#project-title').val();
-//     let desc = $('#project-desc').val();
-//     let imageFile = $('#file_name')[0].files[0];
-
-//     if (category_id == '' || title == '' || desc == '') {
-//         $('#profile-projects .needs-validation').addClass('was-validated');
-//     } else {
-//         let imagePreview = 'No image';
-//         let imageIndex = projectImages.length;
-
-//         if (imageFile) {
-//             imagePreview = `<img src="${URL.createObjectURL(imageFile)}" width="50" alt="Preview">`;
-//             projectImages.push(imageFile); // Store the actual File object
-//         } else {
-//             projectImages.push(null); // Maintain index alignment
-//         }
-
-//         $('#project-table tbody').append(`
-//             <tr data-index="${imageIndex}">
-//                 <td>#</td>
-//                 <td>${categoryName}<input type="hidden" name="category[]" value="${category_id}"></td>
-//                 <td>${title}<input type="hidden" name="title[]" value="${title}"></td>
-//                 <td>${desc}<input type="hidden" name="desc[]" value="${desc}"></td>
-//                 <td>${imagePreview}</td>
-//                 <td><button class="btn btn-danger btn-sm delete-row">Delete</button></td>
-//             </tr>
-//         `);
-
-//         $('#project-category').val('');
-//         $('#project-title').val('');
-//         $('#project-desc').val('');
-//         $('#file_name').val('');
-//         $('.needs-validation').removeClass('was-validated');
-//     }
-// });
 let projectImages = [];
 
 $('#profile-projects').on('submit', function(e) {
@@ -1139,6 +1273,114 @@ function updateProject() {
                 toastErrorAlert(parseResponse.error_success);
             } else {
                 toastErrorAlert("Something went wrong!");
+            }
+        }
+    });
+}
+
+function editProject(id){
+    $('.projectAddBtn').addClass('d-none');
+    $('.projectUpdateBtn').removeClass('d-none');
+    $.ajax({
+        url:"../../controller/profile/Profile.php",
+        type:"POST",
+        data:{GetProjectData:true, id:id},
+        dataType:'json',
+        success:function(response){
+            // console.log(response);
+            let data = response.data[0];
+            $('#projectId').val(id);
+            $('#project-category').val(data.category_id);
+            $('#project-title').val(data.title);
+            $('#project-desc').val(data.description);
+        }
+    });
+}
+function updateLanguageData(id){
+    let category =  $('#project-category').val();
+    let title = $('#project-title').val();
+    let desc = $('#project-desc').val();
+    let image = $('#file_name')[0].files[0];
+    if(category == '' || title == '' || desc == ''){
+       $('form#profile-projects.needs-validation').addClass('was-validated'); // to target specific form class
+        return;
+    }else{
+       $('form#profile-projects.needs-validation').removeClass('was-validated'); // to target specific form class
+    }
+    let formData = new FormData();
+    formData.append('updateProject', true);
+    formData.append('id', id);
+    formData.append('category', category);
+    formData.append('title', title);
+    formData.append('desc', desc);
+    if (image) {
+        formData.append('image', image);
+    }
+
+$.ajax({
+    url: "../../controller/profile/Profile.php",
+    type: "POST",
+    data: formData,
+    contentType: false,       // ✅ Prevent jQuery from setting content type
+    processData: false,       // ✅ Prevent jQuery from processing FormData
+    dataType: 'json',
+    success: function(response) {
+        console.log(response);
+        if (response.success) {
+            $('form#profile-projects.needs-validation').removeClass('was-validated');
+            $('#projectId').val('');
+            $('#project-category').val('');
+            $('#project-title').val('');
+            $('#file_name').val('');
+            projectView();
+            toastSuccessAlert(response.success);
+        } else if (response.error_success) {
+            toastErrorAlert(response.error_success);
+        } else {
+            toastErrorAlert('Something went wrong!');
+        }
+        $('.projectUpdateBtn').addClass('d-none');
+        $('.projectAddBtn').removeClass('d-none');
+    }
+});
+
+}
+function deleteProject(id){
+    $.confirm({
+        title: 'Are you sure?',
+        content: "You won't be able to revert this!",
+        type: 'red',
+        buttons: {
+            confirm: {
+                text: 'Yes, delete it!',
+                btnClass: 'btn-red',
+                action: function () {                     
+                    $.ajax({
+                        url: "../../controller/profile/Profile.php",
+                        type: "POST",
+                        data: { deleteProject:true,id: id },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $.alert({title: 'Deleted!', content: response.success,type: 'green'});
+                                projectView();
+                            } else {
+                                $.alert({title: 'Error!', content: 'Category not deleted.', type: 'red'});
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            $.alert({
+                                title: 'Error!',
+                                content: 'An error occurred: ' + error,
+                                type: 'red'
+                            });
+                        }
+                    });
+                }
+            },
+            cancel: function () {
+                // Optional: do nothing or show a message
             }
         }
     });

@@ -353,10 +353,10 @@ if(isset($_POST['languageNameID']) && isset($_SESSION['user_id'])){
 
 if(isset($_POST['getLanguage']) && isset($_SESSION['user_id'])){
     $id = $_SESSION['user_id'];
-    $query = "SELECT user_languages.user_efficiency,language_types.name
+    $query = "SELECT user_languages.id,user_efficiency,language_types.name
     FROM user_languages
     LEFT JOIN language_types ON user_languages.language_id = language_types.id
-    WHERE user_languages.user_id = $id";
+    WHERE user_languages.user_id = $id AND user_languages.deleted_at IS NULL";
     $result = mysqli_query($conn,$query);
     if($result){
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -364,6 +364,40 @@ if(isset($_POST['getLanguage']) && isset($_SESSION['user_id'])){
         exit;
     }else{
         echo json_encode(['status' => false, 'data' => 'Query failed']);
+    }
+}
+
+if(isset($_POST['GetLanguageData'])){
+    $id = $_POST['id'];
+    $query = "SELECT language_id,user_efficiency FROM user_languages WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        echo json_encode(['status'=>true, 'data'=>$data]);
+    }else{
+        echo json_encode(['status'=>false, 'error'=>'Query failed']);
+    }exit;
+}
+if(isset($_POST['updateLanguage'])){
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $value = $_POST['value'];
+    $query ="UPDATE user_languages SET language_id = $name, user_efficiency = $value, updated_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Language updated successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Language not updated']);
+    }exit;
+}
+if(isset($_POST['deleteLanguage'])){
+    $id = $_POST['id'];
+    $query = "UPDATE user_languages SET deleted_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Language deleted successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Language not deleted']);
     }
 }
 
@@ -390,10 +424,10 @@ if(isset($_POST['extraSkill']) && isset($_SESSION['user_id'])){
 
 if(isset($_POST['getExtraSkill']) && isset($_SESSION['user_id'])){
     $id = $_SESSION['user_id'];
-    $query = "SELECT user_extra_skills.skill_list_id,extra_skill_types.name
+    $query = "SELECT user_extra_skills.id,skill_list_id,extra_skill_types.name
     FROM user_extra_skills
     LEFT JOIN extra_skill_types ON user_extra_skills.skill_list_id = extra_skill_types.id
-    WHERE user_extra_skills.user_id = $id";
+    WHERE user_extra_skills.user_id = $id AND user_extra_skills.deleted_at IS NULL";
     $result = mysqli_query($conn,$query);
     if($result){
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -404,35 +438,38 @@ if(isset($_POST['getExtraSkill']) && isset($_SESSION['user_id'])){
     }
 }
 
-// if (isset($_POST['projectCategory']) && isset($_SESSION['user_id'])) {
-//     $id = $_SESSION['user_id'];
-//     $projectCategory = $_POST['projectCategory'];
-//     $projectTitle = $_POST['projectTitle'];
-//     $projectDesc = $_POST['projectDesc'];
-//     $success = true;
-
-//     for ($i = 0; $i < count($projectCategory); $i++) {
-//         $category = mysqli_real_escape_string($conn, trim($projectCategory[$i]));
-//         $title = mysqli_real_escape_string($conn, trim($projectTitle[$i]));
-//         $desc = mysqli_real_escape_string($conn, trim($projectDesc[$i]));
-
-//         $insert = "INSERT INTO user_projects(`user_id`,`category_id`,`title`,`description`,`status`,`created_at`,`updated_at`)
-//                    VALUES($id,$category,'$title','$desc','1',NOW(),NOW())";
-
-//         if (!mysqli_query($conn, $insert)) {
-//             $success = false;
-//             break;
-//         }
-//     }
-
-//     if ($success) {
-//         echo json_encode(['success' => 'Project added successfully']);
-//     } else {
-//         echo json_encode(['error_success' => 'Project not added']);
-//     }
-//     exit;
-// }
-
+if(isset($_POST['GetExtraSkillData'])){
+    $id = $_POST['id'];
+    $query = "SELECT skill_list_id FROM user_extra_skills WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        echo json_encode(['status'=>true, 'data'=>$data]);
+    }else{
+        echo json_encode(['status'=>false, 'error'=>'Query failed']);
+    }exit;
+}
+if(isset($_POST['updateExtraSkill'])){
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $query ="UPDATE user_extra_skills SET skill_list_id = $name, updated_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Extra Skill updated successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Extra Skill not updated']);
+    }exit;
+}
+if(isset($_POST['deleteExtraSKills'])){
+    $id = $_POST['id'];
+    $query = "UPDATE user_extra_skills SET deleted_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Extra Skill deleted successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Extra Skill not deleted']);
+    }
+}
 
 if (isset($_POST['projectCategory']) && isset($_SESSION['user_id'])) {
     $id = $_SESSION['user_id'];
@@ -480,10 +517,10 @@ if (isset($_POST['projectCategory']) && isset($_SESSION['user_id'])) {
 
 if(isset($_POST['getProjectData']) && isset($_SESSION['user_id'])){
     $id = $_SESSION['user_id'];
-    $query = "SELECT user_projects.title,description,file_name,category_types.name
+    $query = "SELECT user_projects.id,title,description,file_name,category_types.name
     FROM user_projects
     JOIN category_types ON user_projects.category_id = category_types.id
-    WHERE user_projects.user_id = $id";
+    WHERE user_projects.user_id = $id AND user_projects.deleted_at IS NULL";
     $result = mysqli_query($conn,$query);
     if($result){
         $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -492,7 +529,71 @@ if(isset($_POST['getProjectData']) && isset($_SESSION['user_id'])){
         echo json_encode(['status' => false, 'data' => 'Query failed']);
     }
     exit;
+}
 
+if(isset($_POST['GetProjectData'])){
+    $id = $_POST['id'];
+    $query = "SELECT * FROM user_projects WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        echo json_encode(['status'=>true, 'data'=>$data]);
+    }else{
+        echo json_encode(['status'=>false, 'error'=>'Query failed']);
+    }exit;
+}
+if (isset($_POST['updateProject'])) {
+    $id = $_POST['id'];
+    $category = $_POST['category'];
+    $title = $_POST['title'];
+    $desc = $_POST['desc'];
+
+    $uploadDir = '../../uploads/projects/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
+    $newFileName = null;
+
+    // Check if a new image is uploaded
+    if (isset($_FILES['image']['tmp_name']) && $_FILES['image']['tmp_name'] != '') {
+        $fileTmp = $_FILES['image']['tmp_name'];
+        $fileName = basename($_FILES['image']['name']);
+        $fileExt = pathinfo($fileName, PATHINFO_EXTENSION);
+        $newFileName = uniqid('project_') . '.' . $fileExt;
+        $targetFile = $uploadDir . $newFileName;
+
+        if (!move_uploaded_file($fileTmp, $targetFile)) {
+            echo json_encode(['error' => 'Failed to upload image']);
+            exit;
+        }
+    }
+
+    // Build the SQL query dynamically
+    $query = "UPDATE user_projects SET category_id = $category, title = '$title', description = '$desc'";
+    if ($newFileName !== null) {
+        $query .= ", file_name = '$newFileName'";
+    }
+    $query .= ", updated_at = NOW() WHERE id = $id";
+
+    $result = mysqli_query($conn, $query);
+
+    if ($result) {
+        echo json_encode(['success' => 'Project updated successfully']);
+    } else {
+        echo json_encode(['error_success' => 'Project not updated']);
+    }
+    exit;
+}
+if(isset($_POST['deleteProject'])){
+    $id = $_POST['id'];
+    $query = "UPDATE user_projects SET deleted_at = NOW() WHERE id = $id";
+    $result = mysqli_query($conn,$query);
+    if($result){
+        echo json_encode(['success' => 'Project deleted successfully']);
+    }else{
+        echo json_encode(['error_success' => 'Project not deleted']);
+    }
 }
 
 

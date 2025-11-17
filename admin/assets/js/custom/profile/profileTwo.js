@@ -104,7 +104,6 @@ function qualificationView(){
         data: { getQualification: true },
         success: function(response) {
             let data = JSON.parse(response).data;
-
             $('#qualification-table tbody').empty(); // Optional: clear old rows
 
             data.forEach((element, index) => {
@@ -118,6 +117,14 @@ function qualificationView(){
                         <td>${element.end_date}</td>
                         <td>${element.description}</td>
                         <td>${element.certification}</td>
+                        <td>
+                            <button class='btn btn-outline-primary btn-sm me-2' onclick="editQualification(${element.id})">
+                                <i class='ri-pencil-line'></i>
+                            </button>
+                            <button class='btn btn-outline-danger btn-sm' onclick="deleteQualification(${element.id})">
+                                <i class='ri-delete-bin-6-line'></i>
+                            </button>
+                        </td>
                     </tr>
                 `);
             });
@@ -128,3 +135,109 @@ function qualificationView(){
     });
 }
 qualificationView();
+
+function editQualification(id){
+    $('.qualificationAddBtn').addClass('d-none');
+    $('.qualificationUpdateBtn').removeClass('d-none');
+    $.ajax({
+        url:"../../controller/profile/ProfileTwo.php",
+        type:"POST",
+        data:{GetQualificationData:true, id:id},
+        dataType:'json',
+        success:function(response){
+            console.log('result');
+            console.log(response);
+            let data = response.data[0];
+            console.log(data);
+            // $('#qualificationId').val(data.id);
+            // $('#qualification_type').val(data.qualification_type);
+            // $('#education_type').val(data.education_id);
+            // $('#qualification_title').val(data.qualification_title);
+            // $('#qualification_start_date').val(data.start_date);
+            // $('#qualification_end_date').val(data.end_date);
+            // $('#qualification_certification').val(data.certification);
+            // $('#qualification_description').val(data.description);
+        }
+    });
+}
+function updateQualificationData(id){
+    let qualification =  $('#qualification_type').val();
+    let education =  $('#education_type').val();
+    let title =  $('#qualification_title').val();
+    let start_date = $('#qualification_start_date').val();
+    let end_date = $('#qualification_end_date').val();
+    let certification = $('#qualification_certification').val();
+    let desc = $('#qualification_description').val();
+    if(qualification == '' || title == '' || start_date =='' || end_date == ''|| desc ==''){
+       $('form#profile-qualification.needs-validation').addClass('was-validated'); // to target specific form class
+        return;
+    }else{
+       $('form#profile-qualification.needs-validation').removeClass('was-validated'); // to target specific form class
+    }
+    $.ajax({
+        url:"../../controller/profile/ProfileTwo.php",
+        type:"POST",
+        data:{updateQualification:true,id:id,qualification:qualification,education:education,title:title,start_date:start_date,end_date:end_date,certification:certification,desc:desc},
+        dataType:'json',
+        success:function(response){
+            if (response.success) {
+                $('form#profile-plan.needs-validation').removeClass('was-validated');
+                $('#qualificationId').val('');
+                $('#qualification_type').val('');
+                $('#qualification_title').val('');
+                $('#qualification_start_date').val('');
+                $('#qualification_end_date').val('');
+                $('#qualification_certification').val('');
+                $('#qualification_description').val('');
+                qualificationView();
+                toastSuccessAlert(response.success);
+            } else if (parseResponse.error_success) {
+                toastErrorAlert(parseResponse.error_success);
+            } else {
+                toastErrorAlert('Something went wrong!');
+            }
+            $('.qualificationUpdateBtn').addClass('d-none');
+            $('.qualificationAddBtn').removeClass('d-none');
+        }        
+    });
+}
+function deleteQualification(id){
+    $.confirm({
+        title: 'Are you sure?',
+        content: "You won't be able to revert this!",
+        type: 'red',
+        buttons: {
+            confirm: {
+                text: 'Yes, delete it!',
+                btnClass: 'btn-red',
+                action: function () {                     
+                    $.ajax({
+                        url: "../../controller/profile/ProfileTwo.php",
+                        type: "POST",
+                        data: { deleteQualification:true,id: id },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                $.alert({title: 'Deleted!', content: response.success,type: 'green'});
+                                qualificationView();
+                            } else {
+                                $.alert({title: 'Error!', content: 'Qualification not deleted.', type: 'red'});
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            $.alert({
+                                title: 'Error!',
+                                content: 'An error occurred: ' + error,
+                                type: 'red'
+                            });
+                        }
+                    });
+                }
+            },
+            cancel: function () {
+                // Optional: do nothing or show a message
+            }
+        }
+    });
+}
