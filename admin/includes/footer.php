@@ -1,3 +1,20 @@
+        <?php
+require_once 'main_header.php';
+if (isset($_SESSION['user_email'])) {
+    $email = mysqli_real_escape_string($conn, $_SESSION['user_email']);
+    $select = "SELECT * FROM `user_registrations` WHERE `email` = '$email'";
+    $result = mysqli_query($conn, $select);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+    } else {
+        echo "No user found.";
+    }
+} else {
+    echo "User email not set in session.";
+}
+
+?>
         <footer class="footer">
                         <div class="container-fluid">
                             <div class="row">
@@ -49,7 +66,28 @@
         <!-- <script src="../../assets/js/custom.js"></script> -->
         <script src="../../assets/js/app.js"></script>
         <script src="../../assets/js/custom/common.js"></script>
-       
+        <style>
+            .btn-light-green {
+                background-color: #20493aff !important;
+                color: #ffffffff !important;
+                border: none !important;
+            }
+            .btn-light-green:hover {
+                background-color: #439771ff !important;
+                color: #ffffffff !important;
+            }
+
+            .btn-light-red {
+                background-color: #571b20ff !important;
+                color: #ffffffff !important;
+                border: none !important;
+            }
+            .btn-light-red:hover {
+                background-color: #943d46ff !important;
+                color: #ffffffff !important;
+            }
+        </style>
+
         <script>
         // Example starter JavaScript for disabling form submissions if there are invalid fields
         (() => {
@@ -83,5 +121,29 @@
                 }
             });
         }
+
+        function publishAlert() {
+        $.confirm({
+            title: 'Your site is live!',
+            content: 'View your site at: <br><strong>http://localhost/resume_builder/index.php?token=<?php echo $row['token']; ?></strong>',
+            theme: 'supervan',
+            buttons: {
+                confirm: {
+                    text: 'View your site',
+                    btnClass: 'btn-light-green',
+                    action: function () {
+                        window.open("http://localhost/resume_builder/index.php?token=<?php echo $row['token']; ?>", "_blank");
+                    }
+                },
+                cancel: {
+                    text: 'Back to Editor',
+                    btnClass: 'btn-light-red',
+                    action: function () {
+                        console.log('Cancelled!');
+                    }
+                }
+            }
+        });
+    }
         </script>
       

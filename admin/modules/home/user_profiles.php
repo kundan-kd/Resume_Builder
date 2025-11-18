@@ -9,13 +9,21 @@ if (isset($_SESSION['user_email'])) {
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
+        // print_r($row);
+        // echo $row['user_type'];
     } else {
         echo "No user found.";
     }
 } else {
     echo "User email not set in session.";
 }
-
+ 
+$query = "SELECT * FROM settings WHERE id = 1";
+$result2 = mysqli_query($conn, $query);
+if($result2 && mysqli_num_rows($result2) > 0){
+    $settings = mysqli_fetch_assoc($result2);
+}
+                            
 ?>
 
 <body data-menu-color="light" data-sidebar="default">
@@ -446,8 +454,19 @@ if (isset($_SESSION['user_email'])) {
 
      <!-- Programming Cardd -->
                     <div class="card mt-3 skill-card">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between">
                             <h5 class="card-title mb-0">My Services</h5>
+                            <div class="form-check form-switch">
+                                <label class="form-check-label" for="serviceSwitch">
+                                    <span class="badge 
+                                        <?php echo $settings['is_myservice_active'] == 1 ? 'bg-success' : 'bg-danger'; ?>">
+                                        <?php echo $settings['is_myservice_active'] == 1 ? 'Active' : 'InActive'; ?>
+                                    </span>
+                                </label>
+                                <input class="form-check-input" type="checkbox" role="switch" id="serviceSwitch" 
+                                    onclick="serviceSwitchClick(this.id)" 
+                                    <?php echo $settings['is_myservice_active'] == 1 ? 'checked' : ''; ?>>
+                            </div>
                         </div>
                         <div class="card-body">
                             <form id="profile_services" method="POST" class="needs-validation" novalidate>
@@ -641,8 +660,19 @@ if (isset($_SESSION['user_email'])) {
 
                     <!-- Project Card -->
                     <div class="card mt-3 skill-card">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between">
                             <h5 class="card-title mb-0">Project</h5>
+                            <div class="form-check form-switch">
+                                <label class="form-check-label" for="serviceSwitch">
+                                    <span class="badge project-badge
+                                        <?php echo $settings['is_project_active'] == 1 ? 'bg-success' : 'bg-danger'; ?>">
+                                        <?php echo $settings['is_project_active'] == 1 ? 'Active' : 'InActive'; ?>
+                                    </span>
+                                </label>
+                                <input class="form-check-input" type="checkbox" role="switch" id="serviceSwitch" 
+                                    onclick="projectSwitchClick(this.id)" 
+                                    <?php echo $settings['is_project_active'] == 1 ? 'checked' : ''; ?>>
+                            </div>
                         </div>
                         <div class="card-body">
                             <form id="profile-projects" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
@@ -773,8 +803,19 @@ if (isset($_SESSION['user_email'])) {
                     </div>
 
                     <div class="card mt-3 plan-card">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between">
                             <h5 class="card-title mb-0">Plan</h5>
+                            <div class="form-check form-switch">
+                                <label class="form-check-label" for="serviceSwitch">
+                                    <span class="badge plan-badge
+                                        <?php echo $settings['is_plan_active'] == 1 ? 'bg-success' : 'bg-danger'; ?>">
+                                        <?php echo $settings['is_plan_active'] == 1 ? 'Active' : 'InActive'; ?>
+                                    </span>
+                                </label>
+                                <input class="form-check-input" type="checkbox" role="switch" id="serviceSwitch" 
+                                    onclick="planSwitchClick(this.id)" 
+                                    <?php echo $settings['is_plan_active'] == 1 ? 'checked' : ''; ?>>
+                            </div>
                         </div>
                         <div class="card-body">
                             <form id="profile-plan" method="POST" class="needs-validation" novalidate>
@@ -892,7 +933,7 @@ if (isset($_SESSION['user_email'])) {
                 <div class="col-md-3 education-type d-none">
                     <label for="education_type" class="form-label">Qualification ID</label>
                     <select class="form-select" id="education_type" name="education_type[]" style="background-image: none;" required>
-                        <option value="" selected disabled>-- Select Qualification --</option>
+                        <option value="" selected>-- Select Qualification --</option>
                         <?php
                         $select = "SELECT * FROM `education_types`";
                         $result = mysqli_query($conn, $select);

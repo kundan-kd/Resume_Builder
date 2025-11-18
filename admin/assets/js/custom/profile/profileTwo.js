@@ -145,18 +145,15 @@ function editQualification(id){
         data:{GetQualificationData:true, id:id},
         dataType:'json',
         success:function(response){
-            console.log('result');
-            console.log(response);
             let data = response.data[0];
-            console.log(data);
-            // $('#qualificationId').val(data.id);
-            // $('#qualification_type').val(data.qualification_type);
-            // $('#education_type').val(data.education_id);
-            // $('#qualification_title').val(data.qualification_title);
-            // $('#qualification_start_date').val(data.start_date);
-            // $('#qualification_end_date').val(data.end_date);
-            // $('#qualification_certification').val(data.certification);
-            // $('#qualification_description').val(data.description);
+            $('#qualificationId').val(data.id);
+            $('#qualification_type').val(data.qualification_type);
+            $('#education_type').val(data.education_id);
+            $('#qualification_title').val(data.qualification_title);
+            $('#qualification_start_date').val(data.start_date);
+            $('#qualification_end_date').val(data.end_date);
+            $('#qualification_certification').val(data.certification);
+            $('#qualification_description').val(data.description);
         }
     });
 }
@@ -237,6 +234,68 @@ function deleteQualification(id){
             },
             cancel: function () {
                 // Optional: do nothing or show a message
+            }
+        }
+    });
+}
+
+function serviceSwitchClick(x){
+    let badge = $('.form-check-label .badge');
+    badge.addClass('bg-secondary').text('Updating...');
+    $.ajax({
+        url:"../../controller/profile/ProfileTwo.php",
+        type:"POST",
+        data:{myserviceStatus:true},
+        dataType:'json',
+        success:function(response){
+            console.log(response);
+            if(response.success){
+            //    toastSuccessAlert(response.success);
+                setTimeout(function(){
+                    window.location.reload();
+                },1000);
+            }else{
+                toastErrorAlert(response.error_success);
+            }
+        }
+    });
+}
+function projectSwitchClick(x){
+    let badge1 = $('.form-check-label .project-badge');
+    badge1.addClass('bg-secondary').text('Updating...');
+    $.ajax({
+        url:"../../controller/profile/ProfileTwo.php",
+        type:"POST",
+        data:{projectStatus:true},
+        dataType:'json',
+        success:function(response){
+            if(response.success){
+               // toastSuccessAlert(response.success);
+                setTimeout(function(){
+                    window.location.reload();
+                },1000);
+            }else{
+                toastErrorAlert(response.error_success);
+            }
+        }
+    });
+}
+function planSwitchClick(x){
+    let badge2 = $('.form-check-label .plan-badge');
+    badge2.addClass('bg-secondary').text('Updating...');
+    $.ajax({
+        url:"../../controller/profile/ProfileTwo.php",
+        type:"POST",
+        data:{planStatus:true},
+        dataType:'json',
+        success:function(response){
+            if(response.success){
+           //     toastSuccessAlert(response.success);
+                setTimeout(function(){
+                    window.location.reload();
+                },1000);
+            }else{
+                toastErrorAlert(response.error_success);
             }
         }
     });

@@ -83,7 +83,7 @@ if (isset($_SESSION['user_email'])) {
 
         <!-- Publish -->
         <li>
-            <a data-bs-toggle="modal" data-bs-target="#resumeLink" style="cursor: pointer;">
+            <a data-bs-toggle="modal" data-bs-target="#resumeLink1" style="cursor: pointer;" onclick="publishAlert()">
                 <i data-feather="upload"></i>
                 <span>Publish</span>
             </a>

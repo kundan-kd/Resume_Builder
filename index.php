@@ -24,6 +24,11 @@
 
       }
   }
+  $query2 = "SELECT * FROM settings WHERE id = 1";
+  $result2 = mysqli_query($conn, $query2);
+  if($result2 && mysqli_num_rows($result2) > 0){
+      $settings = mysqli_fetch_assoc($result2);
+  }
 ?>
 <!doctype html>
 <html lang="zxx">
@@ -235,20 +240,30 @@
             </div>
             <!-- scroll frame end -->
 
-            <!-- sidebar social -->
-            <div class="art-ls-social">
-              <!-- social link -->
-              <a href="#." target="_blank"><i class="far fa-circle"></i></a>
-              <!-- social link -->
-              <a href="#." target="_blank"><i class="far fa-circle"></i></a>
-              <!-- social link -->
-              <a href="#." target="_blank"><i class="far fa-circle"></i></a>
-              <!-- social link -->
-              <a href="#." target="_blank"><i class="far fa-circle"></i></a>
-              <!-- social link -->
-              <a href="#." target="_blank"><i class="far fa-circle"></i></a>
-            </div>
-            <!-- sidebar social end -->
+           <!-- sidebar social -->
+          <div class="art-ls-social">
+            <!-- Facebook -->
+            <a href="https://facebook.com/yourprofile" target="_blank">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <!-- Twitter -->
+            <a href="https://twitter.com/yourprofile" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <!-- LinkedIn -->
+            <a href="https://linkedin.com/in/yourprofile" target="_blank">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <!-- Instagram -->
+            <a href="https://instagram.com/yourprofile" target="_blank">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <!-- GitHub -->
+            <a href="https://github.com/yourprofile" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+          <!-- sidebar social end -->
 
           </div>
           <!-- menu bar frame end -->
@@ -280,14 +295,14 @@
               <div class="container-fluid">
 
                 <!-- row -->
-                <div class="row p-60-0 p-lg-30-0 p-md-15-0">
+                <div class="row p-30-0 p-lg-30-0 p-md-15-0">
                   <!-- col -->
                   <div class="col-lg-12">
 
                     <!-- banner -->
                     <div class="art-a art-banner" style="background-image: url(img/bg.jpg)">
                       <!-- banner back -->
-                      <div class="art-banner-back"></div>
+                      <!-- <div class="art-banner-back"></div> -->
                       <!-- banner dec -->
                       <div class="art-banner-dec"></div>
                       <!-- banner overlay -->
@@ -308,7 +323,7 @@
                         </div>
                         <!-- main title end -->
                         <!-- photo -->
-                        <img src="img/face-2.png" class="art-banner-photo" alt="Your Name">
+                        <!-- <img src="img/face-2.png" class="art-banner-photo" alt="Your Name"> -->
                       </div>
                       <!-- banner overlay end -->
                     </div>
@@ -410,7 +425,7 @@
               <!-- container end -->
 
               <!-- container -->
-              <div class="container-fluid">
+              <div class="container-fluid <?php echo $settings['is_myservice_active'] == 0 ? 'd-none' : ''?>">
 
                 <!-- row -->
                 <div class="row">
@@ -471,7 +486,7 @@
               </div>
               <!-- container end -->
               <!-- container -->
-              <div class="container-fluid">
+              <div class="container-fluid <?php echo $settings['is_project_active'] == 0 ? 'd-none' : ''?>">
 
                 <!-- row -->
                 <div class="row p-30-0">
@@ -754,6 +769,103 @@
 
                   </div>
                   <!-- col end -->
+                             
+                  
+
+
+
+
+
+
+
+
+    <!-- container -->
+              <div class="container-fluid <?php echo $settings['is_plan_active'] == 0 ? 'd-none' : ''?>">
+
+                <!-- row -->
+                <div class="row p-0-0">
+
+                  <!-- col -->
+                  <div class="col-lg-12">
+
+                    <!-- section title -->
+                    <div class="art-section-title">
+                      <!-- title frame -->
+                      <div class="art-title-frame">
+                        <!-- title -->
+                        <h4>Price Plans</h4>
+                      </div>
+                      <!-- title frame end -->
+                    </div>
+                    <!-- section title end -->
+
+                  </div>
+                  <!-- col end -->
+
+                  <!-- col -->
+                   <?php 
+                        $query = "SELECT  * FROM user_plan";
+                        $result = mysqli_query($conn,$query);
+                        if ($result && mysqli_num_rows($result) > 0) {
+                          while ($plan = mysqli_fetch_assoc($result)) {
+                            $plan_id = $plan['plan_type_id'];
+                            $plan_name = getdatafromtable($conn,"plan_types","name","id = $plan_id");
+                      ?>
+                  <div class="col-lg-3">
+
+                    <!-- price -->
+                    <div class="art-a art-price">
+                      <!-- price body -->
+                      <div class="art-price-body">
+                        <h5 class="mb-30"><?= $plan_name?></h5>
+                        <!-- price cost -->
+                        <div class="art-price-cost">
+                          <div class="art-number"><?= $plan['price']?><sup>*</sup></div>
+                        </div>
+                        <!-- price cost end -->
+                        <!-- price list -->
+                        <ul class="art-price-list">
+                          <!-- list item -->
+                          <li>Ui Design</li>
+                          <!-- list item -->
+                          <li>Web Development</li>
+                          <!-- list item -->
+                          <li class="art-empty-item">Logo design</li>
+                          <!-- list item -->
+                          <li class="art-empty-item">SEO optimization</li>
+                          <!-- list item -->
+                          <li class="art-empty-item">Wordpress integration</li>
+                        </ul>
+                        <!-- price list end -->
+                        <!-- button -->
+                        <a href="/contact.html" class="art-link art-color-link art-w-chevron">Order now</a>
+                        <div class="art-asterisk"><sup>*</sup>Free only when ordering paid services</div>
+                      </div>
+                      <!-- price body end -->
+                    </div>
+                    <!-- price end -->
+
+                  </div>
+                  <?php
+                          }}
+                  ?>
+                  <!-- grid -->
+
+
+
+                </div>
+                <!-- row end -->
+
+              </div>
+              <!-- container end -->
+
+
+
+
+
+
+
+
 
                   <!-- col -->
                   <div class="col-lg-12">
@@ -894,7 +1006,7 @@
       <!-- preloader content -->
       <div class="art-preloader-content">
         <!-- title -->
-        <h4>Resume Builder</h4>
+        <h4>Resume for <strong><?= $row['first_name'] ?></strong> is ready!</h4>
         <!-- progressbar -->
         <div id="preloader" class="art-preloader-load"></div>
       </div>
@@ -1040,7 +1152,7 @@ $('#form_contact').on('submit', function(e) {
   let email = $('#contact_email').val();
   let message = $('#contact_message').val();
   let id = <?php echo json_encode($row['id']); ?>; // safer output
-
+  let userEmail = <?php echo json_encode($row['email']); ?>;
   $.ajax({
     url: "action.php",
     type: "POST",
@@ -1048,10 +1160,12 @@ $('#form_contact').on('submit', function(e) {
       id: id,
       contactName: name,
       email: email,
-      message: message
+      message: message,
+      userEmail:userEmail
     },
      dataType: "json", // jQuery will parse response automatically
     success: function(response) {
+      // console.log(response);
       if (response.success) {
         $('#form_contact')[0].reset();
         alert(response.success);
