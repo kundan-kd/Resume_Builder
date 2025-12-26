@@ -205,7 +205,7 @@ if(isset($_POST['myserviceStatus'])){
     $query = "UPDATE settings SET is_myservice_active = $newData WHERE id = 1";
     $result = mysqli_query($conn, $query);
     if($result){
-        echo json_encode(['success' => 'My Services status changed']);
+        echo json_encode(['success' => 'My Services status changed','data' => $newData]);
     }else{
         echo json_encode(['error_success' => 'Status not changed']);
     }
@@ -219,7 +219,7 @@ if(isset($_POST['projectStatus'])){
     $query = "UPDATE settings SET is_project_active = $newData WHERE id = 1";
     $result = mysqli_query($conn, $query);
     if($result){
-        echo json_encode(['success' => 'Project status changed']);
+        echo json_encode(['success' => 'Project status changed','data' => $newData]);
     }else{
         echo json_encode(['error_success' => 'Status not changed']);
     }
@@ -233,7 +233,7 @@ if(isset($_POST['planStatus'])){
     $query = "UPDATE settings SET is_plan_active = $newData WHERE id = 1";
     $result = mysqli_query($conn, $query);
     if($result){
-        echo json_encode(['success' => 'Plan status changed']);
+        echo json_encode(['success' => 'Plan status changed','data' => $newData]);
     }else{
         echo json_encode(['error_success' => 'Status not changed']);
     }

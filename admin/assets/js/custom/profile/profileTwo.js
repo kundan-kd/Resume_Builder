@@ -239,64 +239,89 @@ function deleteQualification(id){
     });
 }
 
-function serviceSwitchClick(x){
-    let badge = $('.form-check-label .badge');
-    badge.addClass('bg-secondary').text('Updating...');
+
+function serviceSwitchClick(){
+    let badge = $('.form-check-label .service-badge');
+    badge.removeClass('bg-success bg-danger').addClass('bg-secondary').text('Updating...');
     $.ajax({
-        url:"../../controller/profile/ProfileTwo.php",
-        type:"POST",
-        data:{myserviceStatus:true},
-        dataType:'json',
-        success:function(response){
-            console.log(response);
-            if(response.success){
-            //    toastSuccessAlert(response.success);
-                setTimeout(function(){
-                    window.location.reload();
-                },1000);
-            }else{
-                toastErrorAlert(response.error_success);
+        url: "../../controller/profile/ProfileTwo.php",
+        type: "POST",
+        data: { myserviceStatus: true },
+        dataType: 'json',
+        success: function(response){
+            console.log(response.data);
+            if(response.success !== undefined){
+                // Remove existing status classes
+                badge.removeClass('bg-secondary bg-success bg-danger');
+                if(response.data == 1){
+                    badge.addClass('bg-success').text('Active');
+                } else {
+                    badge.addClass('bg-danger').text('InActive');
+                }
+                toastSuccessAlert(response.success);
+            } else {
+                toastErrorAlert(response.error_success || "Unknown error occurred.");
             }
+        },
+        error: function(){
+            toastErrorAlert("Failed to update service status.");
         }
     });
 }
-function projectSwitchClick(x){
+
+function projectSwitchClick(){
     let badge1 = $('.form-check-label .project-badge');
-    badge1.addClass('bg-secondary').text('Updating...');
+    badge1.removeClass('bg-success bg-danger').addClass('bg-secondary').text('Updating...');
+
     $.ajax({
-        url:"../../controller/profile/ProfileTwo.php",
-        type:"POST",
-        data:{projectStatus:true},
-        dataType:'json',
-        success:function(response){
-            if(response.success){
-               // toastSuccessAlert(response.success);
-                setTimeout(function(){
-                    window.location.reload();
-                },1000);
-            }else{
-                toastErrorAlert(response.error_success);
+        url: "../../controller/profile/ProfileTwo.php",
+        type: "POST",
+        data: { projectStatus: true },
+        dataType: 'json',
+        success: function(response){
+            if(response.success !== undefined){
+                badge1.removeClass('bg-secondary bg-success bg-danger');
+
+                if(response.data == 1){
+                    badge1.addClass('bg-success').text('Active');
+                } else {
+                    badge1.addClass('bg-danger').text('InActive');
+                }
+                toastSuccessAlert(response.success);
+            } else {
+                toastErrorAlert(response.error_success || "Unknown error occurred.");
             }
+        },
+        error: function(){
+            toastErrorAlert("Failed to update project status.");
         }
     });
 }
-function planSwitchClick(x){
+function planSwitchClick(){
     let badge2 = $('.form-check-label .plan-badge');
-    badge2.addClass('bg-secondary').text('Updating...');
+    badge2.removeClass('bg-success bg-danger').addClass('bg-secondary').text('Updating...');
+
     $.ajax({
-        url:"../../controller/profile/ProfileTwo.php",
-        type:"POST",
-        data:{planStatus:true},
-        dataType:'json',
-        success:function(response){
-            if(response.success){
-           //     toastSuccessAlert(response.success);
-                setTimeout(function(){
-                    window.location.reload();
-                },1000);
-            }else{
-                toastErrorAlert(response.error_success);
+        url: "../../controller/profile/ProfileTwo.php",
+        type: "POST",
+        data: { planStatus: true },
+        dataType: 'json',
+        success: function(response){
+            if(response.success !== undefined){
+                badge2.removeClass('bg-secondary bg-success bg-danger');
+
+                if(response.data == 1){
+                    badge2.addClass('bg-success').text('Active');
+                } else {
+                    badge2.addClass('bg-danger').text('InActive');
+                }
+                toastSuccessAlert(response.success);
+            } else {
+                toastErrorAlert(response.error_success || "Unknown error occurred.");
             }
+        },
+        error: function(){
+            toastErrorAlert("Failed to update plan status.");
         }
     });
 }

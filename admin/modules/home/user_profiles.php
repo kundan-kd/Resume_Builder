@@ -457,14 +457,14 @@ if($result2 && mysqli_num_rows($result2) > 0){
                         <div class="card-header d-flex justify-content-between">
                             <h5 class="card-title mb-0">My Services</h5>
                             <div class="form-check form-switch">
-                                <label class="form-check-label" for="serviceSwitch">
-                                    <span class="badge 
-                                        <?php echo $settings['is_myservice_active'] == 1 ? 'bg-success' : 'bg-danger'; ?>">
-                                        <?php echo $settings['is_myservice_active'] == 1 ? 'Active' : 'InActive'; ?>
-                                    </span>
+                                <label class="form-check-label">
+                                        <span class="badge service-badge
+                                            <?php echo $settings['is_myservice_active'] == 1 ? 'bg-success' : 'bg-danger'; ?>">
+                                            <?php echo $settings['is_myservice_active'] == 1 ? 'Active' : 'InActive'; ?>
+                                        </span>                            
                                 </label>
-                                <input class="form-check-input" type="checkbox" role="switch" id="serviceSwitch" 
-                                    onclick="serviceSwitchClick(this.id)" 
+                                <input class="form-check-input" type="checkbox" role="switch" 
+                                    onclick="serviceSwitchClick()" 
                                     <?php echo $settings['is_myservice_active'] == 1 ? 'checked' : ''; ?>>
                             </div>
                         </div>
@@ -663,14 +663,14 @@ if($result2 && mysqli_num_rows($result2) > 0){
                         <div class="card-header d-flex justify-content-between">
                             <h5 class="card-title mb-0">Project</h5>
                             <div class="form-check form-switch">
-                                <label class="form-check-label" for="serviceSwitch">
+                                <label class="form-check-label">
                                     <span class="badge project-badge
                                         <?php echo $settings['is_project_active'] == 1 ? 'bg-success' : 'bg-danger'; ?>">
                                         <?php echo $settings['is_project_active'] == 1 ? 'Active' : 'InActive'; ?>
                                     </span>
                                 </label>
-                                <input class="form-check-input" type="checkbox" role="switch" id="serviceSwitch" 
-                                    onclick="projectSwitchClick(this.id)" 
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    onclick="projectSwitchClick()" 
                                     <?php echo $settings['is_project_active'] == 1 ? 'checked' : ''; ?>>
                             </div>
                         </div>
@@ -806,14 +806,14 @@ if($result2 && mysqli_num_rows($result2) > 0){
                         <div class="card-header d-flex justify-content-between">
                             <h5 class="card-title mb-0">Plan</h5>
                             <div class="form-check form-switch">
-                                <label class="form-check-label" for="serviceSwitch">
+                                <label class="form-check-label">
                                     <span class="badge plan-badge
                                         <?php echo $settings['is_plan_active'] == 1 ? 'bg-success' : 'bg-danger'; ?>">
                                         <?php echo $settings['is_plan_active'] == 1 ? 'Active' : 'InActive'; ?>
                                     </span>
                                 </label>
-                                <input class="form-check-input" type="checkbox" role="switch" id="serviceSwitch" 
-                                    onclick="planSwitchClick(this.id)" 
+                                <input class="form-check-input" type="checkbox" role="switch" 
+                                    onclick="planSwitchClick()" 
                                     <?php echo $settings['is_plan_active'] == 1 ? 'checked' : ''; ?>>
                             </div>
                         </div>
